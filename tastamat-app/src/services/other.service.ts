@@ -6,12 +6,11 @@ export class OtherService {
   constructor(private http: HttpClient) {
   }
 
-  getTastamats(token, lat, lng): any {
-    return this.http.get(`http://tasta.tastamat.com/api/rest/a/lockers?lat=${lat}&lng=${lng}`, {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + token
-      })
-    })
+  getTastamats(token, lat, lng, page, limit): any {
+    return this.http.get(
+      `http://tasta.tastamat.com/api/rest/a/lockers?lat=${lat}&lng=${lng}&page=${page}&limit=${limit}`,
+      { headers: new HttpHeaders({'Authorization': 'Bearer ' + token}) }
+    )
   }
 
   openCell(token, data): any {

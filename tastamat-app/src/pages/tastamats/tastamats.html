@@ -29,4 +29,9 @@
       </div>
     </div>
   </div>
+  <div class="tastamats__row">
+    <button (click)="loadMore()" *ngIf="showMore" class="tastamats__showMore">
+      {{ 'tastamats.showMore' | translate }}
+    </button>
+  </div>
 </ion-content>

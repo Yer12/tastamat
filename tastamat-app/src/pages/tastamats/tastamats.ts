@@ -15,11 +15,18 @@ export class TastamatsPage {
   };
   lat: number;
   lng: number;
+  page: number = 0;
+  limit: number;
+  showMore: boolean = true;
 
   constructor(
     private geolocation: Geolocation, private otherService: OtherService,
     private storage: Storage, public loadingCtrl: LoadingController
-  ) {}
+  ) {
+    this.limit = screen.height
+      ? Math.round((screen.height - 250)/64)
+      : 5;
+  }
 
   ionViewDidLoad() {
     this.getLocation();
@@ -51,13 +58,17 @@ export class TastamatsPage {
   async getTastamats(lat, lng) {
     this.storage.get('token').then((token) => {
       if (token) {
-        let loader = this.loadingCtrl.create({
-          spinner: 'crescent'
-        });
+        let loader = this.loadingCtrl.create({ spinner: 'crescent' });
         loader.present();
-        this.otherService.getTastamats(token, lat, lng).subscribe(
+        this.otherService.getTastamats(token, lat, lng, this.page, this.limit).subscribe(
           async response => {
-            this.tastamats = await response;
+            this.showMore = !(response.list.length < this.limit);
+
+            if (this.tastamats.list.length)
+              response.list.forEach(t => { this.tastamats.list.push(t); });
+            else
+              this.tastamats = await response;
+
             loader.dismiss();
           },
           error => {
@@ -68,6 +79,12 @@ export class TastamatsPage {
         );
       }
     });
+  }
+
+  async loadMore() {
+    await this.page++;
+    console.log(this.page);
+    this.getLocation();
   }
 
   expand(item) {

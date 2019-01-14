@@ -8,17 +8,18 @@ page-tastamats {
     &__button {
       width: 100%;
       text-align: left;
-      padding: 16px 0 16px 16px;
+      font-size: 16px;
+      padding: 1.5em 0 1.5em 1em;
       background: #FFFFFF url("../../assets/imgs/closed.svg") center left no-repeat;
       border-top: 0.25px solid #797979;
       overflow: hidden;
-      max-height: 48px;
+      max-height: 64px;
       &:last-of-type {
         border-bottom: 0.25px solid #797979;
       }
       &.expanded {
         max-height: none;
-        background: #FFFFFF url("../../assets/imgs/opened.svg") 0 20px no-repeat;
+        background: #FFFFFF url("../../assets/imgs/opened.svg") 0 29px no-repeat;
       }
     }
     &__info {
@@ -55,6 +56,21 @@ page-tastamats {
       @extend .tastamats__text;
       font-weight: 700;
       margin-bottom: 2em;
+    }
+    &__row {
+      display: flex;
+      flex: 1;
+      justify-content: center;
+    }
+    &__showMore {
+      margin-top: 1.5em;
+      background: transparent;
+      font-size: 1em;
+      padding: 0.5em 0.75em;
+      color: #ca6231;
+      border: 1px solid #ca6231;
+      text-align: center;
+      border-radius: 50px;
     }
   }
 }
