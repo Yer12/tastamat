@@ -1,0 +1,21 @@
+<ion-content padding>
+  <div class="tastamatApp__row">
+    <button class="tastamatApp__close" (click)="popView()"><ion-icon name="close"></ion-icon></button>
+  </div>
+  <div class="sms__title">{{ 'smsTemplate.currentSmsExample' | translate }}</div>
+  <div class="sms__rectangle">
+    <span>Уважаемый(-ая) ____!</span>
+    <span>{{profile && profile.template}}</span>
+    <span>Подробности: https://tastamat.kz/XXXXXXX</span>
+  </div>
+  <hr>
+  <div class="sms__title">{{ 'smsTemplate.editSms' | translate }}</div>
+  <ion-textarea placeholder="Enter a description" class="sms__editArea" rows="6" (keyup)="changeTemplate($event)"
+                [(ngModel)]="template" ngClass="{{template.length > 80 ? 'error' : ''}}">
+  </ion-textarea>
+  <div class="sms__countSymbols">{{template.length}}/80</div>
+  <button ion-button class="tastamatApp__primaryButton" (click)="save()"
+          [disabled]="template.length === 0 || template.length > 80">
+    {{ 'smsTemplate.save' | translate }}
+  </button>
+</ion-content>

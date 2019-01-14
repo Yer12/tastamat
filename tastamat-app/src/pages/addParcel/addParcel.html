@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'addParcel.title' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <p class="tastamatApp__title">{{ 'addParcel.step1' | translate }}</p>
+
+  <input type="text" class="tastamatApp__input--person" [(ngModel)]="name"
+             placeholder="{{ 'addParcel.namePlaceholder' | translate }}" />
+  <input type="tel" class="tastamatApp__input--phone" [(ngModel)]="phone" prefix="+7 " mask="000 000 00 00"
+         #phoneInput (keyup)="this.phone.length === 10 ? phoneInput.blur() : null"
+         placeholder="{{ 'addParcel.phonePlaceholder' | translate }}" />
+
+  <p class="tastamatApp__title">{{ 'addParcel.step2' | translate }}</p>
+  <div class="addParcel__buttonsRow">
+    <button ion-button class="addParcel__cellSize" ngClass="{{cellSize === 'S' ? 'active' : ''}}"
+            [innerHTML]="'addParcel.smallCell' | translate" (click)="this.setCellSize('S')"></button>
+    <button ion-button class="addParcel__cellSize" ngClass="{{cellSize === 'M' ? 'active' : ''}}"
+            [innerHTML]="'addParcel.middleCell' | translate" (click)="this.setCellSize('M')"></button>
+    <button ion-button class="addParcel__cellSize" ngClass="{{cellSize === 'L' ? 'active' : ''}}"
+            [innerHTML]="'addParcel.bigCell' | translate" (click)="this.setCellSize('L')"></button>
+  </div>
+
+  <p class="tastamatApp__title">{{ 'addParcel.step3' | translate }}</p>
+  <button ion-button class="tastamatApp__primaryButton" [disabled]="this.checkForm()" (click)="goToQr()">
+    {{ 'addParcel.scan' | translate }}
+  </button>
+  <span class="addParcel__info">
+    {{ 'addParcel.info' | translate }}
+  </span>
+</ion-content>

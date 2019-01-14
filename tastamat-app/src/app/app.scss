@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,700');
+
+* {
+  font-family: 'Rubik', sans-serif;
+}
+
+.tabbar {
+  box-shadow: 0px -2px 6px #BDBDBD;
+}
+
+.toolbar-title {
+  text-align: center;
+  font-family: 'Rubik', sans-serif;
+  text-transform: uppercase;
+}
+
+.toolbar-ios {
+  & ion-title {
+    padding: 0 1em;
+  }
+}
+
+.tastamatApp {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  &__row {
+    display: flex;
+    flex: 1;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  &__close {
+    line-height: normal;
+    font-size: 2em;
+    text-align: center;
+    color: #797979;
+    background: transparent;
+    border: 0;
+  }
+  &__primaryButton {
+    height: auto;
+    background: #FA631D;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    padding: 14px 7px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFFFFF;
+    width: 100%;
+    text-align: center;
+    &:disabled {
+      background: #FC935E;
+    }
+  }
+  &__title {
+    font-style: normal;
+    font-weight: bold;
+    line-height: normal;
+    font-size: 14px;
+    color: #797979;
+    margin: 16px 0;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+  &__input {
+    border: 1px solid #FA631D;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    width: 100%;
+    &:not(:first-of-type) {
+      margin-top: 16px;
+    }
+    &::placeholder {
+      color: #CFCFCF;
+    }
+    & input {
+      margin: 0 !important;
+      &::placeholder {
+        color: #CFCFCF;
+      }
+    }
+    &--leftIcon {
+      padding: 14px 18px 14px 46px;
+      & input {
+        padding: 14px 18px 14px 46px;
+      }
+    }
+    &--search {
+      @extend .tastamatApp__input;
+      background: #FFFFFF url("../assets/icon/search.svg") 95% 50% no-repeat;
+      margin-bottom: 1em;
+      & input {
+        padding: 14px 32px 14px 18px;
+      }
+    }
+    &--person {
+      @extend .tastamatApp__input;
+      @extend .tastamatApp__input--leftIcon;
+      background: #FFFFFF url("../assets/icon/person.svg") 14px 50% no-repeat;
+    }
+    &--phone {
+      @extend .tastamatApp__input;
+      @extend .tastamatApp__input--leftIcon;
+      background: #FFFFFF url("../assets/icon/phone.svg") 14px 50% no-repeat;
+    }
+  }
+  &__input2 {
+    background: #FFFFFF;
+    border: 1px solid #FA631D;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    margin-top: 25px;
+    padding: 14px 7px;
+    width: 100%;
+    text-align: center;
+    &::placeholder {
+      color: #CFCFCF;
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "TastamatApp",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular",
+  "id": "e5800f79"
+}
