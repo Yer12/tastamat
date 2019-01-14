@@ -1,0 +1,88 @@
+smsTemplate-page {
+  hr {
+    margin: 25px 0;
+  }
+  .sms {
+    &__title {
+      font-weight: normal;
+      line-height: normal;
+      font-size: 10px;
+      color: #797979;
+      margin-bottom: 0.5em;
+    }
+    &__rectangle {
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      font-weight: 300;
+      line-height: 14px;
+      font-size: 10px;
+      color: #000000;
+      padding: 20px 52px 20px 24px;
+      box-sizing: border-box;
+      border-radius: 10px 10px 0 10px;
+      position: relative;
+      background: #FFFFFF;
+      border: 1px solid #8CA93A;
+      &:before {
+        content: '';
+        position: absolute;
+        right: 1px;
+        bottom: 0;
+        width: 0;
+        height: 0;
+        border: 24px solid transparent;
+        border-left-color: #fff;
+        border-right: 0;
+        border-bottom: 0;
+        margin-top: -24px;
+        margin-right: -24px;
+        z-index: 1;
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        bottom: -1px;
+        width: 0;
+        height: 0;
+        border: 24px solid transparent;
+        border-left-color: #8CA93A;
+        border-right: 0;
+        border-bottom: 0;
+        margin-top: -24px;
+        margin-right: -24px;
+      }
+    }
+    &__editArea {
+      &.error {
+        & textarea {
+          color: #f53d3d;
+          border: 1px solid #f53d3d;
+        }
+      }
+      & textarea {
+        border: 1px solid rgba(121,121,121,0.5);
+        padding: 12px 18px;
+        box-sizing: border-box;
+        border-radius: 10px;
+        font-weight: 300;
+        line-height: 14px;
+        font-size: 12px;
+        color: #000000;
+        margin: 0;
+        width: 100%;
+      }
+    }
+    &__countSymbols {
+      width: 100%;
+      text-align: right;
+      margin-top: 8px;
+      margin-bottom: 45px;
+      font-weight: 300;
+      line-height: 14px;
+      font-size: 10px;
+      color: #797979;
+    }
+  }
+}

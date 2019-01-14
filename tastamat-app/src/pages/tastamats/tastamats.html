@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'tastamats.title' | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <!--<ion-input type="text" value="" class="tastamatApp__input&#45;&#45;search"-->
+             <!--placeholder="{{ 'tastamats.find' | translate }}"></ion-input>-->
+
+
+  <p class="tastamatApp__title">{{ 'tastamats.closer' | translate }}</p>
+  <p class="tastamats__title" *ngIf="!tastamats.list.length" [innerHtml]="'tastamats.notFound' | translate"></p>
+  <div class="tastamats__list">
+    <div *ngFor="let item of tastamats.list" id="{{item.id}}" class="tastamats__button" (click)="expand(item)">
+      <div class="tastamats__title">
+        <span>{{item.address.buildingShortRu}}</span>
+        <span>~{{item.location.distance}} {{ 'tastamats.meter' | translate }}</span>
+      </div>
+      <div class="tastamats__info">
+        <div class="tastamats__info__text">
+          <div class="tastamats__address">{{item.address.streetShortRu}} {{item.address.buildingNumber}}</div>
+          <div class="tastamats__text">{{item.location.descriptionRu}}</div>
+        </div>
+        <a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="tastamats__info__map"></a>
+      </div>
+    </div>
+  </div>
+</ion-content>

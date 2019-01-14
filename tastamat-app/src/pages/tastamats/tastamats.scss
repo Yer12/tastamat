@@ -1,0 +1,60 @@
+page-tastamats {
+  .tastamats {
+    &__list {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+    &__button {
+      width: 100%;
+      text-align: left;
+      padding: 16px 0 16px 16px;
+      background: #FFFFFF url("../../assets/imgs/closed.svg") center left no-repeat;
+      border-top: 0.25px solid #797979;
+      overflow: hidden;
+      max-height: 48px;
+      &:last-of-type {
+        border-bottom: 0.25px solid #797979;
+      }
+      &.expanded {
+        max-height: none;
+        background: #FFFFFF url("../../assets/imgs/opened.svg") 0 20px no-repeat;
+      }
+    }
+    &__info {
+      display: flex;
+      margin-top: 2em;
+      &__text {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      &__map {
+        width: 80px;
+        height: 80px;
+        background: url("../../assets/imgs/map-button.svg") no-repeat;
+        background-size: contain;
+      }
+    }
+    &__title {
+      font-style: normal;
+      font-weight: normal;
+      line-height: normal;
+      font-size: 14px;
+      color: #797979;
+      display: flex;
+      justify-content: space-between;
+    }
+    &__text {
+      font-style: normal;
+      line-height: normal;
+      font-size: 10px;
+      color: #797979;
+    }
+    &__address {
+      @extend .tastamats__text;
+      font-weight: 700;
+      margin-bottom: 2em;
+    }
+  }
+}

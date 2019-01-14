@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      {{ 'profile.title' | translate }}
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <div class="profile__balance">
+    <div class="profile__balance__textBlock">
+      <p class="profile__balance__text--regular">
+        {{ 'profile.yourBalance' | translate }}
+      </p>
+      <p class="profile__balance__text--bold">
+        {{ profile && profile.wallet ? (profile.wallet | mask: 'separator') : 0 }}
+        {{ 'profile.tg' | translate }}
+      </p>
+    </div>
+    <button class="profile__balance__btn" [disabled]="true">
+      {{ 'profile.fillUp' | translate }}
+    </button>
+  </div>
+  <hr>
+  <ion-list>
+    <ion-item (click)="goTo()">
+      <ion-icon name="text" item-start></ion-icon>
+      {{ 'profile.smsTemplate' | translate }}
+    </ion-item>
+    <ion-item>
+      <ion-icon name="call" item-start></ion-icon>
+      <a href="tel:+77760082782" class="profile__link">
+        {{ 'profile.callCenter' | translate }}
+      </a>
+    </ion-item>
+    <ion-item (click)="signOut()">
+      <ion-icon name="log-out" item-start></ion-icon>
+      {{ 'profile.signOut' | translate }}
+    </ion-item>
+  </ion-list>
+  <!--<button ion-button (click)="signOut()">-->
+    <!--Sign out-->
+  <!--</button>-->
+</ion-content>

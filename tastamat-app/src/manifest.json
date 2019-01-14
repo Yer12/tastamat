@@ -1,0 +1,13 @@
+{
+  "name": "Tastamat",
+  "short_name": "Tastamat",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [{
+    "src": "assets/imgs/logo.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }],
+  "background_color": "#FA631D",
+  "theme_color": "#FA631D"
+}

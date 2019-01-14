@@ -1,0 +1,54 @@
+page-addParcel {
+  .addParcel {
+    &__buttonsRow {
+      display: flex;
+    }
+    &__cellSize {
+      height: auto;
+      background: #FC935E;
+      box-shadow: 0 4px 4px #E5E5E5;
+      padding: 14px 7px;
+      font-size: 10px;
+      color: #FFFFFF;
+      width: 33.333%;
+      text-align: center;
+      @media (max-device-width: 320px) {
+        font-size: 9px;
+        padding: 14px 2px;
+      }
+      &.active {
+        background: #FA631D;
+      }
+      &:not(:first-of-type) {
+        margin-left: 2px;
+      }
+      &:first-of-type {
+        border-radius: 5px 0 0 5px;
+      }
+      &:last-of-type {
+        border-radius: 0 5px 5px 0;
+      }
+    }
+    &__info {
+      width: 100%;
+      line-height: 12px;
+      font-size: 9px;
+      color: #797979;
+      display: flex;
+      position: relative;
+      padding-left: 3em;
+      margin-top: 2em;
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 18px;
+        height: 20px;
+        background: url("../../assets/icon/info.svg") no-repeat;
+        background-size: contain;
+        position: absolute;
+        left: 0;
+        top: calc(50% - 10px);
+      }
+    }
+  }
+}
