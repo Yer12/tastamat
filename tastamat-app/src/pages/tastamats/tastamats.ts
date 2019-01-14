@@ -24,7 +24,7 @@ export class TastamatsPage {
     private storage: Storage, public loadingCtrl: LoadingController
   ) {
     this.limit = screen.height
-      ? Math.round((screen.height - 250)/64)
+      ? Math.round((screen.height - 300)/64)
       : 5;
   }
 
