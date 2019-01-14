@@ -1,0 +1,13 @@
+plugins {
+    id 'application'
+}
+
+mainClassName = 'kz.tastamat.jooq.Main'
+
+dependencies {
+    compile project.log,
+            project.jooq,
+            project.jooqMeta,
+            project.jooqCodegen,
+            project.postgresDriver
+}

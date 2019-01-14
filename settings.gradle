@@ -1,0 +1,11 @@
+rootProject.name = 'tastamat-main'
+
+include 'tastamat-api',
+        'vertx-base',
+        'tastamat-utils',
+		'db-model',
+		'db-dao',
+		'db-dao-jooq',
+		'jooq-generator',
+		'ws-clients:sms-ws-client'
+

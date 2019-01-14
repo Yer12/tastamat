@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  name="SendSMSLib" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://tempuri.org/"
+                  xmlns:tns="http://tempuri.org/">
+    <wsdl:types>
+        <xs:schema targetNamespace="http://tempuri.org/" elementFormDefault="qualified">
+            <xs:complexType name="SMSResult">
+                <xs:sequence>
+                    <xs:element name="StatusCode" type="xs:int">
+                    </xs:element>
+                    <xs:element name="Status" type="xs:string">
+                    </xs:element>
+                    <xs:element name="Segments" type="xs:int">
+                    </xs:element>
+                    <xs:element name="MsgID" type="xs:string">
+                    </xs:element>
+                    <xs:element name="ResepDateTime" type="xs:string">
+                    </xs:element>
+                    <xs:element name="Recepient" type="xs:string">
+                    </xs:element>
+                    <xs:element name="Lang" type="xs:string">
+                    </xs:element>
+                    <xs:element name="UserMsgID" type="xs:string">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSInfo">
+                <xs:sequence>
+                    <xs:element name="resultCode" type="xs:int">
+                    </xs:element>
+                    <xs:element name="resultS" type="xs:string">
+                    </xs:element>
+                    <xs:element name="recepient" type="xs:string">
+                    </xs:element>
+                    <xs:element name="status" type="xs:string">
+                    </xs:element>
+                    <xs:element name="senderId" type="xs:string">
+                    </xs:element>
+                    <xs:element name="senttime" type="xs:string">
+                    </xs:element>
+                    <xs:element name="receivedtime" type="xs:string">
+                    </xs:element>
+                    <xs:element name="segments" type="xs:int">
+                    </xs:element>
+                    <xs:element name="lang" type="xs:string">
+                    </xs:element>
+                    <xs:element name="userMsgID" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msgID" type="xs:string">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSReport">
+                <xs:sequence>
+                    <xs:element name="ResultCode" type="xs:int">
+                    </xs:element>
+                    <xs:element name="ResultS" type="xs:string">
+                    </xs:element>
+                    <xs:element name="RecepCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="SmsCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="DelivCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="UndelivCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="SendCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="SentCount" type="xs:int">
+                    </xs:element>
+                    <xs:element name="SendingCount" type="xs:int">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+			<xs:complexType name="SMSM">
+                <xs:sequence>
+                    <xs:element name="recepient" type="xs:string">
+                    </xs:element>
+                    <xs:element name="senderid" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msg" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msgtype" type="xs:int">
+                    </xs:element>
+                    <xs:element name="scheduled" type="xs:string">
+                    </xs:element>
+                    <xs:element name="UserMsgID" type="xs:string">
+                    </xs:element>
+                    <xs:element name="prioritet" type="xs:int">
+                    </xs:element>
+				</xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSM1">
+                <xs:sequence>
+                    <xs:element name="recepient" type="xs:string">
+                    </xs:element>
+                    <xs:element name="senderid" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msg" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msgtype" type="xs:int">
+                    </xs:element>
+                    <xs:element name="scheduled" type="xs:string">
+                    </xs:element>
+                    <xs:element name="UserMsgID" type="xs:string">
+                    </xs:element>
+                    <xs:element name="prioritet" type="xs:int">
+                    </xs:element>
+		    <xs:element name="tlv_2012" type="xs:string">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="IDSMS">
+                <xs:sequence>
+                    <xs:element name="MsgID" type="xs:string">
+                    </xs:element>
+                    <xs:element name="UserMsgID" type="xs:string">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSInbox">
+                <xs:sequence>
+                    <xs:element name="ResultCode" type="xs:int">
+                    </xs:element>
+                    <xs:element name="Results" type="xs:string">
+                    </xs:element>
+                    <xs:element name="id" type="xs:string">
+                    </xs:element>
+                    <xs:element name="sender" type="xs:string">
+                    </xs:element>
+                    <xs:element name="receiver" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msg" type="xs:string">
+                    </xs:element>
+                    <xs:element name="senttime" type="xs:string">
+                    </xs:element>
+                    <xs:element name="receivedtime" type="xs:string">
+                    </xs:element>
+                    <xs:element name="msgtype" type="xs:string">
+                    </xs:element>
+                    <xs:element name="new" type="xs:string">
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSAbonentsArray">
+                <xs:sequence>
+                    <xs:element name="SMSInfo" minOccurs="0" maxOccurs="unbounded" type="tns:SMSInfo"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSMArray">
+                <xs:sequence>
+                    <xs:element name="SMSM" minOccurs="0" maxOccurs="unbounded" type="tns:SMSM"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SMSResultArray">
+                <xs:sequence>
+                    <xs:element name="SMSResult" minOccurs="0" maxOccurs="unbounded" type="tns:SMSResult"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="IDSMSArray">
+                <xs:sequence>
+                    <xs:element name="IDSMS" minOccurs="0" maxOccurs="unbounded" type="tns:IDSMS"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="SmsInboxArray">
+                <xs:sequence>
+                    <xs:element name="SMSInbox" minOccurs="0" maxOccurs="unbounded" type="tns:SMSInbox"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="SendSMSService___GetReport">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="begind" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="endd" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetReportResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSReport"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetAbonents">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="begind" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="endd" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetAbonentsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSAbonentsArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+			<xs:element name="SendSMSService___SendMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="sms" minOccurs="1" maxOccurs="1" type="tns:SMSM"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___SendMessageTlv">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="sms" minOccurs="1" maxOccurs="1" type="tns:SMSM1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___SendMessageResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSResult"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetInfoByID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="ids" minOccurs="1" maxOccurs="1" type="tns:IDSMS"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetInfoByIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSInfo"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetBulkInfoByID">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="idsms" minOccurs="1" maxOccurs="1" type="tns:IDSMSArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetBulkInfoByIDResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSAbonentsArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___SendBulkMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="smsarray" minOccurs="1" maxOccurs="1" type="tns:SMSMArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___SendBulkMessageResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SMSResultArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetInboxMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="login" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="password" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="begind" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="endd" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                        <xs:element name="onlynew" minOccurs="1" maxOccurs="1" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SendSMSService___GetInboxMessageResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Result" minOccurs="1" maxOccurs="1" type="tns:SmsInboxArray"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="SendSMSService___GetReportRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetReport"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetReportResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetReportResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetAbonentsRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetAbonents"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetAbonentsResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetAbonentsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___SendMessageRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendMessage"/>
+    </wsdl:message>
+	<wsdl:message name="SendSMSService___SendMessageResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendMessageResponse"/>
+    </wsdl:message>
+	<wsdl:message name="SendSMSService___SendMessageRequestTlv">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendMessageTlv"/>
+    </wsdl:message>
+	<wsdl:message name="SendSMSService___SendMessageResponseTlv">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendMessageResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetInfoByIDRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetInfoByID"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetInfoByIDResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetInfoByIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetBulkInfoByIDRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetBulkInfoByID"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetBulkInfoByIDResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetBulkInfoByIDResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___SendBulkMessageRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendBulkMessage"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___SendBulkMessageResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___SendBulkMessageResponse"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetInboxMessageRequest">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetInboxMessage"/>
+    </wsdl:message>
+    <wsdl:message name="SendSMSService___GetInboxMessageResponse">
+        <wsdl:part name="parameters" element="tns:SendSMSService___GetInboxMessageResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="SendSMSService">
+        <wsdl:operation name="GetReport">
+            <wsdl:input message="tns:SendSMSService___GetReportRequest"/>
+            <wsdl:output message="tns:SendSMSService___GetReportResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetAbonents">
+            <wsdl:input message="tns:SendSMSService___GetAbonentsRequest"/>
+            <wsdl:output message="tns:SendSMSService___GetAbonentsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessage">
+            <wsdl:input message="tns:SendSMSService___SendMessageRequest"/>
+            <wsdl:output message="tns:SendSMSService___SendMessageResponse"/>
+        </wsdl:operation>
+		<wsdl:operation name="SendMessageTlv">
+            <wsdl:input message="tns:SendSMSService___SendMessageRequestTlv"/>
+            <wsdl:output message="tns:SendSMSService___SendMessageResponseTlv"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetInfoByID">
+            <wsdl:input message="tns:SendSMSService___GetInfoByIDRequest"/>
+            <wsdl:output message="tns:SendSMSService___GetInfoByIDResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetBulkInfoByID">
+            <wsdl:input message="tns:SendSMSService___GetBulkInfoByIDRequest"/>
+            <wsdl:output message="tns:SendSMSService___GetBulkInfoByIDResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="SendBulkMessage">
+            <wsdl:input message="tns:SendSMSService___SendBulkMessageRequest"/>
+            <wsdl:output message="tns:SendSMSService___SendBulkMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetInboxMessage">
+            <wsdl:input message="tns:SendSMSService___GetInboxMessageRequest"/>
+            <wsdl:output message="tns:SendSMSService___GetInboxMessageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="SendSMSServiceBinding" type="tns:SendSMSService">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetReport">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#GetReport" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetAbonents">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#GetAbonents" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendMessage">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#SendMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+		<wsdl:operation name="SendMessageTlv">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#SendMessageTlv" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetInfoByID">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#GetInfoByID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBulkInfoByID">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#GetBulkInfoByID" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="SendBulkMessage">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#SendBulkMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetInboxMessage">
+            <soap:operation soapAction="urn:SendSMSLib-SendSMSService#GetInboxMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="SendSMSService">
+        <xs:annotation>
+            <xs:documentation>
+                Service SendSMSService. This service has been automatically generated using the RODL template you can
+                find in the Templates directory.
+            </xs:documentation>
+        </xs:annotation>
+        <wsdl:port name="SendSMSServicePort" binding="tns:SendSMSServiceBinding">
+            <soap:address location="http://isms.center/ru/soap/server"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

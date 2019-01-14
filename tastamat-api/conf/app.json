@@ -1,0 +1,62 @@
+{
+  "name": "tastamat-api",
+  "verticles": [
+    {
+      "enabled": true,
+      "verticle_class": "kz.tastamat.web.WebServiceVerticle",
+      "instance_count": 1
+    },
+    {
+      "enabled": true,
+      "verticle_class": "kz.tastamat.sms.verticle.SmsVerticle",
+      "instance_count": 1
+    },
+    {
+      "enabled": true,
+      "verticle_class": "kz.tastamat.core.verticle.CoreVerticle",
+      "instance_count": 1
+    }
+  ],
+  "core": {
+    "url": "http://test.tastamat.com/api/rest",
+    "key": "tastamat",
+    "token": "dba99fdf-855e-45cd-a9f3-88bb5cc91e9e",
+    "prefix": "http://open.tatamat.com/open/"
+  },
+  "auth": {
+    "type": "jceks",
+    "path": "conf/keystore.jceks",
+    "password": "b5ccb8cf-03ed-4412-b5ff-d86951953065"
+  },
+  "sms": {
+    "url": "http://isms.center/ru/soap/server",
+    "login": "toolpar",
+    "password": "okrX9UEEJ",
+    "sender_id": "INFO_KAZ",
+    "msg_type": 0,
+    "user_msg_id": "",
+    "scheduled": "",
+    "priority": 2
+  },
+  "billing": {
+    "price": 200
+  },
+  "profile": {
+    "wallet": 0,
+    "template": "Вам поступила посылка в тастамат."
+  },
+  "web": {
+    "host": "localhost",
+    "port": 10403,
+    "prefix": "api"
+  },
+  "datasources": [
+    {
+      "name": "default",
+      "jdbc_url": "jdbc:postgresql://localhost:5432/tastamat",
+      "username": "postgres",
+      "password": "postgres",
+      "max_pool_size": 10
+    }
+  ]
+}

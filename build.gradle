@@ -1,0 +1,79 @@
+apply plugin: "idea"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = "4.7"
+}
+
+def vertxVersion = "3.5.2"
+def log4jVersion = "2.10.0"
+def jooqVersion = "3.10.1"
+def immutablesVersion = "2.5.6"
+
+project.ext {
+    commonsIo = "commons-io:commons-io:2.5"
+    commonsCollections = "org.apache.commons:commons-collections4:4.1"
+    commonsCodec = "commons-codec:commons-codec:1.10"
+    commonsLang = "org.apache.commons:commons-lang3:3.7"
+
+    vertxCore = "io.vertx:vertx-core:${vertxVersion}"
+    vertxWeb = "io.vertx:vertx-web:${vertxVersion}"
+    vertxJwt = "io.vertx:vertx-auth-jwt:${vertxVersion}"
+    vertxOauth = "io.vertx:vertx-auth-oauth2:${vertxVersion}"
+    vertxHealth = "io.vertx:vertx-health-check:${vertxVersion}"
+    vertxWebClient = "io.vertx:vertx-web-client:${vertxVersion}"
+    vertxWebContract = "io.vertx:vertx-web-api-contract:${vertxVersion}"
+    vertxMicrometer = "io.vertx:vertx-micrometer-metrics:${vertxVersion}"
+// vertxMetrics = ['io.micrometer:micrometer-registry-prometheus:1.0.0', vertxMicrometer]
+    vertxMetrics = ['io.micrometer:micrometer-registry-influx:1.0.4', vertxMicrometer]
+    vertxCodegen = "io.vertx:vertx-codegen:${vertxVersion}"
+    vertxServiceProxy = "io.vertx:vertx-service-proxy:${vertxVersion}"
+    vertxMqtt = "io.vertx:vertx-mqtt:${vertxVersion}"
+
+    vertxCodegenProc = "io.vertx:vertx-codegen:${vertxVersion}:processor"
+    vertxServiceProxyProc = "io.vertx:vertx-service-proxy:${vertxVersion}:processor"
+
+    freemarker = "org.freemarker:freemarker:2.3.28"
+
+    logCore = "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    logApi = "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    slf4j = "org.slf4j:slf4j-jdk14:1.7.25"
+
+    postgresDriver = "org.postgresql:postgresql:42.2.2"
+    hikari = "com.zaxxer:HikariCP:3.1.0"
+
+    jooq = "org.jooq:jooq:${jooqVersion}"
+    jooqMeta = "org.jooq:jooq-meta:${jooqVersion}"
+    jooqCodegen = "org.jooq:jooq-codegen:${jooqVersion}"
+
+    keycloakAdminClient = "org.keycloak:keycloak-admin-client:3.4.3.Final"
+    jaxrs = 'javax.ws.rs:javax.ws.rs-api:2.0'
+    resteasyClient = 'org.jboss.resteasy:resteasy-client:3.1.4.Final'
+    resteasyJacksonProvider = 'org.jboss.resteasy:resteasy-jackson2-provider:3.1.4.Final'
+
+    immutables = ["org.immutables:value:${immutablesVersion}", "org.immutables:builder:${immutablesVersion}"]
+    log = [logCore, logApi, slf4j]
+    vertx = [vertxCore, vertxWeb, vertxJwt, vertxWebContract, vertxHealth]
+    db = [postgresDriver, hikari]
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "idea"
+
+    idea {
+        module {
+            generatedSourceDirs += new File(projectDir, 'src/main/generated')
+            outputDir file('build/classes/java/main')
+            testOutputDir file('build/classes/java/test')
+        }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}

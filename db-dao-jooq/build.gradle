@@ -1,0 +1,8 @@
+apply plugin: 'maven'
+
+dependencies {
+    compile \
+        project(':db-dao')
+
+    testCompile 'org.postgresql:postgresql:9.4-1200-jdbc41'
+}

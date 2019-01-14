@@ -1,0 +1,41 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '2.0.3'
+    id 'application'
+}
+
+dependencies {
+
+    compile  \
+        project(':vertx-base'),
+        project.vertx,
+        project.db,
+        project.log,
+		project(':db-dao'),
+		project(':db-dao-jooq'),
+        project.vertxJwt,
+        project(':ws-clients:sms-ws-client')
+}
+
+mainClassName = 'kz.tastamat.bootstrap.AppLauncher'
+
+def mainVerticleName = 'kz.zx.api.app.AppVerticle'
+
+def watchForChange = 'src/**/*.java'
+
+def doOnChange = '../gradlew compileJava'
+
+def confPath = 'conf/local.json'
+
+run {
+    args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange", "-conf=$confPath"]
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Verticle': 'kz.zx.api.app.AppVerticle'
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}

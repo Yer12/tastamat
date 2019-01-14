@@ -1,0 +1,10 @@
+dependencies {
+
+    compile  \
+        project.vertx,
+        project.log,
+        project.db,
+        project.jooq,
+        project.commonsCodec,
+        project(':tastamat-utils')
+}

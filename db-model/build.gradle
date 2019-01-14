@@ -1,0 +1,10 @@
+plugins {
+    id 'org.flywaydb.flyway' version '4.2.0'
+}
+
+dependencies {
+    compile \
+        project.jooq,
+        project.postgresDriver,
+        project(':tastamat-utils')
+}
