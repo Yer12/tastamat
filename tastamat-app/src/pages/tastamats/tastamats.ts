@@ -29,10 +29,10 @@ export class TastamatsPage {
   }
 
   ionViewDidLoad() {
-    this.getLocation();
+    this.getLocation(false);
   }
 
-  getLocation() {
+  getLocation(refresh) {
     let options = {
       timeout: 30000,
       enableHighAccuracy: true
@@ -41,7 +41,7 @@ export class TastamatsPage {
       .then((resp) => {
         this.lat = resp.coords.latitude;
         this.lng = resp.coords.longitude;
-        this.getTastamats(resp.coords.latitude, resp.coords.longitude);
+        this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh);
       })
       .catch((error) => {
         console.log('Error getting location', error);
@@ -49,13 +49,13 @@ export class TastamatsPage {
   }
 
   doRefresh(refresher) {
-    this.getLocation();
+    this.getLocation(true);
     setTimeout(() => {
       refresher.complete();
     }, 2000);
   }
 
-  async getTastamats(lat, lng) {
+  async getTastamats(lat, lng, refresh) {
     this.storage.get('token').then((token) => {
       if (token) {
         let loader = this.loadingCtrl.create({ spinner: 'crescent' });
@@ -64,7 +64,7 @@ export class TastamatsPage {
           async response => {
             this.showMore = !(response.list.length < this.limit);
 
-            if (this.tastamats.list.length)
+            if (this.tastamats.list.length && !refresh)
               response.list.forEach(t => { this.tastamats.list.push(t); });
             else
               this.tastamats = await response;
@@ -83,8 +83,7 @@ export class TastamatsPage {
 
   async loadMore() {
     await this.page++;
-    console.log(this.page);
-    this.getLocation();
+    this.getLocation(false);
   }
 
   expand(item) {
