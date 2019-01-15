@@ -48,7 +48,8 @@ export class TastamatsPage {
       });
   }
 
-  doRefresh(refresher) {
+  async doRefresh(refresher) {
+    this.page = await 0;
     this.getLocation(true);
     setTimeout(() => {
       refresher.complete();
