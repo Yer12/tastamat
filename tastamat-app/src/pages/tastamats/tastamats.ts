@@ -17,7 +17,7 @@ export class TastamatsPage {
   lng: number;
   page: number = 0;
   limit: number;
-  showMore: boolean = true;
+  showMore: boolean = false;
 
   constructor(
     private geolocation: Geolocation, private otherService: OtherService,
@@ -33,17 +33,19 @@ export class TastamatsPage {
   }
 
   getLocation(refresh) {
-    let options = {
-      timeout: 30000,
-      enableHighAccuracy: true
-    };
-    this.geolocation.getCurrentPosition(options)
+    let loader = this.loadingCtrl.create({ spinner: 'crescent' });
+    loader.present();
+    this.geolocation.getCurrentPosition({ timeout: 30000, enableHighAccuracy: true })
       .then((resp) => {
         this.lat = resp.coords.latitude;
         this.lng = resp.coords.longitude;
-        this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh);
+        this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh).then(
+          () => loader.dismiss(),
+          () => loader.dismiss()
+        );
       })
       .catch((error) => {
+        loader.dismiss();
         console.log('Error getting location', error);
       });
   }
@@ -57,28 +59,28 @@ export class TastamatsPage {
   }
 
   async getTastamats(lat, lng, refresh) {
-    this.storage.get('token').then((token) => {
-      if (token) {
-        let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-        loader.present();
-        this.otherService.getTastamats(token, lat, lng, this.page, this.limit).subscribe(
-          async response => {
-            this.showMore = !(response.list.length < this.limit);
+    let promise = new Promise((resolve, reject) => {
+      this.storage.get('token').then((token) => {
+        if (token) {
+          this.otherService.getTastamats(token, lat, lng, this.page, this.limit).subscribe(
+            async response => {
 
-            if (this.tastamats.list.length && !refresh)
-              response.list.forEach(t => { this.tastamats.list.push(t); });
-            else
-              this.tastamats = await response;
+              if (this.tastamats.list.length && !refresh)
+                response.list.forEach(t => { this.tastamats.list.push(t); });
+              else
+                this.tastamats = await response;
 
-            loader.dismiss();
-          },
-          error => {
-            console.log(error);
-            this.tastamats.list = [];
-            loader.dismiss();
-          }
-        );
-      }
+              this.showMore = !(response.count === this.tastamats.list.length);
+              resolve();
+            },
+            error => {
+              console.log(error);
+              this.tastamats.list = [];
+              reject();
+            }
+          );
+        }
+      });
     });
   }
 
@@ -92,7 +94,7 @@ export class TastamatsPage {
     if (button.className.indexOf('expanded') > -1) {
       button.classList.remove('expanded');
     } else {
-      const otherButtons = document.querySelectorAll('.tastamats__button');
+      const otherButtons = document.querySelectorAll('.tastamatApp__list__item');
       for (let i = 0; i < otherButtons.length; i++) {
         otherButtons[i].classList.remove('expanded');
       }

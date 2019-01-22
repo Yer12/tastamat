@@ -5,9 +5,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { TranslateService } from '@ngx-translate/core';
 import { Globalization } from '@ionic-native/globalization';
-import {TabsPage} from "../pages/tabs/tabs";
-import {SignInPage} from "../pages/signIn/signIn";
-import {Storage} from "@ionic/storage";
+import { TabsPage } from "../pages/tabs/tabs";
+import { SignInPage } from "../pages/signIn/signIn";
+import { Storage } from "@ionic/storage";
+import { Config } from "ionic-angular";
 
 @Component({
   templateUrl: 'app.html'
@@ -22,6 +23,7 @@ export class MyApp {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     translate: TranslateService,
+    private config: Config,
     private storage: Storage,
     private globalization: Globalization
   ) {
@@ -35,15 +37,22 @@ export class MyApp {
       }
     });
 
-    platform.ready().then(() => {
+    platform.ready().then(async () => {
 
       this.globalization.getPreferredLanguage()
         .then(res => console.log(res))
         .catch(e => console.log(e));
 
-      statusBar.styleDefault();
+      if (platform.is('android')) {
+        statusBar.backgroundColorByHexString('#FA671D');
+      } else {
+        statusBar.styleDefault();
+      }
       splashScreen.hide();
-      translate.setDefaultLang('ru');
+      await translate.setDefaultLang('ru');
+      translate.get('tabs.back').subscribe(backLabel => {
+        this.config.set('backButtonText', backLabel);
+      });
     });
   }
 }

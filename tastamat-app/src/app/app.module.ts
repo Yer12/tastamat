@@ -8,6 +8,7 @@ import { SignInPage } from '../pages/signIn/signIn';
 import { EnterSmsCodePage } from "../pages/enterSmsCode/enterSmsCode";
 import { TastamatsPage } from '../pages/tastamats/tastamats';
 import { AddParcelPage } from '../pages/addParcel/addParcel';
+import { OrdersPage } from '../pages/orders/orders';
 import { ProfilePage } from '../pages/profile/profile';
 import { SmsTemplatePage } from "../pages/smsTemplate/smsTemplate";
 import { SetPasswordPage } from "../pages/setPasswordPage/setPassword";
@@ -40,6 +41,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     SignInPage,
     EnterSmsCodePage,
     AddParcelPage,
+    OrdersPage,
     ProfilePage,
     SmsTemplatePage,
     SetPasswordPage,
@@ -69,6 +71,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     EnterSmsCodePage,
     SetPasswordPage,
     AddParcelPage,
+    OrdersPage,
     ProfilePage,
     SmsTemplatePage,
     TastamatsPage,

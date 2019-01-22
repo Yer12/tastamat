@@ -16,6 +16,7 @@ export class QrScannerPage {
   option: BarcodeScannerOptions;
   presenceCode: string;
   data: {
+    type: string,
     name: string,
     phone: string,
     cellSize: string,
@@ -29,7 +30,7 @@ export class QrScannerPage {
     this.platform.registerBackButtonAction(this.popView,1);
 
     this.data = this.navParams.get('data');
-    if (!this.data) {
+    if (this.data.type === 'addParcel' && (!this.data.name || !this.data.phone || !this.data.cellSize)) {
       this.navCtrl.push(AddParcelPage);
     }
   }

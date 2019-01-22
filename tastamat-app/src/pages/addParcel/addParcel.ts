@@ -28,6 +28,7 @@ export class AddParcelPage {
 
   goToQr() {
     const data = {
+      type: 'addParcel',
       name: this.name,
       phone: 7 + this.phone,
       cellSize: this.cellSize

@@ -13,10 +13,10 @@
 
 
   <p class="tastamatApp__title">{{ 'tastamats.closer' | translate }}</p>
-  <p class="tastamats__title" *ngIf="!tastamats.list.length" [innerHtml]="'tastamats.notFound' | translate"></p>
-  <div class="tastamats__list">
-    <div *ngFor="let item of tastamats.list" id="{{item.id}}" class="tastamats__button" (click)="expand(item)">
-      <div class="tastamats__title">
+  <p class="tastamatApp__list__title" *ngIf="!tastamats.list.length" [innerHtml]="'global.notFound' | translate"></p>
+  <div class="tastamatApp__list">
+    <div *ngFor="let item of tastamats.list" id="{{item.id}}" class="tastamatApp__list__item">
+      <div class="tastamatApp__list__title" (click)="expand(item)">
         <span>{{item.address.buildingShortRu}}</span>
         <span>~{{item.location.distance}} {{ 'tastamats.meter' | translate }}</span>
       </div>
@@ -30,8 +30,8 @@
     </div>
   </div>
   <div class="tastamats__row">
-    <button (click)="loadMore()" *ngIf="showMore" class="tastamats__showMore">
-      {{ 'tastamats.showMore' | translate }}
+    <button (click)="loadMore()" *ngIf="showMore" class="tastamatApp__showMore">
+      {{ 'global.showMore' | translate }}
     </button>
   </div>
 </ion-content>

@@ -9,9 +9,22 @@
 }
 
 .toolbar-title {
+  display: flex;
+  justify-content: center;
   text-align: center;
   font-family: 'Rubik', sans-serif;
   text-transform: uppercase;
+  font-size: 14px;
+}
+
+ion-title {
+  justify-content: center;
+  & ion-select {
+    max-width: none;
+  }
+  & .select-icon-inner {
+    color: #ffffff !important;
+  }
 }
 
 .toolbar-ios {
@@ -123,5 +136,56 @@
     &::placeholder {
       color: #CFCFCF;
     }
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    &__title {
+      font-style: normal;
+      font-weight: normal;
+      line-height: normal;
+      font-size: 14px;
+      color: #797979;
+      display: flex;
+      justify-content: space-between;
+    }
+    &__item {
+      width: 100%;
+      text-align: left;
+      font-size: 16px;
+      padding: 1.5em 0 1.5em 1em;
+      background: #FFFFFF url("../assets/imgs/closed.svg") center left no-repeat;
+      overflow: hidden;
+      max-height: 64px;
+      &:not(:first-of-type) {
+        border-top: 0.25px solid #797979;
+      }
+      &.expanded {
+        max-height: none;
+        background: #FFFFFF url("../assets/imgs/opened.svg") 0 29px no-repeat;
+      }
+    }
+  }
+  &__showMore {
+    margin-top: 1.5em;
+    background: transparent;
+    font-size: 1em;
+    font-weight: 300;
+    padding: 0.5em 0.75em;
+    color: #FA631D;
+    border: 1px solid rgba(250, 99, 29, 0.5);
+    text-align: center;
+    border-radius: 50px;
+  }
+  &__headerIcon {
+    height: 24px;
+    width: 24px;
+    background: transparent;
+    position: absolute;
+    right: 5%;
+    top: calc(50% - 12px);
+    color: #fff;
+    font-size: 1.4em;
   }
 }
