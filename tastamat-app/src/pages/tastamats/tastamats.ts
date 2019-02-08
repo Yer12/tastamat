@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
-import { LoadingController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
 import { OtherService } from "../../services/other.service";
-import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-tastamats',
@@ -19,10 +17,7 @@ export class TastamatsPage {
   limit: number;
   showMore: boolean = false;
 
-  constructor(
-    private geolocation: Geolocation, private otherService: OtherService,
-    private storage: Storage, public loadingCtrl: LoadingController
-  ) {
+  constructor(private geolocation: Geolocation, private otherService: OtherService) {
     this.limit = screen.height
       ? Math.round((screen.height - 300)/64)
       : 5;
@@ -33,19 +28,13 @@ export class TastamatsPage {
   }
 
   getLocation(refresh) {
-    let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-    loader.present();
-    this.geolocation.getCurrentPosition({ timeout: 30000, enableHighAccuracy: true })
+    this.geolocation.getCurrentPosition({ timeout: 3000, enableHighAccuracy: true })
       .then((resp) => {
         this.lat = resp.coords.latitude;
         this.lng = resp.coords.longitude;
-        this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh).then(
-          () => loader.dismiss(),
-          () => loader.dismiss()
-        );
+        this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh);
       })
       .catch((error) => {
-        loader.dismiss();
         console.log('Error getting location', error);
       });
   }
@@ -59,29 +48,18 @@ export class TastamatsPage {
   }
 
   async getTastamats(lat, lng, refresh) {
-    let promise = new Promise((resolve, reject) => {
-      this.storage.get('token').then((token) => {
-        if (token) {
-          this.otherService.getTastamats(token, lat, lng, this.page, this.limit).subscribe(
-            async response => {
+    this.otherService.getTastamats(lat, lng, this.page, this.limit).subscribe(
+      async response => {
 
-              if (this.tastamats.list.length && !refresh)
-                response.list.forEach(t => { this.tastamats.list.push(t); });
-              else
-                this.tastamats = await response;
+        if (this.tastamats.list.length && !refresh)
+          response.list.forEach(t => { this.tastamats.list.push(t); });
+        else
+          this.tastamats = await response;
 
-              this.showMore = !(response.count === this.tastamats.list.length);
-              resolve();
-            },
-            error => {
-              console.log(error);
-              this.tastamats.list = [];
-              reject();
-            }
-          );
-        }
-      });
-    });
+        this.showMore = !(response.count === this.tastamats.list.length);
+      },
+      error => this.tastamats.list = []
+    );
   }
 
   async loadMore() {

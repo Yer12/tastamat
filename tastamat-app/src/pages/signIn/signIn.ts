@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingController, NavController, Platform } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { AlertController } from 'ionic-angular';
 import { TranslateService } from "@ngx-translate/core";
@@ -27,8 +27,7 @@ export class SignInPage {
     private alertCtrl: AlertController,
     private translate: TranslateService,
     private smsService: SmsService,
-    private authService: AuthService,
-    private loadingCtrl: LoadingController
+    private authService: AuthService
   ) {
     this.platform.registerBackButtonAction(() => {},1);
   }
@@ -36,12 +35,9 @@ export class SignInPage {
   checkNumber(element) {
     if (this.phone.length === 10) {
       element.blur();
-      let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-      loader.present();
-
       this.authService.checkNumber(this.phone).subscribe(
-        response => { this.exists = response.exists; loader.dismiss(); },
-        error => { console.log(error); loader.dismiss(); }
+        response => { this.exists = response.exists; },
+        error => { console.log(error); }
       );
     }
   }
@@ -77,21 +73,14 @@ export class SignInPage {
   };
 
   async signIn() {
-    let loader = this.loadingCtrl.create({
-      spinner: 'crescent'
-    });
-
-    loader.present();
     this.authService.signIn({phone: 7 + this.phone, password: this.password}).subscribe(
       async response => {
-        loader.dismiss();
         await this.storage.set('token', response.token);
         this.storage.set('user', response.user);
         this.navCtrl.push(TabsPage);
       },
       error => {
         console.log(error.error);
-        loader.dismiss();
         let alert = this.alertCtrl.create({
           title: this.translate.instant('signIn.incorrectPassword'),
           buttons: [

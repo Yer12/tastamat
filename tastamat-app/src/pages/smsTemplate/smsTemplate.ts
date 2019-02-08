@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingController, NavController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ProfileService } from "../../services/profile.service";
 
@@ -18,7 +18,6 @@ export class SmsTemplatePage {
     public navCtrl: NavController,
     private storage: Storage,
     private profileService: ProfileService,
-    private loadingCtrl: LoadingController
   ) {}
 
   ionViewWillEnter() {
@@ -39,11 +38,9 @@ export class SmsTemplatePage {
   }
 
   save() {
-    let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-    loader.present();
     this.profileService.changeSmsTemplate({id: this.profile.id, template: this.profile.template}).subscribe(
-      res => { this.profile = res; loader.dismiss(); },
-      err => { console.log(err); loader.dismiss() }
+      res => this.profile = res,
+      err => console.log(err)
     )
   }
 

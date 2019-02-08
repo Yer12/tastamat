@@ -20,7 +20,7 @@
         {{ 'profile.tg' | translate }}
       </p>
     </div>
-    <button class="profile__balance__btn" [disabled]="true">
+    <button class="profile__balance__btn" (click)="fillWallet()">
       {{ 'profile.fillUp' | translate }}
     </button>
   </div>

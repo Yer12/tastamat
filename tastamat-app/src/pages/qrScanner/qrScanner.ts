@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { AlertController, LoadingController, NavController, NavParams, Platform} from 'ionic-angular';
+import { AlertController, NavController, NavParams, Platform} from 'ionic-angular';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { TranslateService } from "@ngx-translate/core";
-import { Storage } from '@ionic/storage';
 import { OtherService } from "../../services/other.service";
 import { ProfilePage } from "../profile/profile";
 import { AddParcelPage } from "../addParcel/addParcel";
@@ -24,8 +23,8 @@ export class QrScannerPage {
 
   constructor(
     public navCtrl: NavController, private navParams: NavParams, public platform: Platform,
-    private barcodeScanner: BarcodeScanner, private loadingCtrl: LoadingController, private alertCtrl: AlertController,
-    private translate: TranslateService, private otherService: OtherService, private storage: Storage
+    private barcodeScanner: BarcodeScanner, private alertCtrl: AlertController,
+    private translate: TranslateService, private otherService: OtherService
   ) {
     this.platform.registerBackButtonAction(this.popView,1);
 
@@ -85,50 +84,42 @@ export class QrScannerPage {
   }
 
   openCell(data) {
-    this.storage.get('token').then((token) => {
-      if (token) {
-        let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-        loader.present();
-        this.otherService.openCell(token, data).subscribe(
-          response => {
-            loader.dismiss();
-            let alert = this.alertCtrl.create({
-              subTitle: this.translate.instant('qrScanner.cellOpened'),
-              buttons: [
-                {
-                  text: this.translate.instant('qrScanner.ok'),
-                  handler: () => {
-                    alert.dismiss();
-                    this.navCtrl.push(ProfilePage);
-                    return false;
-                  }
-                }
-              ]
-            });
-            alert.present();
-          },
-          error => {
-            loader.dismiss();
-            console.log(error);
-            const err = JSON.parse(error.error.message);
-            let alert = this.alertCtrl.create({
-              subTitle: err[this.translate.getDefaultLang()],
-              buttons: [
-                {
-                  text: this.translate.instant('qrScanner.ok'),
-                  handler: () => {
-                    alert.dismiss();
-                    this.popView();
-                    return false;
-                  }
-                }
-              ]
-            });
-            alert.present();
-          }
-        );
+    this.otherService.openCell(data).subscribe(
+      response => {
+        let alert = this.alertCtrl.create({
+          subTitle: this.translate.instant('qrScanner.cellOpened'),
+          buttons: [
+            {
+              text: this.translate.instant('qrScanner.ok'),
+              handler: () => {
+                alert.dismiss();
+                this.navCtrl.push(ProfilePage);
+                return false;
+              }
+            }
+          ]
+        });
+        alert.present();
+      },
+      error => {
+        console.log(error);
+        const err = JSON.parse(error.error.message);
+        let alert = this.alertCtrl.create({
+          subTitle: err[this.translate.getDefaultLang()],
+          buttons: [
+            {
+              text: this.translate.instant('qrScanner.ok'),
+              handler: () => {
+                alert.dismiss();
+                this.popView();
+                return false;
+              }
+            }
+          ]
+        });
+        alert.present();
       }
-    });
+    );
   }
 
 

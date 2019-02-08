@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { LoadingController, NavController } from 'ionic-angular';
-import { Storage } from "@ionic/storage";
+import { NavController } from 'ionic-angular';
 import { ProfilePage } from "../profile/profile";
-import {QrScannerPage} from "../qrScanner/qrScanner";
+import { QrScannerPage } from "../qrScanner/qrScanner";
 
 @Component({
   selector: 'page-orders',
@@ -16,11 +15,7 @@ export class OrdersPage {
   showMore: boolean = false;
   status: string = 'current';
 
-  constructor(
-    public navCtrl: NavController,
-    private storage: Storage,
-    public loadingCtrl: LoadingController
-  ) {
+  constructor(public navCtrl: NavController) {
     // this.limit = screen.height
     //   ? Math.round((screen.height - 300)/64)
     //   : 5;
@@ -39,22 +34,13 @@ export class OrdersPage {
   }
 
   getOrders(refresh) {
-    this.storage.get('token').then(async token => {
-      if (token) {
-        let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-        loader.present();
+    this.orders = [
+      {id: 1, phone: '+7 777 642 03 44', date: new Date, rating: 3, status: 'finished', recipient: 'Тимур', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
+      {id: 2, phone: '+7 701 220 28 21', date: new Date, rating: 4, status: 'current', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
+      {id: 3, phone: '+7 701 546 25 84', date: new Date, rating: 5, status: 'finished', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}}
+    ];
 
-        this.orders = [
-          {id: 1, phone: '+7 777 642 03 44', date: new Date, rating: 3, status: 'finished', recipient: 'Тимур', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
-          {id: 2, phone: '+7 701 220 28 21', date: new Date, rating: 4, status: 'current', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
-          {id: 3, phone: '+7 701 546 25 84', date: new Date, rating: 5, status: 'finished', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}}
-        ];
-
-        this.sort(this.status);
-
-        loader.dismiss();
-      }
-    });
+    this.sort(this.status);
   }
 
   goToQr() {

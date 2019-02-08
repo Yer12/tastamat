@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {AlertController, LoadingController, NavController, NavParams} from 'ionic-angular';
+import { AlertController, NavController, NavParams } from 'ionic-angular';
 import { SmsService } from "../../services/sms.service";
-import {SetPasswordPage} from "../setPasswordPage/setPassword";
-import {TranslateService} from "@ngx-translate/core";
+import { SetPasswordPage } from "../setPasswordPage/setPassword";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'enterSmsCode-page',
@@ -29,7 +29,6 @@ export class EnterSmsCodePage {
     private smsService: SmsService,
     private alertCtrl: AlertController,
     private translate: TranslateService,
-    private loadingCtrl: LoadingController
 
   ) {
     this.data = this.navParams.get('data');
@@ -65,15 +64,11 @@ export class EnterSmsCodePage {
     if (this.smsCode1 && this.smsCode2 && this.smsCode3 && this.smsCode4) {
       this.data.code = this.smsCode1 + this.smsCode2 + this.smsCode3 + this.smsCode4;
 
-      let loader = this.loadingCtrl.create({ spinner: 'crescent' });
-      loader.present();
       this.smsService.confirmCode(this.data).subscribe(
         response => {
-          loader.dismiss();
           this.navCtrl.push(SetPasswordPage, {data: this.data})
         },
         error => {
-          loader.dismiss();
           const err = JSON.parse(error.error.message);
           let alert = this.alertCtrl.create({
             subTitle: err[this.translate.getDefaultLang()],

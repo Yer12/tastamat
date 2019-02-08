@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
 import { SignInPage } from "../signIn/signIn";
 import { SmsTemplatePage } from "../smsTemplate/smsTemplate";
 import { ProfileService } from "../../services/profile.service";
@@ -19,7 +20,8 @@ export class ProfilePage {
   constructor(
     public navCtrl: NavController,
     private storage: Storage,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private iab: InAppBrowser
   ) {
     this.storage.get('profile').then(profile => {
       if (profile) { this.profile = profile; }
@@ -57,6 +59,20 @@ export class ProfilePage {
 
   goTo() {
     this.navCtrl.push(SmsTemplatePage);
+  }
+
+  fillWallet() {
+    const option: InAppBrowserOptions = {
+      zoom: 'no',
+      hardwareback: 'no'
+    };
+    const browser = this.iab.create('https://ionicframework.com/', '_self', option);
+
+    browser.on('loadstart').subscribe(event => {
+      if ((event.url).indexOf("http://localhost/callback") > -1) {
+        browser.close();
+      }
+    });
   }
 
   async signOut() {

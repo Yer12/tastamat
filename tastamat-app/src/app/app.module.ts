@@ -20,6 +20,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from "@ionic-native/globalization";
 import { Geolocation } from '@ionic-native/geolocation';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -30,6 +31,8 @@ import { SmsService } from "../services/sms.service";
 import { AuthService } from "../services/auth.service";
 import { OtherService } from "../services/other.service";
 import { ProfileService } from "../services/profile.service";
+import { InterceptorModule } from "../providers/interceptors/interceptor";
+import { LoaderProvider } from "../providers/loader.provider";
 
 export function setTranslateLoader(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, '../assets/i18n/', '.json');
@@ -53,6 +56,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpClientModule,
+    InterceptorModule,
     IonicStorageModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
@@ -84,10 +88,12 @@ export function setTranslateLoader(httpClient: HttpClient) {
     Globalization,
     Geolocation,
     BarcodeScanner,
+    InAppBrowser,
     SmsService,
     AuthService,
     OtherService,
     ProfileService,
+    LoaderProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
