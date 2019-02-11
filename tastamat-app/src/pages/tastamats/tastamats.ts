@@ -64,7 +64,7 @@ export class TastamatsPage {
 
   async loadMore() {
     await this.page++;
-    this.getLocation(false);
+    this.getTastamats(this.lat, this.lng, false);
   }
 
   expand(item) {

@@ -1,22 +1,22 @@
 tabs {
-  .tab-button {
-    &:nth-of-type(2) {
-      background: #FA671D;
-      border: 3px solid #FFFFFF;
-      box-sizing: border-box;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
-      border-radius: 50%;
-      flex: none;
-      width: 55px;
-      height: 55px;
-      margin-top: -24px;
-      color: #fff !important;
-      & .tab-button-icon {
-        color: #fff !important;
-      }
-    }
-  }
+  //.tab-button {
+  //  &:nth-of-type(2) {
+  //    background: #FA671D;
+  //    border: 3px solid #FFFFFF;
+  //    box-sizing: border-box;
+  //    -webkit-border-radius: 50%;
+  //    -moz-border-radius: 50%;
+  //    border-radius: 50%;
+  //    flex: none;
+  //    width: 55px;
+  //    height: 55px;
+  //    margin-top: -24px;
+  //    color: #fff !important;
+  //    & .tab-button-icon {
+  //      color: #fff !important;
+  //    }
+  //  }
+  //}
   .tab-button-text {
     text-transform: uppercase !important;
   }

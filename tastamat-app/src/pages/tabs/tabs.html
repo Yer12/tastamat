@@ -2,8 +2,12 @@
   <ion-tab [root]="tab1Root" tabTitle="{{ 'tabs.tastamats' | translate }}"
            tabIcon="pin" tabsHideOnSubPages="true"></ion-tab>
 
-  <ion-tab [root]="tab2Root" tabTitle="" tabIcon="add" tabsHideOnSubPages="true"></ion-tab>
+  <ion-tab [root]="tab2Root" tabTitle="{{ 'tabs.drop' | translate }}"
+           tabIcon="add" tabsHideOnSubPages="true"></ion-tab>
 
-  <ion-tab [root]="tab3Root" tabTitle="{{ 'tabs.profile' | translate }}"
+  <ion-tab [root]="tab3Root" tabTitle="{{ 'tabs.orders' | translate }}"
+           tabIcon="list" tabsHideOnSubPages="true"></ion-tab>
+
+  <ion-tab [root]="tab4Root" tabTitle="{{ 'tabs.profile' | translate }}"
            tabIcon="person" tabsHideOnSubPages="true"></ion-tab>
 </ion-tabs>

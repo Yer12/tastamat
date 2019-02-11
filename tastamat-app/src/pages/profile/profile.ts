@@ -23,9 +23,7 @@ export class ProfilePage {
     private profileService: ProfileService,
     private iab: InAppBrowser
   ) {
-    this.storage.get('profile').then(profile => {
-      if (profile) { this.profile = profile; }
-    });
+    this.storage.get('profile').then(profile => {if (profile) { this.profile = profile; }});
   }
 
   ionViewWillEnter() {
@@ -62,15 +60,17 @@ export class ProfilePage {
   }
 
   fillWallet() {
-    const option: InAppBrowserOptions = {
+    const options: InAppBrowserOptions = {
       zoom: 'no',
-      hardwareback: 'no'
+      hardwareback: 'no',
+      location: 'no'
     };
-    const browser = this.iab.create('https://ionicframework.com/', '_self', option);
-
+    const browser = this.iab.create('https://ionicframework.com/', '_self', options);
     browser.on('loadstart').subscribe(event => {
-      if ((event.url).indexOf("http://localhost/callback") > -1) {
-        browser.close();
+      console.log(event.url);
+      if (event.url === 'https://ionicframework.com/getting-started') {
+        console.log('close!');
+        window.history.back();
       }
     });
   }
