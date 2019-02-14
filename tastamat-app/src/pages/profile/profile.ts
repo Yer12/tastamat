@@ -59,7 +59,13 @@ export class ProfilePage {
   }
 
   fillWallet() {
-    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'drop' });
+    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'fillUp' });
+    myModal.present();
+    myModal.onWillDismiss(data => this.getProfileInfo())
+  }
+
+  showHistory() {
+    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'history' });
     myModal.present();
     myModal.onWillDismiss(data => this.getProfileInfo())
   }

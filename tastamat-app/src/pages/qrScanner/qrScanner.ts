@@ -5,6 +5,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { OtherService } from "../../services/other.service";
 import { ProfilePage } from "../profile/profile";
 import { AddParcelPage } from "../addParcel/addParcel";
+import {OrdersPage} from "../orders/orders";
 
 @Component({
   selector: 'qrScanner-page',
@@ -15,6 +16,7 @@ export class QrScannerPage {
   option: BarcodeScannerOptions;
   presenceCode: string;
   data: {
+    id: number,
     type: string,
     name: string,
     phone: string,
@@ -48,79 +50,89 @@ export class QrScannerPage {
       showFlipCameraButton: true,
       showTorchButton: true
     };
-    this.barcodeScanner.scan(this.option).then(barcodeData => {
-      this.scannedData = barcodeData;
-      const link = barcodeData && barcodeData.text;
-      if (link && link.toLowerCase().indexOf('2qr.kz') > -1) {
-        const presenceCode = link.split('/');
-        this.presenceCode = presenceCode[presenceCode.length - 1];
 
-        this.openCell({
-          recipientName: this.data.name,
-          recipientPhone: this.data.phone,
-          size: this.data.cellSize,
-          presenceCode: this.presenceCode
-        });
-      } else if (link && link.toLowerCase().indexOf('2qr.kz') < 0) {
-        let alert = this.alertCtrl.create({
-          subTitle: this.translate.instant('qrScanner.incorrectQR'),
-          buttons: [
-            {
-              text: this.translate.instant('qrScanner.tryAgain'),
-              handler: () => {
-                alert.dismiss();
-                return false;
+    this.barcodeScanner.scan(this.option)
+      .then(async barcodeData => {
+        this.scannedData = barcodeData;
+        const link = barcodeData && barcodeData.text;
+        if (link && link.toLowerCase().indexOf('2qr.kz') > -1) {
+          const presenceCode = link.split('/');
+          this.presenceCode = await presenceCode[presenceCode.length - 1];
+
+          if (this.data.type === 'addParcel')
+            this.openCell();
+          else if (this.data.type === 'pickParcel')
+            this.withdrawnFromCell();
+
+        } else if (link && link.toLowerCase().indexOf('2qr.kz') < 0) {
+          let alert = this.alertCtrl.create({
+            subTitle: this.translate.instant('qrScanner.incorrectQR'),
+            buttons: [
+              {
+                text: this.translate.instant('qrScanner.tryAgain'),
+                handler: () => {
+                  alert.dismiss();
+                  return false;
+                }
               }
-            }
-          ]
-        });
-        alert.present();
-      } else if(barcodeData.cancelled == true) {
-        this.popView()
-      }
+            ]
+          });
+          alert.present();
+        } else if(barcodeData.cancelled == true) {
+          this.popView()
+        }
     }).catch(err => {
       console.log('Error', err);
     });
   }
 
-  openCell(data) {
+  async openCell() {
+    const data = await {
+      recipientName: this.data.name,
+      recipientPhone: this.data.phone,
+      size: this.data.cellSize,
+      presenceCode: this.presenceCode
+    };
     this.otherService.openCell(data).subscribe(
-      response => {
-        let alert = this.alertCtrl.create({
-          subTitle: this.translate.instant('qrScanner.cellOpened'),
-          buttons: [
-            {
-              text: this.translate.instant('qrScanner.ok'),
-              handler: () => {
-                alert.dismiss();
-                this.navCtrl.push(ProfilePage);
-                return false;
-              }
-            }
-          ]
-        });
-        alert.present();
-      },
-      error => {
-        console.log(error);
-        const err = JSON.parse(error.error.message);
-        let alert = this.alertCtrl.create({
-          subTitle: err[this.translate.getDefaultLang()],
-          buttons: [
-            {
-              text: this.translate.instant('qrScanner.ok'),
-              handler: () => {
-                alert.dismiss();
-                this.popView();
-                return false;
-              }
-            }
-          ]
-        });
-        alert.present();
-      }
+      res => this.cellOpenedAlert('success', null),
+      err => this.cellOpenedAlert('error', err)
     );
   }
 
+  async withdrawnFromCell() {
+    const data = await {
+      id: this.data.id,
+      locker: this.presenceCode
+    };
+    this.otherService.withdrawFromCell(data).subscribe(
+      res => this.cellOpenedAlert('success', null),
+      err => this.cellOpenedAlert('error', err)
+    )
+  }
+
+  cellOpenedAlert(type, error) {
+    const err = type === 'error' ? JSON.parse(error.error.message) : '';
+    let alert = this.alertCtrl.create({
+      subTitle: type === 'error'
+        ? err[this.translate.getDefaultLang()]
+        : this.translate.instant('qrScanner.cellOpened'),
+      buttons: [
+        {
+          text: this.translate.instant('qrScanner.ok'),
+          handler: () => {
+            alert.dismiss();
+
+            if (type === 'success')
+              this.navCtrl.push(this.data.type === 'addParcel' ? ProfilePage : OrdersPage);
+            else
+              this.popView();
+
+            return false;
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
 
 }

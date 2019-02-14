@@ -1,0 +1,32 @@
+page-payment {
+  .payment {
+    &__label {
+      font-size: 0.875rem;
+      color: #7f7f7f;
+    }
+    &__listItem {
+      display: flex;
+      flex: 1 1;
+      justify-content: space-between;
+      padding: 1em 0;
+      max-height: 64px;
+      &:not(:first-of-type) {
+        border-top: 0.25px solid #797979;
+      }
+    }
+    &__status {
+      &.IN_PROCCESS {
+        color: #7f7f7f;
+      }
+      &.APPROVED, &.CONFIRMED {
+        color: #3ec330;
+      }
+      &.EXPIRED, &.CANCELED, &.FAILED {
+        color: #c30015;
+      }
+    }
+    &__refresh {
+      background: transparent;
+    }
+  }
+}

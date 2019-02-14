@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, ViewController } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams } from 'ionic-angular';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
-import { ProfileService } from "../../services/profile.service";
+import { PaymentService } from "../../services/payment.service";
 
 @IonicPage()
 @Component({
@@ -10,15 +10,46 @@ import { ProfileService } from "../../services/profile.service";
 })
 export class PaymentPage {
   amount: number;
+  type: string;
+  page: number = 0;
+  limit: number;
+  showMore: boolean = false;
+  history = {
+    count: 0,
+    list: []
+  };
 
-  constructor(private view: ViewController, private iab: InAppBrowser, private profileService: ProfileService) {}
+  constructor(
+    private view: ViewController,
+    private iab: InAppBrowser,
+    private paymentService: PaymentService,
+    private navParams: NavParams
+  ) {
+    this.type = this.navParams.get('type');
+    this.limit = screen.height
+      ? Math.round((screen.height - 70)/64)
+      : 5;
+  }
+
+  ionViewWillEnter() {
+    if (this.type === 'history')
+      this.getPaymentHistory(true);
+  }
+
+  async doRefresh(refresher) {
+    this.page = await 0;
+    this.getPaymentHistory(true);
+    setTimeout(() => {
+      refresher.complete();
+    }, 1000);
+  }
 
   closeModal() {
     this.view.dismiss();
   }
 
   createPayment() {
-    this.profileService.fillUpWallet(this.amount).subscribe(
+    this.paymentService.fillUpWallet(this.amount).subscribe(
       res => this.openBrowser(res.url),
       err => console.log(err)
     )
@@ -37,6 +68,35 @@ export class PaymentPage {
         browser.close();
       }
     });
+  }
+
+  getPaymentHistory(refresh) {
+    this.paymentService.getPaymentHistory(this.page, this.limit).subscribe(
+      async response => {
+        if (this.history.list.length && !refresh)
+          response.list.forEach(order => { this.history.list.push(order); });
+        else
+          this.history = await response;
+
+        this.showMore = !(response.count === this.history.list.length);
+      },
+      err => console.log(err)
+    )
+  }
+
+  getCurrentStatus(id) {
+    this.paymentService.getCurrentStatus(id).subscribe(
+      res => {
+        const index = this.history.list.findIndex(item => item.id === res.id);
+        this.history.list.splice(index, 1, res);
+      },
+      err => console.log(err)
+    )
+  }
+
+  async loadMore() {
+    await this.page++;
+    this.getPaymentHistory(false);
   }
 
 }

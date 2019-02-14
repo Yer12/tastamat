@@ -15,4 +15,12 @@ export class OtherService {
     return this.http.post('http://tasta.tastamat.com/api/rest/a/orders', data)
   }
 
+  getOrders(status, page, limit): any {
+    return this.http.get(`http://tasta.tastamat.com/api/rest/a/orders?status=${status}&page=${page}&limit=${limit}`)
+  }
+
+  withdrawFromCell(data): any {
+    return this.http.put('http://tasta.tastamat.com/api/rest/a/orders/withdraw', data)
+  }
+
 }

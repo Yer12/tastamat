@@ -2,6 +2,7 @@
 
 * {
   font-family: 'Rubik', sans-serif;
+  font-size: 16px;
 }
 
 .tabbar {
@@ -33,6 +34,12 @@ ion-title {
   }
 }
 
+.tabs {
+  & .tab-button-text {
+    font-size: 1.2rem;
+  }
+}
+
 .tastamatApp {
   &__container {
     display: flex;
@@ -40,11 +47,23 @@ ion-title {
     align-items: center;
     width: 100%;
   }
+  &__col {
+    display: flex;
+    flex-direction: column;
+    &--end {
+      @extend .tastamatApp__col;
+      align-items: flex-end;
+    }
+  }
   &__row {
     display: flex;
     flex: 1;
     width: 100%;
     justify-content: flex-end;
+    &--center {
+      @extend .tastamatApp__row;
+      justify-content: center;
+    }
   }
   &__close {
     line-height: normal;
@@ -166,6 +185,9 @@ ion-title {
       color: #797979;
       display: flex;
       justify-content: space-between;
+      > span {
+        font-size: 1em;
+      }
     }
     &__item {
       width: 100%;

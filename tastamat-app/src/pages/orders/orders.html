@@ -2,13 +2,10 @@
   <ion-navbar>
     <ion-title>
       <ion-select [(ngModel)]="status" interface="popover">
-        <ion-option value="current" (ionSelect)="sort('current')">{{ 'orders.current' | translate }}</ion-option>
-        <ion-option value="finished" (ionSelect)="sort('finished')">{{ 'orders.finished' | translate }}</ion-option>
+        <ion-option value="SENT" (ionSelect)="getOrders(true)">{{ 'orders.SENT' | translate }}</ion-option>
+        <ion-option value="END" (ionSelect)="getOrders(true)">{{ 'orders.END' | translate }}</ion-option>
       </ion-select>
     </ion-title>
-    <button class="tastamatApp__headerIcon" (click)="goToProfile()">
-      <ion-icon name="person"></ion-icon>
-    </button>
   </ion-navbar>
 </ion-header>
 
@@ -17,48 +14,48 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <p class="tastamatApp__list__title" *ngIf="!filteredOrders.length" [innerHtml]="'global.notFound' | translate"></p>
+  <p class="tastamatApp__list__title" *ngIf="!orders.list.length" [innerHtml]="'global.notFound' | translate"></p>
   <div class="tastamatApp__list">
-    <div *ngFor="let item of filteredOrders" id="{{item.id+item.recipient}}" class="tastamatApp__list__item">
+    <div *ngFor="let item of orders.list" id="{{item.id+item.recipientPhone}}" class="tastamatApp__list__item">
       <div class="tastamatApp__list__title" (click)="expand(item)">
-        <span>{{item.phone}}</span>
-        <span>{{item.date | date: 'dd/MM/yy HH:mm'}}</span>
+        <span>{{item.recipientPhone}}</span>
+        <span>{{item.createDate | date: 'dd/MM/yy HH:mm'}}</span>
       </div>
       <div class="orders__info">
         <div class="orders__info__text">
-          <div class="orders__text" style="margin-bottom: 1em">
+          <div class="orders__text">
             <span class="orders__recipient">{{'orders.recipient' | translate}}</span>
-            {{item.recipient}}
+            {{item.recipientName}}
           </div>
-          <div class="orders__text">{{item.locker.name}}, {{item.locker.address}}</div>
-          <button class="orders__btn" (click)="goToQr()" *ngIf="item.status === 'current'">
+          <!--<div class="orders__text">{{item.locker.name}}, {{item.locker.address}}</div>-->
+          <button class="orders__btn" (click)="goToQr(item.id)" *ngIf="item.status === 'SENT'">
             {{'orders.pick' | translate}}
           </button>
         </div>
-        <a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="orders__info__map"
-           *ngIf="item.status === 'current'"></a>
+        <!--<a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="orders__info__map"-->
+           <!--*ngIf="item.status === 'SENT'"></a>-->
 
-        <div class="orders__stars" *ngIf="item.status === 'finished'">
-          <div class="orders__star" ngClass="{{item.rating > 0 ? ' active' : ''}}">
-            {{item.rating>0 ? '★' : '☆'}}
-          </div>
-          <div class="orders__star" ngClass="{{item.rating > 1 ? ' active' : ''}}">
-            {{item.rating>1 ? '★' : '☆'}}
-          </div>
-          <div class="orders__star" ngClass="{{item.rating > 2 ? ' active' : ''}}">
-            {{item.rating>2 ? '★' : '☆'}}
-          </div>
-          <div class="orders__star" ngClass="{{item.rating > 3 ? ' active' : ''}}">
-            {{item.rating>3 ? '★' : '☆'}}
-          </div>
-          <div class="orders__star" ngClass="{{item.rating > 4 ? ' active' : ''}}">
-            {{item.rating>4 ? '★' : '☆'}}
-          </div>
-        </div>
+        <!--<div class="orders__stars" *ngIf="item.status === 'END'">-->
+          <!--<div class="orders__star" ngClass="{{item.rating > 0 ? ' active' : ''}}">-->
+            <!--{{item.rating>0 ? '★' : '☆'}}-->
+          <!--</div>-->
+          <!--<div class="orders__star" ngClass="{{item.rating > 1 ? ' active' : ''}}">-->
+            <!--{{item.rating>1 ? '★' : '☆'}}-->
+          <!--</div>-->
+          <!--<div class="orders__star" ngClass="{{item.rating > 2 ? ' active' : ''}}">-->
+            <!--{{item.rating>2 ? '★' : '☆'}}-->
+          <!--</div>-->
+          <!--<div class="orders__star" ngClass="{{item.rating > 3 ? ' active' : ''}}">-->
+            <!--{{item.rating>3 ? '★' : '☆'}}-->
+          <!--</div>-->
+          <!--<div class="orders__star" ngClass="{{item.rating > 4 ? ' active' : ''}}">-->
+            <!--{{item.rating>4 ? '★' : '☆'}}-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
   </div>
-  <div class="orders__row">
+  <div class="tastamatApp__row--center">
     <button (click)="loadMore()" *ngIf="showMore" class="tastamatApp__showMore">
       {{ 'global.showMore' | translate }}
     </button>

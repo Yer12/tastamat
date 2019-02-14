@@ -2,23 +2,26 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ProfilePage } from "../profile/profile";
 import { QrScannerPage } from "../qrScanner/qrScanner";
+import { OtherService } from "../../services/other.service";
 
 @Component({
   selector: 'page-orders',
   templateUrl: 'orders.html'
 })
 export class OrdersPage {
-  orders = [];
-  filteredOrders = [];
+  orders = {
+    count: 0,
+    list: []
+  };
   page: number = 0;
   limit: number;
   showMore: boolean = false;
-  status: string = 'current';
+  status: string = 'SENT';
 
-  constructor(public navCtrl: NavController) {
-    // this.limit = screen.height
-    //   ? Math.round((screen.height - 300)/64)
-    //   : 5;
+  constructor(public navCtrl: NavController, private otherService: OtherService) {
+    this.limit = screen.height
+      ? Math.round((screen.height - 300)/64)
+      : 5;
   }
 
   ionViewDidLoad() {
@@ -34,27 +37,25 @@ export class OrdersPage {
   }
 
   getOrders(refresh) {
-    this.orders = [
-      {id: 1, phone: '+7 777 642 03 44', date: new Date, rating: 3, status: 'finished', recipient: 'Тимур', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
-      {id: 2, phone: '+7 701 220 28 21', date: new Date, rating: 4, status: 'current', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}},
-      {id: 3, phone: '+7 701 546 25 84', date: new Date, rating: 5, status: 'finished', recipient: 'Арман', locker: {name: 'ЖК “Лазурный квартал”', address: 'Сарайшык 7/3'}}
-    ];
+    this.otherService.getOrders(this.status, this.page, this.limit).subscribe(
+      async response => {
+        if (this.orders.list.length && !refresh)
+          response.list.forEach(order => { this.orders.list.push(order); });
+        else
+          this.orders = await response;
 
-    this.sort(this.status);
+        this.showMore = !(response.count === this.orders.list.length);
+      },
+      err => console.log(err)
+    );
   }
 
-  goToQr() {
+  goToQr(id) {
     const data = {
-      type: 'pickParcel'
+      type: 'pickParcel',
+      id: id
     };
     this.navCtrl.push(QrScannerPage, {data: data})
-  }
-
-  sort(value: string) {
-    this.status = value;
-    this.filteredOrders = this.orders.filter(o => {
-      return o.status === value
-    })
   }
 
   async loadMore() {
@@ -67,7 +68,7 @@ export class OrdersPage {
   }
 
   expand(item) {
-    const button = document.getElementById(item.id+item.recipient);
+    const button = document.getElementById(item.id+item.recipientPhone);
     if (button.className.indexOf('expanded') > -1) {
       button.classList.remove('expanded');
     } else {

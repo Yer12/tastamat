@@ -1,18 +1,18 @@
 page-orders {
   .orders {
-    &__row {
-      display: flex;
-      flex: 1;
-      justify-content: center;
-    }
     &__info {
       display: flex;
       margin-top: 1.5em;
       &__text {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        justify-content: space-between;
+        align-items: center;
         flex: 1;
+        &:not(:first-child) {
+          & * {
+            margin-left: 0.5rem;
+          }
+        }
       }
       &__map {
         width: 80px;
@@ -41,7 +41,6 @@ page-orders {
       line-height: normal;
       font-size: 12px;
       padding: 0.35em 3em;
-      margin-top: 1em;
       text-align: center;
       color: #FA631D;
     }

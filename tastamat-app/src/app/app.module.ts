@@ -31,6 +31,7 @@ import { SmsService } from "../services/sms.service";
 import { AuthService } from "../services/auth.service";
 import { OtherService } from "../services/other.service";
 import { ProfileService } from "../services/profile.service";
+import { PaymentService } from "../services/payment.service";
 import { InterceptorModule } from "../providers/interceptors/interceptor";
 import { LoaderProvider } from "../providers/loader.provider";
 
@@ -93,6 +94,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     AuthService,
     OtherService,
     ProfileService,
+    PaymentService,
     LoaderProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

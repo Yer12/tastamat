@@ -44,7 +44,7 @@ export class MyApp {
         .catch(e => console.log(e));
 
       if (platform.is('android')) {
-        statusBar.backgroundColorByHexString('#FA671D');
+        statusBar.backgroundColorByHexString('#cc5418');
       } else {
         statusBar.styleDefault();
       }
