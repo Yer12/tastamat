@@ -104,6 +104,11 @@ ion-title {
         padding: 14px 18px 14px 46px;
       }
     }
+    &--rightIcon {
+      & input {
+        padding: 14px 46px 14px 18px;
+      }
+    }
     &--search {
       @extend .tastamatApp__input;
       background: #FFFFFF url("../assets/icon/search.svg") 95% 50% no-repeat;
@@ -121,6 +126,18 @@ ion-title {
       @extend .tastamatApp__input;
       @extend .tastamatApp__input--leftIcon;
       background: #FFFFFF url("../assets/icon/phone.svg") 14px 50% no-repeat;
+    }
+    &--amount {
+      @extend .tastamatApp__input;
+      @extend .tastamatApp__input--rightIcon;
+      margin-bottom: 1.5em;
+      &:after {
+        content: attr(aria-label);
+        position: absolute;
+        height: 16px;
+        right: 16px;
+        top: calc(50% - 10px);
+      }
     }
   }
   &__input2 {

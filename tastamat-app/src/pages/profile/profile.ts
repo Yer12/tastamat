@@ -61,7 +61,7 @@ export class ProfilePage {
   fillWallet() {
     const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'drop' });
     myModal.present();
-    myModal.onWillDismiss(data => {})
+    myModal.onWillDismiss(data => this.getProfileInfo())
   }
 
   async signOut() {

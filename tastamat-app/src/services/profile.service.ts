@@ -12,4 +12,10 @@ export class ProfileService {
   changeSmsTemplate(data): any {
     return this.http.put('http://tasta.tastamat.com/api/rest/a/profiles/template', data);
   }
+
+  fillUpWallet(amount): any {
+    return this.http.post(' http://tasta.tastamat.com/api/rest/a/payment', {
+      amount: amount
+    })
+  }
 }

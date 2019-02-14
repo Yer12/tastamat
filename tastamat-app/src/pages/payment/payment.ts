@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
-import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
+import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
+import { ProfileService } from "../../services/profile.service";
 
 @IonicPage()
 @Component({
@@ -8,25 +9,32 @@ import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/
   templateUrl: 'payment.html',
 })
 export class PaymentPage {
-  amount: string;
+  amount: number;
 
-  constructor(private view: ViewController, private iab: InAppBrowser) {}
+  constructor(private view: ViewController, private iab: InAppBrowser, private profileService: ProfileService) {}
 
   closeModal() {
     this.view.dismiss();
   }
 
-  openBrowser() {
+  createPayment() {
+    this.profileService.fillUpWallet(this.amount).subscribe(
+      res => this.openBrowser(res.url),
+      err => console.log(err)
+    )
+  }
+
+  openBrowser(url) {
+    this.closeModal();
     const options: InAppBrowserOptions = {
       zoom: 'no',
       hardwareback: 'no',
-      location: 'yes'
+      location: 'no'
     };
-    const browser = this.iab.create('https://ionicframework.com/', '_blank', options);
+    const browser = this.iab.create(url, '_blank', options);
     browser.on('loadstart').subscribe(event => {
-      if (event.url === 'https://ionicframework.com/appflow') {
+      if (event.url === 'https://tastamat.kz/') {
         browser.close();
-        this.closeModal();
       }
     });
   }

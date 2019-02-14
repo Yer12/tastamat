@@ -11,10 +11,10 @@
 
 
 <ion-content padding>
-  <form (submit)="openBrowser()" style="margin: 3em 0">
-    <ion-input type="tel" [(ngModel)]="amount" class="tastamatApp__input--textCenter"
+  <form (submit)="createPayment()" style="margin: 3em 0">
+    <ion-input type="tel" [(ngModel)]="amount" class="tastamatApp__input--amount" aria-label="{{ 'payment.currency' | translate }}"
                placeholder="{{ 'payment.amount' | translate }}" [ngModelOptions]="{standalone: true}"></ion-input>
-    <button type="submit" class="tastamatApp__primaryButton" >
+    <button type="submit" class="tastamatApp__primaryButton" [disabled]="!amount || amount < 1">
       {{ 'payment.accept' | translate }}
     </button>
   </form>
