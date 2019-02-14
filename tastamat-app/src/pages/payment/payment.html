@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'payment.title' | translate }}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form (submit)="openBrowser()" style="margin: 3em 0">
+    <ion-input type="tel" [(ngModel)]="amount" class="tastamatApp__input--textCenter"
+               placeholder="{{ 'payment.amount' | translate }}" [ngModelOptions]="{standalone: true}"></ion-input>
+    <button type="submit" class="tastamatApp__primaryButton" >
+      {{ 'payment.accept' | translate }}
+    </button>
+  </form>
+</ion-content>

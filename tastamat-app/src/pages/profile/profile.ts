@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Modal, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser/ngx';
 import { SignInPage } from "../signIn/signIn";
 import { SmsTemplatePage } from "../smsTemplate/smsTemplate";
 import { ProfileService } from "../../services/profile.service";
@@ -21,7 +20,7 @@ export class ProfilePage {
     public navCtrl: NavController,
     private storage: Storage,
     private profileService: ProfileService,
-    private iab: InAppBrowser
+    private modal: ModalController
   ) {
     this.storage.get('profile').then(profile => {if (profile) { this.profile = profile; }});
   }
@@ -60,19 +59,9 @@ export class ProfilePage {
   }
 
   fillWallet() {
-    const options: InAppBrowserOptions = {
-      zoom: 'no',
-      hardwareback: 'no',
-      location: 'no'
-    };
-    const browser = this.iab.create('https://ionicframework.com/', '_self', options);
-    browser.on('loadstart').subscribe(event => {
-      console.log(event.url);
-      if (event.url === 'https://ionicframework.com/getting-started') {
-        console.log('close!');
-        window.history.back();
-      }
-    });
+    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'drop' });
+    myModal.present();
+    myModal.onWillDismiss(data => {})
   }
 
   async signOut() {
