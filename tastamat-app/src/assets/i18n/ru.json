@@ -62,6 +62,7 @@
     "paymentHistory": "История платежей"
   },
   "smsTemplate": {
+    "title": "Шаблон SMS",
     "currentSmsExample": "Пример текущего сообщения:",
     "editSms": "Редактировать тело сообщения",
     "save": "Сохранить"

@@ -1,4 +1,7 @@
 enterSmsCode-page {
+  .scroll-content {
+    padding-top: 2.5em !important;
+  }
   .smsCode {
     &__row {
       display: flex;

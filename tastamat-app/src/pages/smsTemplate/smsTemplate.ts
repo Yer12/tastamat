@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { IonicPage, ViewController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { ProfileService } from "../../services/profile.service";
 
+@IonicPage()
 @Component({
   selector: 'smsTemplate-page',
   templateUrl: 'smsTemplate.html'
@@ -15,7 +16,7 @@ export class SmsTemplatePage {
   template: string = '';
 
   constructor(
-    public navCtrl: NavController,
+    private view: ViewController,
     private storage: Storage,
     private profileService: ProfileService,
   ) {}
@@ -30,7 +31,7 @@ export class SmsTemplatePage {
   }
 
   popView(){
-    this.navCtrl.pop();
+    this.view.dismiss();
   }
 
   changeTemplate(event) {

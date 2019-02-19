@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
-import { PaymentPage } from './payment';
+import { SmsTemplatePage } from './smsTemplate';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {HttpClient} from "@angular/common/http";
@@ -11,10 +11,10 @@ export function setTranslateLoader(httpClient: HttpClient) {
 
 @NgModule({
   declarations: [
-    PaymentPage,
+    SmsTemplatePage,
   ],
   imports: [
-    IonicPageModule.forChild(PaymentPage),
+    IonicPageModule.forChild(SmsTemplatePage),
     TranslateModule.forChild({
       loader: {
         provide: TranslateLoader,
@@ -24,4 +24,4 @@ export function setTranslateLoader(httpClient: HttpClient) {
     })
   ],
 })
-export class PaymentModule {}
+export class SmsTemplateModule {}

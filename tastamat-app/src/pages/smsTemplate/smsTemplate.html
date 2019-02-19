@@ -1,7 +1,15 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'smsTemplate.title' | translate }}</ion-title>
+    <ion-buttons end>
+      <button class="tastamatApp__close--white" (click)="popView()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
-  <div class="tastamatApp__row">
-    <button class="tastamatApp__close" (click)="popView()"><ion-icon name="close"></ion-icon></button>
-  </div>
   <div class="sms__title">{{ 'smsTemplate.currentSmsExample' | translate }}</div>
   <div class="sms__rectangle">
     <span>Уважаемый(-ая) ____!</span>

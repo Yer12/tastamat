@@ -67,11 +67,15 @@ ion-title {
   }
   &__close {
     line-height: normal;
-    font-size: 2em;
+    font-size: 1.5em;
     text-align: center;
     color: #797979;
     background: transparent;
     border: 0;
+    &--white {
+      @extend .tastamatApp__close;
+      color: #ffffff;
+    }
   }
   &__primaryButton {
     height: auto;
@@ -226,5 +230,11 @@ ion-title {
     top: calc(50% - 12px);
     color: #fff;
     font-size: 1.4em;
+  }
+}
+
+.bar-buttons-md {
+  & .tastamatApp__close {
+    font-size: 1.2em;
   }
 }

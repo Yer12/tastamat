@@ -2,7 +2,7 @@
   <ion-navbar>
     <ion-title>{{ type === 'fillUp' ?  ('payment.fillUp' | translate) : ('payment.history' | translate) }}</ion-title>
     <ion-buttons end>
-      <button ion-button (click)="closeModal()">
+      <button class="tastamatApp__close--white" (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
       </button>
     </ion-buttons>
@@ -15,7 +15,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <form (submit)="createPayment()" style="margin: 3em 0" *ngIf="type === 'fillUp'">
-    <ion-input type="tel" [(ngModel)]="amount" class="tastamatApp__input--amount" aria-label="тг."
+    <ion-input #amountInput type="tel" [(ngModel)]="amount" class="tastamatApp__input--amount" aria-label="тг."
                placeholder="{{ 'payment.writeAmount' | translate }}" [ngModelOptions]="{standalone: true}"></ion-input>
     <button type="submit" class="tastamatApp__primaryButton" [disabled]="!amount || amount < 1">
       {{ 'payment.accept' | translate }}

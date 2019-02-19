@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { IonicPage, ViewController, NavParams } from 'ionic-angular';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 import { PaymentService } from "../../services/payment.service";
@@ -19,6 +19,8 @@ export class PaymentPage {
     list: []
   };
 
+  @ViewChild('amountInput') amountInput;
+
   constructor(
     private view: ViewController,
     private iab: InAppBrowser,
@@ -29,6 +31,11 @@ export class PaymentPage {
     this.limit = screen.height
       ? Math.round((screen.height - 70)/64)
       : 5;
+  }
+
+  ngAfterViewChecked() {
+    if (this.type === 'fillUp')
+      this.amountInput.setFocus()
   }
 
   ionViewWillEnter() {
