@@ -13,14 +13,17 @@ import { ProfilePage } from '../pages/profile/profile';
 import { SmsTemplatePage } from "../pages/smsTemplate/smsTemplate";
 import { SetPasswordPage } from "../pages/setPasswordPage/setPassword";
 import { QrScannerPage } from "../pages/qrScanner/qrScanner";
+import { Verification_step1Page, Verification_step2Page } from "../pages/verification/verification";
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
+import { File } from "@ionic-native/file";
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Globalization } from "@ionic-native/globalization";
 import { Geolocation } from '@ionic-native/geolocation';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { Camera } from '@ionic-native/camera';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -32,13 +35,14 @@ import { AuthService } from "../services/auth.service";
 import { OtherService } from "../services/other.service";
 import { ProfileService } from "../services/profile.service";
 import { PaymentService } from "../services/payment.service";
+import { VerifyService } from "../services/verify.service";
 import { InterceptorModule } from "../providers/interceptors/interceptor";
 import { LoaderProvider } from "../providers/loader.provider";
 
 export function setTranslateLoader(httpClient: HttpClient) {
   return new TranslateHttpLoader(httpClient, '../assets/i18n/', '.json');
 }
-
+// @ts-ignore
 @NgModule({
   declarations: [
     MyApp,
@@ -51,6 +55,8 @@ export function setTranslateLoader(httpClient: HttpClient) {
     SetPasswordPage,
     TastamatsPage,
     QrScannerPage,
+    Verification_step1Page,
+    Verification_step2Page,
     TabsPage
   ],
   imports: [
@@ -81,6 +87,8 @@ export function setTranslateLoader(httpClient: HttpClient) {
     SmsTemplatePage,
     TastamatsPage,
     QrScannerPage,
+    Verification_step1Page,
+    Verification_step2Page,
     TabsPage
   ],
   providers: [
@@ -90,11 +98,14 @@ export function setTranslateLoader(httpClient: HttpClient) {
     Geolocation,
     BarcodeScanner,
     InAppBrowser,
+    Camera,
+    File,
     SmsService,
     AuthService,
     OtherService,
     ProfileService,
     PaymentService,
+    VerifyService,
     LoaderProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

@@ -1,0 +1,13 @@
+verification-page {
+  .verification {
+    &__item {
+      padding-left: 0;
+    }
+    &__footer {
+      position: fixed;
+      display: flex;
+      padding: 1em;
+      background: #ffffff;
+    }
+  }
+}

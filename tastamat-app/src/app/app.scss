@@ -91,6 +91,9 @@ ion-title {
     &:disabled {
       background: #FC935E;
     }
+    &:not(:first-of-type) {
+      margin-left: 1em;
+    }
   }
   &__title {
     font-style: normal;
@@ -230,6 +233,58 @@ ion-title {
     top: calc(50% - 12px);
     color: #fff;
     font-size: 1.4em;
+  }
+
+  &__checkbox {
+    margin-top: 24px;
+    & a {
+      text-decoration: underline;
+    }
+    & input[type='checkbox'] {
+      display: none;
+      &:checked {
+        + .signIn__checkbox__label {
+          position: relative;
+          &:after {
+            content: '';
+            display: block;
+            width: 3px;
+            height: 9px;
+            border: 2px solid #FA671D;
+            border-left-width: 0;
+            border-top-width: 0;
+            transform: rotate(45deg);
+            position: absolute;
+            left: 7px;
+            top: 3px;
+          }
+        }
+      }
+    }
+    &__label {
+      display: flex;
+      align-items: center;
+      font-style: normal;
+      font-weight: normal;
+      line-height: normal;
+      font-size: 0.75em;
+      color: #797979;
+      & a {
+        font-size: 1em;
+      }
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        background: #FFFFFF;
+        border: 1px solid #FA671D;
+        box-sizing: border-box;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 2px;
+        margin-right: 8px;
+      }
+    }
   }
 }
 

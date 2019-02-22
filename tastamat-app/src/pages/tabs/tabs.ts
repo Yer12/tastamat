@@ -4,6 +4,9 @@ import { TastamatsPage } from '../tastamats/tastamats';
 import { AddParcelPage } from '../addParcel/addParcel';
 import { OrdersPage } from '../orders/orders';
 import { ProfilePage } from '../profile/profile';
+import {Verification_step1Page} from "../verification/verification";
+import {Storage} from "@ionic/storage";
+import {NavController} from "ionic-angular";
 
 @Component({
   selector: 'tabs',
@@ -16,7 +19,10 @@ export class TabsPage {
   tab3Root = OrdersPage;
   tab4Root = ProfilePage;
 
-  constructor() {
-
+  constructor(private storage: Storage, public navCtrl: NavController) {
+    this.storage.get('user').then((user) => {
+      if (!user.verificated)
+        this.navCtrl.push(Verification_step1Page);
+    });
   }
 }

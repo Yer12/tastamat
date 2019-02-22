@@ -1,0 +1,34 @@
+<ion-content padding>
+  <ion-list>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.name' | translate}}</ion-label>
+      <ion-input [(ngModel)]="name"></ion-input>
+    </ion-item>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.surname' | translate}}</ion-label>
+      <ion-input [(ngModel)]="surname"></ion-input>
+    </ion-item>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.birthDate' | translate}}</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" [(ngModel)]="birthDate"></ion-datetime>
+    </ion-item>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.docType' | translate}}</ion-label>
+      <ion-select [(ngModel)]="docType" >
+        <ion-option value="ID_CARD">{{'verification.nationalId' | translate}}</ion-option>
+        <ion-option value="PASSPORT">{{'verification.passport' | translate}}</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.docNumber' | translate}}</ion-label>
+      <ion-input [(ngModel)]="docNumber"></ion-input>
+    </ion-item>
+    <ion-item class="verification__item">
+      <ion-label color="primary" floating>{{'verification.docExpDate' | translate}}</ion-label>
+      <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" max="2050-01-01" [(ngModel)]="docExpDate"></ion-datetime>
+    </ion-item>
+  </ion-list>
+  <button class="tastamatApp__primaryButton" (click)="verify()">
+    {{ 'verification.further' | translate }}
+  </button>
+</ion-content>

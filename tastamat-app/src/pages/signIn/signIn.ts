@@ -47,7 +47,7 @@ export class SignInPage {
       subTitle: this.translate.instant('signIn.info', {phone: this.phone}),
       buttons: [
         {
-          text: this.translate.instant('signIn.cancel'),
+          text: this.translate.instant('global.cancel'),
           handler: () => { alert.dismiss(); return false; }
         },
         {

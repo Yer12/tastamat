@@ -6,10 +6,10 @@ export class SmsService {
   constructor(private http: HttpClient) { }
 
   sendSms(phone): any {
-    return this.http.put(`http://tasta.tastamat.com/api/rest/auth/${phone}/sms`, {});
+    return this.http.put(`https://testtasta.tastamat.com/api/rest/auth/${phone}/sms`, {});
   }
 
   confirmCode(data): any {
-    return this.http.put('http://tasta.tastamat.com/api/rest/auth/confirm', data);
+    return this.http.put('https://testtasta.tastamat.com/api/rest/auth/confirm', data);
   }
 }

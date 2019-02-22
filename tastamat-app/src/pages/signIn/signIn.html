@@ -6,9 +6,9 @@
     <input type="password" class="signIn__input" [(ngModel)]="password" placeholder="{{'signIn.password'|translate}}"
            *ngIf="exists && phone.length === 10" id="passwordInput"
     />
-    <div class="signIn__checkbox" *ngIf="exists && phone.length === 10">
+    <div class="tastamatApp__checkbox" *ngIf="exists && phone.length === 10">
       <input type="checkbox" id="aggree" ([ngModel])="agree" (change)="agree = !agree">
-      <label for="aggree" class="signIn__checkbox__label" [innerHtml]="'signIn.offer' | translate"></label>
+      <label for="aggree" class="tastamatApp__checkbox__label" [innerHtml]="'signIn.offer' | translate"></label>
     </div>
     <button ion-button (click)="signIn()" class="signIn__button" [disabled]="checkForm()"
             *ngIf="exists && phone.length === 10">

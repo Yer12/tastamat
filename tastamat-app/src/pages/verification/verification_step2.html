@@ -1,0 +1,16 @@
+<ion-content padding>
+  <button class="tastamatApp__primaryButton" (click)="takePhoto('camera')">
+    {{ 'verification.uploadPhoto' | translate }}
+  </button>
+  <img src="{{photo}}" alt="">
+
+
+  <ion-footer class="verification__footer">
+    <button class="tastamatApp__primaryButton" (click)="goBackTo()">
+      {{ 'verification.back' | translate }}
+    </button>
+    <button class="tastamatApp__primaryButton" (click)="send()">
+      {{ 'verification.send' | translate }}
+    </button>
+  </ion-footer>
+</ion-content>
