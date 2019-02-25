@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import {Nav, Platform} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -9,6 +9,8 @@ import { TabsPage } from "../pages/tabs/tabs";
 import { SignInPage } from "../pages/signIn/signIn";
 import { Storage } from "@ionic/storage";
 import { Config } from "ionic-angular";
+import {Verification_step1Page} from "../pages/verification/verification";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   templateUrl: 'app.html'
@@ -16,7 +18,6 @@ import { Config } from "ionic-angular";
 
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
-  // rootPage:any = SignInPage;
 
   constructor(
     platform: Platform,
@@ -25,12 +26,25 @@ export class MyApp {
     translate: TranslateService,
     private config: Config,
     private storage: Storage,
-    private globalization: Globalization
+    private globalization: Globalization,
+    private authService: AuthService
   ) {
 
-    this.storage.get('token').then((val) => {
-      if (val) {
-        this.nav.setRoot(TabsPage);
+    this.storage.get('token').then(token => {
+      if (token) {
+        this.authService.getAccount().subscribe(
+          res => {
+            this.storage.set('user', res);
+            if (!res.verified)
+              this.nav.setRoot(Verification_step1Page);
+            else
+              this.nav.setRoot(TabsPage);
+          },
+          err => {
+            this.storage.clear();
+            this.nav.setRoot(SignInPage);
+          }
+        );
       }
       else {
         this.nav.setRoot(SignInPage);

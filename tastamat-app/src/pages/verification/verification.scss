@@ -9,5 +9,39 @@ verification-page {
       padding: 1em;
       background: #ffffff;
     }
+    &__files {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 1em;
+    }
+    &__preview {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin-top: 1em;
+      &:not(:last-of-type) {
+        margin-right: 1em;
+      }
+      > img {
+        width: 100%;
+        border-radius: 5px;
+      }
+      &__close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: -6px;
+        top: -6px;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        font-size: 12px;
+        background: #000;
+        color: #fff;
+      }
+    }
   }
 }

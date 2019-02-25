@@ -13,8 +13,8 @@ export class VerifyService {
     return this.http.post(`https://testtasta.tastamat.com/api/rest/a/users/${id}/attachments`, data);
   }
 
-  getPhoto(id): any {
-    return this.http.get(`https://testtasta.tastamat.com/api/rest/a/files/${id}/view`);
+  deletePhoto(id): any {
+    return this.http.delete(`https://testtasta.tastamat.com/api/rest/a/files/${id}`)
   }
 
 }

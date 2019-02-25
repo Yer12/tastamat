@@ -2,7 +2,11 @@
   "global": {
     "notFound": "Не найдено.<br>Потяните вниз чтобы обновить",
     "showMore": "Показать еще",
-    "cancel": "Отмена"
+    "back": "Назад",
+    "further": "Далее",
+    "cancel": "Отмена",
+    "done": "Готово",
+    "signOut": "Выйти"
   },
   "tabs": {
     "tastamats": "Тастаматы",
@@ -104,8 +108,9 @@
     }
   },
   "verification": {
-    "name": "Имя",
-    "surname": "Фамилия",
+    "title": "Верификация",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
     "birthDate": "Дата рождения",
     "docType": "Тип документа",
     "nationalId": "Удостоверение личности",
@@ -115,8 +120,6 @@
     "uploadPhoto": "Загрузить фото",
     "takePhoto": "Сделать фото",
     "openGallery": "Выбрать из галереи",
-    "back": "Назад",
-    "further": "Далее",
     "send": "Отправить"
   }
 }

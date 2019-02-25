@@ -1,34 +1,80 @@
+<ion-header>
+  <ion-navbar color="primary" hideBackButton>
+    <ion-title>{{'verification.title' | translate}}</ion-title>
+    <ion-buttons left>
+      <button ion-button icon-left (click)="signOut()">
+        <ion-icon name="arrow-back"></ion-icon>
+        {{'global.signOut' | translate}}
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
 <ion-content padding>
   <ion-list>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.name' | translate}}</ion-label>
-      <ion-input [(ngModel)]="name"></ion-input>
-    </ion-item>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.surname' | translate}}</ion-label>
-      <ion-input [(ngModel)]="surname"></ion-input>
-    </ion-item>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.birthDate' | translate}}</ion-label>
-      <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" [(ngModel)]="birthDate"></ion-datetime>
-    </ion-item>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.docType' | translate}}</ion-label>
-      <ion-select [(ngModel)]="docType" >
-        <ion-option value="ID_CARD">{{'verification.nationalId' | translate}}</ion-option>
-        <ion-option value="PASSPORT">{{'verification.passport' | translate}}</ion-option>
-      </ion-select>
-    </ion-item>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.docNumber' | translate}}</ion-label>
-      <ion-input [(ngModel)]="docNumber"></ion-input>
-    </ion-item>
-    <ion-item class="verification__item">
-      <ion-label color="primary" floating>{{'verification.docExpDate' | translate}}</ion-label>
-      <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" max="2050-01-01" [(ngModel)]="docExpDate"></ion-datetime>
-    </ion-item>
+    <form [formGroup]="step1">
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.firstName.valid && (step1.controls.firstName.dirty || submitAttempt)"
+        >
+          {{'verification.firstName' | translate}}
+        </ion-label>
+        <ion-input [(ngModel)]="firstName" formControlName="firstName" type="text"></ion-input>
+      </ion-item>
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.lastName.valid && (step1.controls.lastName.dirty || submitAttempt)"
+        >
+          {{'verification.lastName' | translate}}
+        </ion-label>
+        <ion-input [(ngModel)]="lastName" formControlName="lastName" type="text"></ion-input>
+      </ion-item>
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.birthDate.valid && (step1.controls.birthDate.dirty || submitAttempt)"
+        >
+          {{'verification.birthDate' | translate}}
+        </ion-label>
+        <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" formControlName="birthDate"
+                      [(ngModel)]="birthDate"
+                      [doneText]="'global.done' | translate"
+                      [cancelText]="'global.cancel' | translate"
+        ></ion-datetime>
+      </ion-item>
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.docType.valid && (step1.controls.docType.dirty || submitAttempt)"
+        >
+          {{'verification.docType' | translate}}
+        </ion-label>
+        <ion-select [(ngModel)]="docType" formControlName="docType">
+          <ion-option value="ID_CARD">{{'verification.nationalId' | translate}}</ion-option>
+          <ion-option value="PASSPORT">{{'verification.passport' | translate}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.docNumber.valid && (step1.controls.docNumber.dirty || submitAttempt)"
+        >
+          {{'verification.docNumber' | translate}}
+        </ion-label>
+        <ion-input [(ngModel)]="docNumber" formControlName="docNumber" type="text"></ion-input>
+      </ion-item>
+      <ion-item class="verification__item">
+        <ion-label color="primary" floating
+                   [class.invalid]="!step1.controls.docExpDate.valid && (step1.controls.docExpDate.dirty || submitAttempt)"
+        >
+          {{'verification.docExpDate' | translate}}
+        </ion-label>
+        <ion-datetime display-format="DD/MM/YYYY" pickerFormat="DD/MM/YYYY" max="2050-01-01"
+                      [(ngModel)]="docExpDate" formControlName="docExpDate"
+                      [doneText]="'global.done' | translate"
+                      [cancelText]="'global.cancel' | translate"
+        ></ion-datetime>
+      </ion-item>
+    </form>
   </ion-list>
   <button class="tastamatApp__primaryButton" (click)="verify()">
-    {{ 'verification.further' | translate }}
+    {{ 'global.further' | translate }}
   </button>
 </ion-content>

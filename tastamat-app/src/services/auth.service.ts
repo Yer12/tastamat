@@ -16,4 +16,8 @@ export class AuthService {
   signIn(data): any {
     return this.http.put('https://testtasta.tastamat.com/api/rest/auth/login', data);
   }
+
+  getAccount(): any {
+    return this.http.get('https://testtasta.tastamat.com/api/rest/a/users/current-user')
+  }
 }

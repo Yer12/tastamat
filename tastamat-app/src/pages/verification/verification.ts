@@ -6,46 +6,64 @@ import { HttpClient } from "@angular/common/http";
 import { Storage } from "@ionic/storage";
 import { LoaderProvider } from "../../providers/loader.provider";
 import { VerifyService } from "../../services/verify.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SignInPage} from "../signIn/signIn";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'verification-page',
   templateUrl: 'verification_step1.html'
 })
 export class Verification_step1Page {
-  name: string;
-  surname: string;
+  firstName: string;
+  lastName: string;
   birthDate: any;
   docType: string;
   docNumber: string;
   docExpDate: any;
+  step1: FormGroup;
+  submitAttempt: boolean = false;
+
   constructor(
     public navCtrl: NavController,
     public platform: Platform,
     private verifyService: VerifyService,
-    private storage: Storage
+    private storage: Storage,
+    public formBuilder: FormBuilder
   ) {
     this.platform.registerBackButtonAction(() => {},1);
+    this.step1 = formBuilder.group({
+      firstName: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Zа-яА-Я]*'), Validators.required])],
+      lastName: ['', Validators.compose([Validators.maxLength(30), Validators.pattern('[a-zA-Zа-яА-Я]*'), Validators.required])],
+      birthDate: ['', Validators.required],
+      docType: ['', Validators.required],
+      docNumber: ['', Validators.required],
+      docExpDate: ['', Validators.required]
+    });
+  }
+
+  async signOut() {
+    await this.storage.remove('token');
+    this.navCtrl.push(SignInPage);
   }
 
   verify() {
-    const data = {
-      firstname: this.name,
-      lastname: this.surname,
-      birthDate: new Date(this.birthDate).getTime(),
-      docType: this.docType,
-      docNumber: this.docNumber,
-      docExpDate: new Date(this.docExpDate).getTime(),
-    };
-    this.storage.get('user').then((user) => {
-      this.verifyService.sendForm(user.id, data).subscribe(
-        response => {
-          console.log(response);
-          this.navCtrl.push(Verification_step2Page);
-        },
-        err => {
-          console.log(err);
-        });
-    });
+    this.submitAttempt = true;
+    if (this.step1.valid) {
+      const data = {
+        firstname: this.firstName,
+        lastname: this.lastName,
+        birthDate: new Date(this.birthDate).getTime(),
+        docType: this.docType,
+        docNumber: this.docNumber,
+        docExpDate: new Date(this.docExpDate).getTime(),
+      };
+      this.storage.get('user').then((user) => {
+        this.verifyService.sendForm(user.id, data).subscribe(
+          response => this.navCtrl.push(Verification_step2Page),
+          err => console.log(err));
+      });
+    }
   }
 }
 
@@ -57,7 +75,8 @@ export class Verification_step1Page {
 })
 
 export class Verification_step2Page {
-  photo: any;
+  user: {};
+  userFiles: any[];
 
   constructor(
     public navCtrl: NavController,
@@ -68,8 +87,24 @@ export class Verification_step2Page {
     private storage: Storage,
     private loader: LoaderProvider,
     private verifyService: VerifyService,
+    private authService: AuthService
   ) {
     this.platform.registerBackButtonAction(() => this.navCtrl.push(Verification_step1Page),1);
+  }
+
+  ionViewDidLoad() {
+    this.updateUser();
+  }
+
+  updateUser() {
+    this.authService.getAccount().subscribe(
+      res => {
+        this.user = res;
+        this.storage.set('user', res);
+        try { this.userFiles = res.profile.files; } catch (e) {}
+      },
+      err => {}
+    );
   }
 
   takePhoto(type) {
@@ -102,36 +137,24 @@ export class Verification_step2Page {
       const formData = new FormData();
       const imgBlob = new Blob([reader.result], {type: file.type});
       formData.append('file', imgBlob, file.name);
-      this.postData(formData);
+      this.uploadImage(formData);
     };
     reader.readAsArrayBuffer(file);
   }
 
-  private postData(formData: FormData) {
-    this.uploadImage(formData).then(
-      result => this.loader.hide(),
-      err => this.loader.hide()
-    );
+  private uploadImage(formData: FormData) {
+    this.storage.get('user').then((user) => {
+      this.verifyService.uploadPhoto(user.id, formData).subscribe(
+        response => this.userFiles.push(response),
+        err => console.log(err));
+    })
   }
 
-  private uploadImage(formData) {
-    return new Promise((resolve, reject) => {
-      this.storage.get('user').then((user) => {
-        this.verifyService.uploadPhoto(user.id, formData).subscribe(
-          response => {
-            // this.photo = `https://testtasta.tastamat.com/api/rest/a/files/${response.id}/view`;
-            // this.verifyService.getPhoto(response.id).subscribe(
-            //   response => console.log(response),
-            //   err => console.log(err)
-            // );
-            resolve(response)
-          },
-          err => {
-            console.log(err);
-            reject(err);
-          });
-      })
-    })
+  deletePhoto(id) {
+    this.verifyService.deletePhoto(id).subscribe(
+      res => this.updateUser(),
+      err => console.log(err)
+    );
   }
 
   goBackTo() {

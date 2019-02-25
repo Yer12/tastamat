@@ -78,6 +78,10 @@ ion-title {
     }
   }
   &__primaryButton {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: center;
     height: auto;
     background: #FA631D;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
@@ -87,7 +91,6 @@ ion-title {
     font-weight: bold;
     color: #FFFFFF;
     width: 100%;
-    text-align: center;
     &:disabled {
       background: #FC935E;
     }
@@ -291,5 +294,31 @@ ion-title {
 .bar-buttons-md {
   & .tastamatApp__close {
     font-size: 1.2em;
+  }
+}
+
+.invalid {
+  display: flex;
+  align-items: center;
+  color: red !important;
+  &:after {
+    content: '!';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f53d3d;
+    width: 16px;
+    font-size: 12px;
+    height: 16px;
+    color: #ffffff;
+    border-radius: 50%;
+    text-align: center;
+    margin-left: 1em;
+  }
+}
+
+ion-item {
+  .item-inner {
+    padding-right: 0 !important;
   }
 }

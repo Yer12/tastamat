@@ -5,21 +5,18 @@ import { LoadingController } from 'ionic-angular';
 @Injectable()
 export class LoaderProvider {
 
-  constructor(public loadingCtrl: LoadingController) {}
-
   loading: any;
 
-  create() {
-    this.loading = this.loadingCtrl.create({ spinner: 'crescent' });
-  }
+  constructor(public loadingCtrl: LoadingController) {}
 
   show() {
-    this.create();
+    this.loading = this.loadingCtrl.create({ spinner: 'crescent' });
     this.loading.present();
   }
 
   hide() {
-    this.loading.dismiss();
+    if (this.loading)
+      this.loading.dismissAll();
   }
 
 }

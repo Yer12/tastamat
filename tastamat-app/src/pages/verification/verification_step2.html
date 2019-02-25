@@ -1,16 +1,28 @@
+<ion-header>
+  <ion-navbar color="primary" hideBackButton>
+    <ion-title>{{'verification.title' | translate}}</ion-title>
+    <ion-buttons left>
+      <button ion-button (click)="goBackTo()">
+        {{ 'global.back' | translate }}
+      </button>
+    </ion-buttons>
+    <ion-buttons right>
+      <button ion-button (click)="send()">
+        {{ 'global.done' | translate }}
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
 <ion-content padding>
-  <button class="tastamatApp__primaryButton" (click)="takePhoto('camera')">
+  <button class="tastamatApp__primaryButton" icon-left (click)="takePhoto('camera')">
+    <ion-icon name="camera"></ion-icon>
     {{ 'verification.uploadPhoto' | translate }}
   </button>
-  <img src="{{photo}}" alt="">
 
-
-  <ion-footer class="verification__footer">
-    <button class="tastamatApp__primaryButton" (click)="goBackTo()">
-      {{ 'verification.back' | translate }}
-    </button>
-    <button class="tastamatApp__primaryButton" (click)="send()">
-      {{ 'verification.send' | translate }}
-    </button>
-  </ion-footer>
+  <div class="verification__files" *ngIf="userFiles">
+    <div class="verification__preview" *ngFor="let item of userFiles">
+      <button class="verification__preview__close" (click)="deletePhoto(item.id)">&#10006;</button>
+      <img src="https://testtasta.tastamat.com/files/{{item.path}}" alt="">
+    </div>
+  </div>
 </ion-content>
