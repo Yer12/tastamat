@@ -43,5 +43,26 @@ verification-page {
         color: #fff;
       }
     }
+    &__flexCenter {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    &__icon {
+      font-size: 7em;
+      &--success {
+        @extend .verification__icon;
+        color: #00bf00;
+      }
+      &--inProgress {
+        @extend .verification__icon;
+        color: #898786;
+      }
+      &--declined {
+        @extend .verification__icon;
+        color: #b60500;
+      }
+    }
   }
 }

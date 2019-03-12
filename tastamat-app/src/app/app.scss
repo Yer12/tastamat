@@ -246,7 +246,7 @@ ion-title {
     & input[type='checkbox'] {
       display: none;
       &:checked {
-        + .signIn__checkbox__label {
+        + .tastamatApp__checkbox__label {
           position: relative;
           &:after {
             content: '';

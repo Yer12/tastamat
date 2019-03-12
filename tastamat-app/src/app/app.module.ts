@@ -13,7 +13,7 @@ import { ProfilePage } from '../pages/profile/profile';
 import { SmsTemplatePage } from "../pages/smsTemplate/smsTemplate";
 import { SetPasswordPage } from "../pages/setPasswordPage/setPassword";
 import { QrScannerPage } from "../pages/qrScanner/qrScanner";
-import { Verification_step1Page, Verification_step2Page } from "../pages/verification/verification";
+import { Verification_step1Page, Verification_step2Page, Verification_step3Page } from "../pages/verification/verification";
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -57,6 +57,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     QrScannerPage,
     Verification_step1Page,
     Verification_step2Page,
+    Verification_step3Page,
     TabsPage
   ],
   imports: [
@@ -89,6 +90,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     QrScannerPage,
     Verification_step1Page,
     Verification_step2Page,
+    Verification_step3Page,
     TabsPage
   ],
   providers: [

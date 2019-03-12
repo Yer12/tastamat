@@ -9,7 +9,7 @@ import { TabsPage } from "../pages/tabs/tabs";
 import { SignInPage } from "../pages/signIn/signIn";
 import { Storage } from "@ionic/storage";
 import { Config } from "ionic-angular";
-import {Verification_step1Page} from "../pages/verification/verification";
+import {Verification_step1Page, Verification_step3Page} from "../pages/verification/verification";
 import {AuthService} from "../services/auth.service";
 
 @Component({
@@ -32,23 +32,26 @@ export class MyApp {
 
     this.storage.get('token').then(token => {
       if (token) {
-        this.authService.getAccount().subscribe(
-          res => {
-            this.storage.set('user', res);
-            if (!res.verified)
-              this.nav.setRoot(Verification_step1Page);
-            else
-              this.nav.setRoot(TabsPage);
-          },
-          err => {
-            this.storage.clear();
-            this.nav.setRoot(SignInPage);
-          }
-        );
+        this.nav.setRoot(TabsPage);
+        // this.authService.getAccount().subscribe(
+        //   res => {
+        //     this.storage.set('user', res);
+        //     console.log(res);
+        //     if (!res.verified && !res.request)
+        //       this.nav.setRoot(Verification_step1Page);
+        //     if (!res.verified && res.request && (res.request.status === 'IN_PROCESS' || res.request.status === 'DECLINED'))
+        //       this.nav.setRoot(Verification_step3Page);
+        //     else
+        //       this.nav.setRoot(TabsPage);
+        //   },
+        //   err => {
+        //     this.storage.clear();
+        //     this.nav.setRoot(SignInPage);
+        //   }
+        // );
       }
-      else {
+      else
         this.nav.setRoot(SignInPage);
-      }
     });
 
     platform.ready().then(async () => {

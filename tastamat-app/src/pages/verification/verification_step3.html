@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-navbar color="primary" hideBackButton>
+    <ion-title>{{'verification.title' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <div class="verification__flexCenter" *ngIf="requestStatus === 'APPROVED'">
+    <ion-icon name="checkmark-circle-outline" class="verification__icon--success"></ion-icon>
+    <p [innerHTML]="'verification.requestSent' | translate"></p>
+  </div>
+  <div class="verification__flexCenter" *ngIf="requestStatus === 'IN_PROCESS'">
+    <ion-icon name="time" class="verification__icon--inProgress"></ion-icon>
+    <p [innerHTML]="'verification.requestInProgress' | translate"></p>
+  </div>
+  <div class="verification__flexCenter" *ngIf="requestStatus === 'DECLINED'">
+    <ion-icon name="close-circle-outline" class="verification__icon--declined"></ion-icon>
+    <p [innerHTML]="'verification.requestDeclined' | translate"></p>
+  </div>
+</ion-content>

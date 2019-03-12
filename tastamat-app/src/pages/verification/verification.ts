@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform} from 'ionic-angular';
+import { NavController, NavParams, Platform} from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { File, FileEntry } from "@ionic-native/file";
 import { HttpClient } from "@angular/common/http";
@@ -58,11 +58,7 @@ export class Verification_step1Page {
         docNumber: this.docNumber,
         docExpDate: new Date(this.docExpDate).getTime(),
       };
-      this.storage.get('user').then((user) => {
-        this.verifyService.sendForm(user.id, data).subscribe(
-          response => this.navCtrl.push(Verification_step2Page),
-          err => console.log(err));
-      });
+      this.navCtrl.push(Verification_step2Page, {form: data});
     }
   }
 }
@@ -75,11 +71,13 @@ export class Verification_step1Page {
 })
 
 export class Verification_step2Page {
-  user: {};
+  form: any;
+  user: any = {};
   userFiles: any[];
 
   constructor(
     public navCtrl: NavController,
+    private navParams: NavParams,
     public platform: Platform,
     private camera: Camera,
     public http: HttpClient,
@@ -89,6 +87,8 @@ export class Verification_step2Page {
     private verifyService: VerifyService,
     private authService: AuthService
   ) {
+    this.form = this.navParams.get('form');
+    console.log(this.form);
     this.platform.registerBackButtonAction(() => this.navCtrl.push(Verification_step1Page),1);
   }
 
@@ -103,7 +103,9 @@ export class Verification_step2Page {
         this.storage.set('user', res);
         try { this.userFiles = res.profile.files; } catch (e) {}
       },
-      err => {}
+      err => {
+        this.storage.get('user').then(user => this.user = user);
+      }
     );
   }
 
@@ -143,11 +145,9 @@ export class Verification_step2Page {
   }
 
   private uploadImage(formData: FormData) {
-    this.storage.get('user').then((user) => {
-      this.verifyService.uploadPhoto(user.id, formData).subscribe(
-        response => this.userFiles.push(response),
-        err => console.log(err));
-    })
+    this.verifyService.uploadPhoto(this.user.id, formData).subscribe(
+      response => this.userFiles.push(response),
+      err => console.log(err));
   }
 
   deletePhoto(id) {
@@ -162,7 +162,28 @@ export class Verification_step2Page {
   }
 
   send() {
-    console.log('send');
+    this.verifyService.sendForm(this.user.id, this.form).subscribe(
+      response => this.navCtrl.push(Verification_step3Page),
+      err => console.log(err));
   }
+}
 
+// --------------------------------------------STEP 3----------------------------------------------------------------
+
+@Component({
+  selector: 'verification-page',
+  templateUrl: 'verification_step3.html'
+})
+
+export class Verification_step3Page {
+  requestStatus: string;
+
+  constructor(private storage: Storage) {
+    this.storage.get('user').then(user => {
+      if (user.request)
+        this.requestStatus = user.request.status;
+      else
+        this.requestStatus = 'APPROVED'
+    });
+  };
 }
