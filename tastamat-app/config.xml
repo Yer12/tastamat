@@ -89,11 +89,11 @@
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
     <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-        <string>We want your location! Best regards NSA</string>
+        <string>to find nearest</string>
     </edit-config>
     <plugin name="phonegap-plugin-barcodescanner" spec="8.0.1" />
     <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-        <string>To scan barcodes</string>
+        <string>to scan barcodes</string>
     </edit-config>
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
     <plugin name="cordova-plugin-camera" spec="4.0.3" />

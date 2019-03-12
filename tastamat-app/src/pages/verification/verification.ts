@@ -27,7 +27,6 @@ export class Verification_step1Page {
   constructor(
     public navCtrl: NavController,
     public platform: Platform,
-    private verifyService: VerifyService,
     private storage: Storage,
     public formBuilder: FormBuilder
   ) {
