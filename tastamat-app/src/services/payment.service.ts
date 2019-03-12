@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-const baseUrl = "https://testtasta.tastamat.com";
+const baseUrl = "http://tasta.tastamat.com";
 
 @Injectable ()
 export class PaymentService {

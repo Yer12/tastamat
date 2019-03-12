@@ -9,8 +9,8 @@ import { TabsPage } from "../pages/tabs/tabs";
 import { SignInPage } from "../pages/signIn/signIn";
 import { Storage } from "@ionic/storage";
 import { Config } from "ionic-angular";
-import {Verification_step1Page, Verification_step3Page} from "../pages/verification/verification";
-import {AuthService} from "../services/auth.service";
+// import {Verification_step1Page, Verification_step3Page} from "../pages/verification/verification";
+// import {AuthService} from "../services/auth.service";
 
 @Component({
   templateUrl: 'app.html'
@@ -26,8 +26,8 @@ export class MyApp {
     translate: TranslateService,
     private config: Config,
     private storage: Storage,
-    private globalization: Globalization,
-    private authService: AuthService
+    private globalization: Globalization
+    // private authService: AuthService
   ) {
 
     this.storage.get('token').then(token => {
