@@ -17,13 +17,14 @@
   },
   "signIn": {
     "password": "Пароль",
-    "offer": "С&nbsp;<a>УСЛОВИЯМИ ОФЕРТЫ</a>&nbsp;СОГЛАСЕН",
+    "offer": "С&nbsp;<a href=\"http://www.pdf995.com/samples/pdf.pdf\" target=\"_blank\">УСЛОВИЯМИ ОФЕРТЫ</a>&nbsp;СОГЛАСЕН",
     "logIn": "Войти",
     "further": "Далее",
     "info": "На номер +7{{phone}} будет отправлено SMS сообщение",
     "continue": "Продолжить",
     "incorrectPassword": "Неверный пароль",
-    "tryAgain": "Попробовать снова"
+    "tryAgain": "Попробовать снова",
+    "forgotPassword": "Забыли пароль?"
   },
   "enterSmsCode": {
     "title": "SMS код отправлен на номер",

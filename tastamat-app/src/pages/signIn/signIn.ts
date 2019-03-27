@@ -94,4 +94,8 @@ export class SignInPage {
       }
     );
   };
+
+  openOffer() {
+    console.log('asd');
+  }
 }
