@@ -46,7 +46,7 @@ export class OrdersPage {
 
         this.showMore = !(response.count === this.orders.list.length);
       },
-      err => console.log(err)
+      err => this.otherService.handleError(err)
     );
   }
 

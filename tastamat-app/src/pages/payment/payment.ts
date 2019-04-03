@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, ViewController, NavParams } from 'ionic-angular';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 import { PaymentService } from "../../services/payment.service";
+import {OtherService} from "../../services/other.service";
 
 @IonicPage()
 @Component({
@@ -18,6 +19,12 @@ export class PaymentPage {
     count: 0,
     list: []
   };
+  payment: {
+    amount: string
+    id: number
+    payment: string
+    url: string
+  };
 
   @ViewChild('amountInput') amountInput;
 
@@ -25,6 +32,7 @@ export class PaymentPage {
     private view: ViewController,
     private iab: InAppBrowser,
     private paymentService: PaymentService,
+    private otherService: OtherService,
     private navParams: NavParams
   ) {
     this.type = this.navParams.get('type');
@@ -57,8 +65,11 @@ export class PaymentPage {
 
   createPayment() {
     this.paymentService.fillUpWallet(this.amount).subscribe(
-      res => this.openBrowser(res.url),
-      err => console.log(err)
+      res => {
+        this.payment = res;
+        this.openBrowser(res.url)
+      },
+      err => this.otherService.handleError(err)
     )
   }
 
@@ -72,6 +83,10 @@ export class PaymentPage {
     const browser = this.iab.create(url, '_blank', options);
     browser.on('loadstart').subscribe(event => {
       if (event.url === 'https://tastamat.kz/') {
+        this.paymentService.successPayment(this.payment.id).subscribe(
+          res => console.log(res),
+          err => console.log(err)
+        );
         browser.close();
       }
     });
@@ -87,7 +102,7 @@ export class PaymentPage {
 
         this.showMore = !(response.count === this.history.list.length);
       },
-      err => console.log(err)
+      err => this.otherService.handleError(err)
     )
   }
 
@@ -97,7 +112,7 @@ export class PaymentPage {
         const index = this.history.list.findIndex(item => item.id === res.id);
         this.history.list.splice(index, 1, res);
       },
-      err => console.log(err)
+      err => this.otherService.handleError(err)
     )
   }
 

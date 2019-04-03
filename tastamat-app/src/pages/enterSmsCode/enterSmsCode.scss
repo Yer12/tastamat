@@ -35,6 +35,32 @@ enterSmsCode-page {
         border-bottom: 3px solid #FA671D;
       }
     }
+    &__borderBottom {
+      width: 24px;
+      height: 3px;
+      position: absolute;
+      bottom: -3px;
+      background: #bebebe;
+      &.active {
+        background: #FA671D;
+      }
+      &--first {
+        @extend .smsCode__borderBottom;
+        left: 18px;
+      }
+      &--second {
+        @extend .smsCode__borderBottom;
+        left: 54px;
+      }
+      &--third {
+        @extend .smsCode__borderBottom;
+        left: 92px;
+      }
+      &--fourth {
+        @extend .smsCode__borderBottom;
+        left: 130px;
+      }
+    }
     &__sendAgain {
       background: transparent;
       border: 0;

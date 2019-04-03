@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ 'addParcel.manualInput' | translate }}</ion-title>
+    <ion-buttons end>
+      <button ion-button (click)="closeModal(true)">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form (submit)="closeModal()" class="tastamatApp__form">
+    <input type="text" [(ngModel)]="presenceCode" class="tastamatApp__input--textCenter"
+               placeholder="{{ 'addParcel.presenceCode' | translate }}" [ngModelOptions]="{standalone: true}" />
+    <button type="submit" class="tastamatApp__primaryButton" [disabled]="!presenceCode">
+      {{ 'addParcel.open' | translate }}
+    </button>
+  </form>
+</ion-content>

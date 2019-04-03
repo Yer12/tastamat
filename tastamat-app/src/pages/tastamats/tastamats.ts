@@ -16,6 +16,7 @@ export class TastamatsPage {
   page: number = 0;
   limit: number;
   showMore: boolean = false;
+  searchText: string;
 
   constructor(private geolocation: Geolocation, private otherService: OtherService) {
     this.limit = screen.height
@@ -24,7 +25,11 @@ export class TastamatsPage {
   }
 
   ionViewDidLoad() {
-    this.getLocation(false);
+    this.getLocation(true);
+  }
+
+  searchBy() {
+    this.getTastamats(this.lat, this.lng, true);
   }
 
   getLocation(refresh) {
@@ -48,7 +53,7 @@ export class TastamatsPage {
   }
 
   async getTastamats(lat, lng, refresh) {
-    this.otherService.getTastamats(lat, lng, this.page, this.limit).subscribe(
+    this.otherService.getTastamats(lat, lng, this.page, this.limit, this.searchText).subscribe(
       async response => {
 
         if (this.tastamats.list.length && !refresh)

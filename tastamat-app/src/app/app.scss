@@ -2,7 +2,6 @@
 
 * {
   font-family: 'Rubik', sans-serif;
-  font-size: 16px;
 }
 
 .tabbar {
@@ -86,8 +85,8 @@ ion-title {
     background: #FA631D;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
-    padding: 14px 7px;
-    font-size: 14px;
+    padding: 1em 0.5em;
+    font-size: 1.4rem;
     font-weight: bold;
     color: #FFFFFF;
     width: 100%;
@@ -140,10 +139,21 @@ ion-title {
     }
     &--search {
       @extend .tastamatApp__input;
-      background: #FFFFFF url("../assets/icon/search.svg") 95% 50% no-repeat;
+      background: #FFFFFF;
       margin-bottom: 1em;
+      & .searchbar-search-icon {
+        left: 9px;
+        top: 9px;
+        width: 14px;
+        height: 14px;
+        background-size: contain;
+      }
       & input {
-        padding: 14px 32px 14px 18px;
+        background: #ffffff;
+        padding: 0 3rem !important;
+        -webkit-box-shadow: none !important;
+        -moz-box-shadow: none !important;
+        box-shadow: none !important;
       }
     }
     &--person {
@@ -167,6 +177,14 @@ ion-title {
         right: 16px;
         top: calc(50% - 10px);
       }
+    }
+    &--textCenter {
+      @extend .tastamatApp__input;
+      padding: 0.875em;
+      font-size: 14px;
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 1.5em;
     }
   }
   &__input2 {
@@ -288,6 +306,11 @@ ion-title {
         margin-right: 8px;
       }
     }
+  }
+  &__form {
+    display: flex;
+    flex-direction: column;
+    margin: 3em 0;
   }
 }
 

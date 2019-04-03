@@ -7,7 +7,8 @@ import { EnterSmsCodePage } from "../enterSmsCode/enterSmsCode";
 import { SmsService } from "../../services/sms.service";
 import { AuthService } from "../../services/auth.service";
 import { TabsPage } from "../tabs/tabs";
-
+import { InAppBrowser, InAppBrowserOptions } from "@ionic-native/in-app-browser";
+import { OtherService } from "../../services/other.service";
 
 @Component({
   selector: 'signIn-page',
@@ -17,7 +18,7 @@ export class SignInPage {
   response: any[];
   phone: string;
   password: string;
-  agree: boolean;
+  agree: boolean = false;
   exists: any = null;
 
   constructor(
@@ -27,17 +28,25 @@ export class SignInPage {
     private alertCtrl: AlertController,
     private translate: TranslateService,
     private smsService: SmsService,
-    private authService: AuthService
+    private iab: InAppBrowser,
+    private authService: AuthService,
+    private otherService: OtherService
   ) {
     this.platform.registerBackButtonAction(() => {},1);
+  }
+
+  ionViewDidLoad() {
+    setTimeout(() =>
+      document.querySelector("a").addEventListener('click', () => this.openOffer())
+    , 1000);
   }
 
   checkNumber(element) {
     if (this.phone.length === 10) {
       element.blur();
       this.authService.checkNumber(this.phone).subscribe(
-        response => { this.exists = response.exists; },
-        error => { console.log(error); }
+        response =>  this.exists = response.exists,
+        error => this.otherService.handleError(error)
       );
     }
   }
@@ -54,8 +63,8 @@ export class SignInPage {
           text: this.translate.instant('signIn.continue'),
           handler: () => {
             this.smsService.sendSms('7'+this.phone).subscribe(
-              (response: SignInPage) => { this.navCtrl.push(EnterSmsCodePage, {data: response}) },
-              error => console.log(error) // error path
+              (response: SignInPage) => this.navCtrl.push(EnterSmsCodePage, { data: response }),
+              error => this.otherService.handleError(error)
             );
           }
         }
@@ -64,10 +73,16 @@ export class SignInPage {
     alert.present();
   }
 
+  initializeUser() {
+    this.authService.initUser('7'+this.phone).subscribe(
+      res => this.sendSms(),
+      err => this.otherService.handleError(err)
+    );
+  }
 
   checkForm() {
     if (this.phone)
-      return !this.password || (this.phone && this.phone.length !== 10) || !this.agree;
+      return !this.password || (this.phone && this.phone.length !== 10);
     else
       return true;
   };
@@ -96,6 +111,13 @@ export class SignInPage {
   };
 
   openOffer() {
-    console.log('asd');
+    const options: InAppBrowserOptions = {
+      zoom: 'no',
+      hardwareback: 'yes',
+      location: 'yes'
+    };
+    // const url = encodeURIComponent('https://tastamat.kz/offer.pdf');
+    // this.iab.create('https://docs.google.com/viewer?url=' + url, '_blank', options);
+    this.iab.create('https://testplatform.tastamat.com/static/payment_v2.html', '_blank', options);
   }
 }

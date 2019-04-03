@@ -91,11 +91,17 @@ export class QrScannerPage {
       recipientName: this.data.name,
       recipientPhone: this.data.phone,
       size: this.data.cellSize,
-      presenceCode: this.presenceCode
+      locker: this.presenceCode
     };
     this.otherService.openCell(data).subscribe(
-      res => this.cellOpenedAlert('success', null),
-      err => this.cellOpenedAlert('error', err)
+      res => {
+        this.otherService.cellOpenedAlert();
+        this.navCtrl.push(ProfilePage);
+      },
+      err => {
+        this.otherService.handleError(err);
+        this.popView();
+      }
     );
   }
 
@@ -105,34 +111,14 @@ export class QrScannerPage {
       locker: this.presenceCode
     };
     this.otherService.withdrawFromCell(data).subscribe(
-      res => this.cellOpenedAlert('success', null),
-      err => this.cellOpenedAlert('error', err)
+      res => {
+        this.otherService.cellOpenedAlert();
+        this.navCtrl.push(OrdersPage);
+      },
+      err => {
+        this.otherService.handleError(err);
+        this.popView();
+      }
     )
   }
-
-  cellOpenedAlert(type, error) {
-    const err = type === 'error' ? JSON.parse(error.error.message) : '';
-    let alert = this.alertCtrl.create({
-      subTitle: type === 'error'
-        ? err[this.translate.getDefaultLang()]
-        : this.translate.instant('qrScanner.cellOpened'),
-      buttons: [
-        {
-          text: this.translate.instant('qrScanner.ok'),
-          handler: () => {
-            alert.dismiss();
-
-            if (type === 'success')
-              this.navCtrl.push(this.data.type === 'addParcel' ? ProfilePage : OrdersPage);
-            else
-              this.popView();
-
-            return false;
-          }
-        }
-      ]
-    });
-    alert.present();
-  }
-
 }

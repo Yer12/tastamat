@@ -8,6 +8,13 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+  <ion-searchbar
+    class="tastamatApp__input--search"
+    placeholder="{{ 'tastamats.find' | translate }}"
+    debounce="1000"
+    [(ngModel)]="searchText"
+    (ionChange)="searchBy()"
+  ></ion-searchbar>
   <!--<ion-input type="text" value="" class="tastamatApp__input&#45;&#45;search"-->
              <!--placeholder="{{ 'tastamats.find' | translate }}"></ion-input>-->
 

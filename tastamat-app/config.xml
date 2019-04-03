@@ -96,7 +96,7 @@
         <string>to upload photos for verification</string>
     </edit-config>
     <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-        <string>to find nearest</string>
+        <string>Please allow access to your location to help us show you a nearest and suitable lockers for your use.</string>
     </edit-config>
     <plugin name="cordova-plugin-inappbrowser" spec="3.0.0" />
     <plugin name="cordova-plugin-camera" spec="4.0.3" />

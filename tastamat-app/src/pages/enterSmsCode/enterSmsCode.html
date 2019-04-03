@@ -4,21 +4,31 @@
       <button class="smsCode__close" (click)="popView()"><ion-icon name="close"></ion-icon></button>
     </div>
     <h5>{{ 'enterSmsCode.title' | translate }}</h5>
-    <h5>{{ data.phone }}</h5>
-
     <form class="smsCode__form" autocomplete="off">
-      <input #code1 type="tel" id="code1" class="smsCode__input" ngClass="{{smsCode1 ? 'filled' : ''}}"
-             (keyup)="changeFocus(code1)" [maxlength]="1" [(ngModel)]="smsCode1" [ngModelOptions]="{standalone: true}"
-             (ngModelChange)="confirmCode()"/>
-      <input #code2 type="tel" id="code2" class="smsCode__input" ngClass="{{smsCode2 ? 'filled' : ''}}"
-             (keyup)="changeFocus(code2)" [maxlength]="1" [(ngModel)]="smsCode2" [ngModelOptions]="{standalone: true}"
-             (ngModelChange)="confirmCode()"/>
-      <input #code3 type="tel" id="code3" class="smsCode__input" ngClass="{{smsCode3 ? 'filled' : ''}}"
-             (keyup)="changeFocus(code3)" [maxlength]="1" [(ngModel)]="smsCode3" [ngModelOptions]="{standalone: true}"
-             (ngModelChange)="confirmCode()"/>
-      <input #code4 type="tel" id="code4" class="smsCode__input" ngClass="{{smsCode4 ? 'filled' : ''}}"
-             (keyup)="changeFocus(code4)" [maxlength]="1" [(ngModel)]="smsCode4" [ngModelOptions]="{standalone: true}"
-             (ngModelChange)="confirmCode()"/>
+      <input type="tel" id="code1" class="smsCode__input" ngClass="{{smsCode['1'] ? 'filled' : ''}}"
+             (keyup)="changeFocus($event)"
+             (paste)="pasteFunc($event)"
+             [(ngModel)]="smsCode['1']"
+             [ngModelOptions]="{standalone: true}"
+      />
+      <input type="tel" id="code2" class="smsCode__input" ngClass="{{smsCode['2'] ? 'filled' : ''}}"
+             (keyup)="changeFocus($event)"
+             (paste)="pasteFunc($event)"
+             [(ngModel)]="smsCode['2']"
+             [ngModelOptions]="{standalone: true}"
+      />
+      <input type="tel" id="code3" class="smsCode__input" ngClass="{{smsCode['3'] ? 'filled' : ''}}"
+             (keyup)="changeFocus($event)"
+             (paste)="pasteFunc($event)"
+             [(ngModel)]="smsCode['3']"
+             [ngModelOptions]="{standalone: true}"
+      />
+      <input type="tel" id="code4" class="smsCode__input" ngClass="{{smsCode['4'] ? 'filled' : ''}}"
+             (keyup)="changeFocus($event)"
+             (paste)="pasteFunc($event)"
+             [(ngModel)]="smsCode['4']"
+             [ngModelOptions]="{standalone: true}"
+      />
     </form>
 
     <button class="smsCode__sendAgain" [disabled]="!sendAgain" (click)="sendSms()">

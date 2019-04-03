@@ -1,24 +1,29 @@
 <ion-content padding class="signIn">
-  <div class="signIn__container">
+  <form class="signIn__container">
     <img src="../../assets/imgs/logo.svg" alt="">
     <input type="tel" class="signIn__input" #phoneInput [(ngModel)]="phone" placeholder="+ 7 7__ ___ __ __ "
+           [ngModelOptions]="{standalone: true}"
            prefix="+7 " mask="000 000 00 00" (keyup)="checkNumber(phoneInput)"/>
     <input type="password" class="signIn__input" [(ngModel)]="password" placeholder="{{'signIn.password'|translate}}"
+           [ngModelOptions]="{standalone: true}"
            *ngIf="exists && phone.length === 10" id="passwordInput"
     />
-    <button class="signIn__forgotPassword" (click)="sendSms()" *ngIf="exists && phone.length === 10">
+    <button type="button" class="signIn__forgotPassword" (click)="sendSms()"
+            *ngIf="exists && phone.length === 10"
+    >
       {{'signIn.forgotPassword'|translate}}
     </button>
-    <button ion-button (click)="signIn()" class="signIn__button" [disabled]="checkForm()"
+    <button type="submit" ion-button (click)="signIn()" class="signIn__button" [disabled]="checkForm()"
             *ngIf="exists && phone.length === 10">
       {{ 'signIn.logIn' | translate }}
     </button>
-    <div class="tastamatApp__checkbox" *ngIf="exists === false && phone.length === 10">
-      <input type="checkbox" id="aggree" ([ngModel])="agree" (change)="agree = !agree">
-      <label for="aggree" class="tastamatApp__checkbox__label" [innerHtml]="'signIn.offer' | translate"></label>
+    <div class="tastamatApp__checkbox" ngClass="{{exists === false && phone.length === 10 ? '' : 'hide'}}">
+      <input type="checkbox" id="aggree" [checked]="agree" (change)="agree = !agree" />
+      <label for="aggree" class="tastamatApp__checkbox__label" [innerHtml]="'signIn.offer' | translate:{button: offerBtn}"></label>
     </div>
-    <button ion-button (click)="sendSms()" class="signIn__button" *ngIf="exists === false && phone.length === 10">
+    <button ion-button type="submit" (click)="initializeUser()" class="signIn__button"
+            *ngIf="exists === false && phone.length === 10" [disabled]="!this.agree">
       {{ 'signIn.further' | translate }}
     </button>
-  </div>
+  </form>
 </ion-content>

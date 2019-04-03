@@ -27,6 +27,9 @@
   <button ion-button class="tastamatApp__primaryButton" [disabled]="this.checkForm()" (click)="goToQr()">
     {{ 'addParcel.scan' | translate }}
   </button>
+  <button class="addParcel__manualInputBtn" [disabled]="this.checkForm()" (click)="openModal()">
+    {{ 'addParcel.manualInput' | translate }}
+  </button>
   <span class="addParcel__info">
     {{ 'addParcel.info' | translate }}
   </span>

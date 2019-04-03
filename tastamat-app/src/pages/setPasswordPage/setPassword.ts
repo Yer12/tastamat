@@ -4,6 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Storage } from "@ionic/storage";
 import { TabsPage } from "../tabs/tabs";
 import { AuthService } from "../../services/auth.service";
+import {OtherService} from "../../services/other.service";
 
 @Component({
   selector: 'setPassword-page',
@@ -19,8 +20,13 @@ export class SetPasswordPage {
   };
 
   constructor (
-    public navCtrl: NavController, private navParams: NavParams, private translate: TranslateService,
-    private alertCtrl: AlertController, private authService: AuthService, private storage: Storage
+    public navCtrl: NavController,
+    private navParams: NavParams,
+    private translate: TranslateService,
+    private alertCtrl: AlertController,
+    private authService: AuthService,
+    private otherService: OtherService,
+    private storage: Storage
   ) {
     this.data = this.navParams.get('data');
   }
@@ -29,6 +35,7 @@ export class SetPasswordPage {
     const data = {
       id: this.data.id,
       phone: this.data.phone,
+      code: this.data.code,
       password: this.password
     };
 
@@ -60,7 +67,7 @@ export class SetPasswordPage {
                       this.storage.set('user', response.user);
                       this.navCtrl.push(TabsPage);
                     },
-                    error => console.log(error.error)
+                    error => this.otherService.handleError(error)
                   );
                 }
               }
@@ -68,9 +75,7 @@ export class SetPasswordPage {
           });
           alert.present();
         },
-        error => {
-          console.log(error.error);
-        }
+        error => this.otherService.handleError(error)
       );
     }
   }

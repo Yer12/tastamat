@@ -10,13 +10,17 @@ export class LoaderProvider {
   constructor(public loadingCtrl: LoadingController) {}
 
   show() {
-    this.loading = this.loadingCtrl.create({ spinner: 'crescent' });
-    this.loading.present();
+    if (!this.loading) {
+      this.loading = this.loadingCtrl.create({ spinner: 'crescent' });
+      this.loading.present();
+    }
   }
 
   hide() {
-    if (this.loading)
-      this.loading.dismissAll();
+    if (this.loading) {
+      this.loading.dismiss();
+      this.loading = undefined;
+    }
   }
 
 }

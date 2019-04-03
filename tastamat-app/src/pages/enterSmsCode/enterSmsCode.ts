@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { AlertController, NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { SmsService } from "../../services/sms.service";
 import { SetPasswordPage } from "../setPasswordPage/setPassword";
-import { TranslateService } from "@ngx-translate/core";
+import { OtherService } from "../../services/other.service";
 
 @Component({
   selector: 'enterSmsCode-page',
@@ -12,76 +12,77 @@ export class EnterSmsCodePage {
   exists: boolean;
   phone: string;
   code: number;
-  smsCode1: string;
-  smsCode2: string;
-  smsCode3: string;
-  smsCode4: string;
+  smsCode = {
+    1: '',
+    2: '',
+    3: '',
+    4: ''
+  };
   sendAgain: boolean = false;
   data = {
     id: null,
     phone: null,
     code: null
   };
+  type: string;
 
   constructor(
     public navCtrl: NavController,
     private navParams: NavParams,
     private smsService: SmsService,
-    private alertCtrl: AlertController,
-    private translate: TranslateService,
+    private otherService: OtherService
 
   ) {
-    this.data = this.navParams.get('data');
+    this.data = this.navParams.get('data') || {};
+    this.type = this.navParams.get('type') || '';
   }
 
   popView(){
     this.navCtrl.pop();
   }
 
-  changeFocus(element) {
-    const idName = element.id.substr(0,element.id.length - 1);
-    const nextId = parseInt(element.id.substr(element.id.length - 1)) + 1;
-    const prevId = parseInt(element.id.substr(element.id.length - 1)) - 1;
+  pasteFunc(event) {
+    setTimeout(() => {
+      let arr = event.target.value.split("");
+      for (let i=1; i < 5; i++) {
+        this.smsCode[i] = arr[i - 1] || '';
+      }
+      this.confirmCode();
+    }, 100);
+  }
 
-    if (element.value && nextId < 5) {
-      document.getElementById(idName+nextId).focus();
-    }
-    else if (!element.value && prevId > 0) {
-      document.getElementById(idName+prevId).focus();
+  changeFocus(event) {
+    const element = event.target;
+    const idName = element.id.substr(0,element.id.length - 1);
+    const id = parseInt(element.id.substr(element.id.length - 1));
+    const nextId = id + 1, prevId = id - 1;
+
+    if (element.value.length === 4) {
+      this.pasteFunc(event);
+    } else  {
+      if (element.value.length > 1) {
+        this.smsCode[id] = element.value.substr(0, 1);
+        this.smsCode[nextId] = element.value.substr(element.value.length - 1, element.value.length);
+      }
+      if (element.value && nextId < 5) document.getElementById(idName+nextId).focus();
+      else if (!element.value && prevId > 0) document.getElementById(idName+prevId).focus();
+      this.confirmCode();
     }
   }
 
   sendSms() {
     this.smsService.sendSms(this.data.phone).subscribe(
-      response => {
-        this.sendAgain = false;
-      },
-      error => console.log(error) // error path
+      response => this.sendAgain = false,
+      error => this.otherService.handleError(error)
     );
   }
 
-  confirmCode() {
-    if (this.smsCode1 && this.smsCode2 && this.smsCode3 && this.smsCode4) {
-      this.data.code = this.smsCode1 + this.smsCode2 + this.smsCode3 + this.smsCode4;
-
+  async confirmCode() {
+    if (this.smsCode["1"] && this.smsCode["2"] && this.smsCode["3"] && this.smsCode["4"]) {
+      this.data.code = await this.smsCode["1"] + this.smsCode["2"] + this.smsCode["3"] + this.smsCode["4"];
       this.smsService.confirmCode(this.data).subscribe(
-        response => {
-          this.navCtrl.push(SetPasswordPage, {data: this.data})
-        },
-        error => {
-          const err = JSON.parse(error.error.message);
-          let alert = this.alertCtrl.create({
-            subTitle: err[this.translate.getDefaultLang()],
-            buttons: [
-              {
-                text: this.translate.instant('alerts.ok'),
-                handler: () => { alert.dismiss();
-                  return false; }
-              }
-            ]
-          });
-          alert.present();
-        }
+        response => this.navCtrl.push(SetPasswordPage, { data: this.data }),
+        error => this.otherService.handleError(error)
       );
     }
   }

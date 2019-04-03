@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Modal, ModalController } from 'ionic-angular';
 import { QrScannerPage } from "../qrScanner/qrScanner";
+import { OtherService } from "../../services/other.service";
 
 @Component({
   selector: 'page-addParcel',
@@ -11,9 +12,11 @@ export class AddParcelPage {
   phone: string;
   cellSize: string;
 
-  constructor(public navCtrl: NavController) {
-
-  }
+  constructor(
+    public navCtrl: NavController,
+    private modal: ModalController,
+    private otherService: OtherService
+  ) {}
 
   setCellSize(size) {
     this.cellSize = size;
@@ -34,5 +37,28 @@ export class AddParcelPage {
       cellSize: this.cellSize
     };
     this.navCtrl.push(QrScannerPage, {data: data})
+  }
+
+  openModal() {
+    const ManualInputPage: Modal = this.modal.create('ManualInputPage', { 'type': 'accept' });
+    ManualInputPage.present();
+
+    ManualInputPage.onWillDismiss(data => {
+      if (data)
+        this.openCell(data.toUpperCase());
+    })
+  }
+
+  async openCell(presenceCode) {
+    const data = await {
+      recipientName: this.name,
+      recipientPhone: this.phone,
+      size: this.cellSize,
+      locker: presenceCode
+    };
+    this.otherService.openCell(data).subscribe(
+      () => this.otherService.cellOpenedAlert(),
+      err => this.otherService.handleError(err)
+    );
   }
 }
