@@ -1,5 +1,9 @@
 <ion-content padding>
-  <div class="tastamatApp__row">
-    <button class="tastamatApp__close" (click)="popView()"><ion-icon name="close"></ion-icon></button>
-  </div>
+  <button class="tastamatApp__close" (click)="closeModal()"><ion-icon name="close"></ion-icon></button>
+  <p class="tastamatApp__alert">
+    {{ 'global.cameraTrouble' | translate }}
+  </p>
+  <button class="tastamatApp__fillUp" (click)="closeModal('error')">
+    {{ 'global.inputManually' | translate }}
+  </button>
 </ion-content>

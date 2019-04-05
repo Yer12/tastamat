@@ -1,17 +1,25 @@
 import { Component } from '@angular/core';
-import { AlertController, NavController, NavParams, Platform} from 'ionic-angular';
+import {
+  IonicPage,
+  AlertController,
+  ViewController,
+  NavController,
+  NavParams,
+  Platform
+} from 'ionic-angular';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { TranslateService } from "@ngx-translate/core";
 import { OtherService } from "../../services/other.service";
 import { ProfilePage } from "../profile/profile";
 import { AddParcelPage } from "../addParcel/addParcel";
-import {OrdersPage} from "../orders/orders";
+import { OrdersPage } from "../orders/orders";
 
+@IonicPage()
 @Component({
   selector: 'qrScanner-page',
   templateUrl: 'qrScanner.html'
 })
-export class QrScannerPage {
+export class QrScannerModal {
   scannedData = {};
   option: BarcodeScannerOptions;
   presenceCode: string;
@@ -22,13 +30,15 @@ export class QrScannerPage {
     phone: string,
     cellSize: string,
   };
+  showError: boolean = false;
 
   constructor(
+    private view: ViewController,
     public navCtrl: NavController, private navParams: NavParams, public platform: Platform,
     private barcodeScanner: BarcodeScanner, private alertCtrl: AlertController,
     private translate: TranslateService, private otherService: OtherService
   ) {
-    this.platform.registerBackButtonAction(this.popView,1);
+    this.platform.registerBackButtonAction(this.closeModal,1);
 
     this.data = this.navParams.get('data');
     if (this.data.type === 'addParcel' && (!this.data.name || !this.data.phone || !this.data.cellSize)) {
@@ -40,8 +50,8 @@ export class QrScannerPage {
     this.scan();
   }
 
-  popView(){
-    this.navCtrl.pop();
+  closeModal(data?: any) {
+    this.view.dismiss(data ? data : null);
   }
 
   scan() {
@@ -78,11 +88,12 @@ export class QrScannerPage {
             ]
           });
           alert.present();
-        } else if(barcodeData.cancelled == true) {
-          this.popView()
+        } else if (barcodeData.cancelled == true) {
+          this.closeModal()
         }
     }).catch(err => {
       console.log('Error', err);
+      this.showError = true;
     });
   }
 
@@ -100,7 +111,7 @@ export class QrScannerPage {
       },
       err => {
         this.otherService.handleError(err);
-        this.popView();
+        this.closeModal();
       }
     );
   }
@@ -117,7 +128,7 @@ export class QrScannerPage {
       },
       err => {
         this.otherService.handleError(err);
-        this.popView();
+        this.closeModal();
       }
     )
   }

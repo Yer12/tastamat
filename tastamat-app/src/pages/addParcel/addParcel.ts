@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, Modal, ModalController } from 'ionic-angular';
-import { QrScannerPage } from "../qrScanner/qrScanner";
+import { Modal, ModalController } from 'ionic-angular';
 import { OtherService } from "../../services/other.service";
+import { Storage } from "@ionic/storage";
 
 @Component({
   selector: 'page-addParcel',
@@ -11,12 +11,25 @@ export class AddParcelPage {
   name: string;
   phone: string;
   cellSize: string;
+  user: {
+    id: number;
+    phone: string;
+    role: string
+    system: {};
+  };
 
   constructor(
-    public navCtrl: NavController,
     private modal: ModalController,
-    private otherService: OtherService
-  ) {}
+    private otherService: OtherService,
+    private storage: Storage
+  ) {
+  }
+
+  ionViewDidEnter() {
+    this.storage.get('user').then(user => {
+      if (user) { this.user = user; }
+    });
+  }
 
   setCellSize(size) {
     this.cellSize = size;
@@ -36,7 +49,13 @@ export class AddParcelPage {
       phone: 7 + this.phone,
       cellSize: this.cellSize
     };
-    this.navCtrl.push(QrScannerPage, {data: data})
+    const BarcodeScannerModal: Modal = this.modal.create('QrScannerModal', { data: data });
+    BarcodeScannerModal.present();
+
+    BarcodeScannerModal.onWillDismiss(data => {
+      if (data === 'error')
+        this.openModal();
+    })
   }
 
   openModal() {
@@ -52,7 +71,7 @@ export class AddParcelPage {
   async openCell(presenceCode) {
     const data = await {
       recipientName: this.name,
-      recipientPhone: this.phone,
+      recipientPhone: 7 + this.phone,
       size: this.cellSize,
       locker: presenceCode
     };
@@ -60,5 +79,10 @@ export class AddParcelPage {
       () => this.otherService.cellOpenedAlert(),
       err => this.otherService.handleError(err)
     );
+  }
+
+  fillWallet() {
+    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'fillUp' });
+    myModal.present();
   }
 }

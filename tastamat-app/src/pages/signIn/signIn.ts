@@ -116,8 +116,7 @@ export class SignInPage {
       hardwareback: 'yes',
       location: 'yes'
     };
-    // const url = encodeURIComponent('https://tastamat.kz/offer.pdf');
-    // this.iab.create('https://docs.google.com/viewer?url=' + url, '_blank', options);
-    this.iab.create('https://testplatform.tastamat.com/static/payment_v2.html', '_blank', options);
+    const url = encodeURIComponent('https://tastamat.kz/offer.pdf');
+    this.iab.create('https://docs.google.com/viewer?url=' + url, '_blank', options);
   }
 }

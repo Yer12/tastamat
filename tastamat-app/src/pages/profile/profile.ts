@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, Modal, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { SignInPage } from "../signIn/signIn";
-import { SmsTemplatePage } from "../smsTemplate/smsTemplate";
+// import { SmsTemplatePage } from "../smsTemplate/smsTemplate";
 import { AuthService } from "../../services/auth.service";
 
 @Component({
@@ -13,8 +13,10 @@ export class ProfilePage {
   user: {
     id: number;
     phone: string;
-    role: string
-    system: {};
+    role: string;
+    system: {
+      price: number;
+    };
   };
 
   constructor(
@@ -55,7 +57,9 @@ export class ProfilePage {
   // }
 
   fillWallet() {
-    const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'fillUp' });
+    const myModal: Modal = this.modal.create('PaymentPage',
+      { type: 'fillUp', price: this.user.system.price }
+    );
     myModal.present();
     myModal.onWillDismiss(data => this.getProfileInfo())
   }

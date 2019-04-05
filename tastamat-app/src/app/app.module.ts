@@ -12,7 +12,6 @@ import { OrdersPage } from '../pages/orders/orders';
 import { ProfilePage } from '../pages/profile/profile';
 import { SmsTemplatePage } from "../pages/smsTemplate/smsTemplate";
 import { SetPasswordPage } from "../pages/setPasswordPage/setPassword";
-import { QrScannerPage } from "../pages/qrScanner/qrScanner";
 import { Verification_step1Page, Verification_step2Page, Verification_step3Page } from "../pages/verification/verification";
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -54,7 +53,6 @@ export function setTranslateLoader(httpClient: HttpClient) {
     SmsTemplatePage,
     SetPasswordPage,
     TastamatsPage,
-    QrScannerPage,
     Verification_step1Page,
     Verification_step2Page,
     Verification_step3Page,
@@ -87,7 +85,6 @@ export function setTranslateLoader(httpClient: HttpClient) {
     ProfilePage,
     SmsTemplatePage,
     TastamatsPage,
-    QrScannerPage,
     Verification_step1Page,
     Verification_step2Page,
     Verification_step3Page,

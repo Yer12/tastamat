@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateService } from "@ngx-translate/core";
 import { AlertController } from "ionic-angular";
-import {ProfilePage} from "../pages/profile/profile";
-import {OrdersPage} from "../pages/orders/orders";
 
 const baseUrl = "https://testplatform.tastamat.com";
 
@@ -17,8 +15,10 @@ export class OtherService {
 
   getTastamats(lat, lng, page, limit, searchKey): any {
     return this.http.get(
-      `${baseUrl}/api/rest/lockers?lat=${lat}&lng=${lng}&page=${page}&limit=${limit}${searchKey ? `&searchKey=${searchKey}` : ''}`
-    )
+      `${baseUrl}/api/rest/lockers?page=${page}&limit=${limit}${
+        lat && lng ? `&lat=${lat}&lng=${lng}` : ""
+        }${searchKey ? `&searchKey=${searchKey}` : ""}`
+    );
   }
 
   openCell(data): any {

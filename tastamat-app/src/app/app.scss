@@ -66,13 +66,17 @@ ion-title {
   }
   &__close {
     line-height: normal;
-    font-size: 1.5em;
+    font-size: 3em;
     text-align: center;
-    color: #797979;
+    color: #b2b2b2;
     background: transparent;
     border: 0;
+    margin: 1em auto;
+    display: block;
     &--white {
       @extend .tastamatApp__close;
+      margin: 0;
+      font-size: 2em;
       color: #ffffff;
     }
   }
@@ -90,11 +94,12 @@ ion-title {
     font-weight: bold;
     color: #FFFFFF;
     width: 100%;
+    margin: 0.4rem 0;
     &:disabled {
       background: #FC935E;
     }
-    &:not(:first-of-type) {
-      margin-left: 1em;
+    &:not(:last-of-type) {
+      margin-right: 1em;
     }
   }
   &__title {
@@ -311,6 +316,19 @@ ion-title {
     display: flex;
     flex-direction: column;
     margin: 3em 0;
+  }
+  &__alert {
+    font-size: 1.2rem;
+    margin: 0 0 0.5em;
+    color: #ff0000;
+  }
+  &__fillUp {
+    font-size: 1.2rem;
+    margin: 0 0 0.5em;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    text-decoration: underline;
   }
 }
 

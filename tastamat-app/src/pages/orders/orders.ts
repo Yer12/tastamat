@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { ProfilePage } from "../profile/profile";
-import { QrScannerPage } from "../qrScanner/qrScanner";
+import { QrScannerModal } from "../qrScanner/qrScanner";
 import { OtherService } from "../../services/other.service";
 
 @Component({
@@ -55,7 +55,7 @@ export class OrdersPage {
       type: 'pickParcel',
       id: id
     };
-    this.navCtrl.push(QrScannerPage, {data: data})
+    this.navCtrl.push(QrScannerModal, {data: data})
   }
 
   async loadMore() {
@@ -68,7 +68,7 @@ export class OrdersPage {
   }
 
   expand(item) {
-    const button = document.getElementById(item.id+item.recipientPhone);
+    const button = document.getElementById(item.id+item.createDate);
     if (button.className.indexOf('expanded') > -1) {
       button.classList.remove('expanded');
     } else {

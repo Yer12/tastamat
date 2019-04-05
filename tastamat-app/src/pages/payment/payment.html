@@ -15,6 +15,9 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <form (submit)="createPayment()" style="margin: 3em 0" *ngIf="type === 'fillUp'">
+    <p class="payment__tariff">
+      {{ 'payment.currentTariff' | translate }} {{price}} {{ 'payment.currency' | translate }}
+    </p>
     <ion-input #amountInput type="tel" [(ngModel)]="amount" class="tastamatApp__input--amount" aria-label="тг."
                placeholder="{{ 'payment.writeAmount' | translate }}" [ngModelOptions]="{standalone: true}"></ion-input>
     <button type="submit" class="tastamatApp__primaryButton" [disabled]="!amount || amount < 1">

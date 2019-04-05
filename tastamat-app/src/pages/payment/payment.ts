@@ -14,6 +14,7 @@ export class PaymentPage {
   type: string;
   page: number = 0;
   limit: number;
+  price: number;
   showMore: boolean = false;
   history = {
     count: 0,
@@ -36,6 +37,7 @@ export class PaymentPage {
     private navParams: NavParams
   ) {
     this.type = this.navParams.get('type');
+    this.price = this.navParams.get('price');
     this.limit = screen.height
       ? Math.round((screen.height - 70)/64)
       : 5;
