@@ -3,16 +3,12 @@ import {
   IonicPage,
   AlertController,
   ViewController,
-  NavController,
   NavParams,
   Platform
 } from 'ionic-angular';
 import { BarcodeScanner, BarcodeScannerOptions } from '@ionic-native/barcode-scanner';
 import { TranslateService } from "@ngx-translate/core";
 import { OtherService } from "../../services/other.service";
-import { ProfilePage } from "../profile/profile";
-import { AddParcelPage } from "../addParcel/addParcel";
-import { OrdersPage } from "../orders/orders";
 
 @IonicPage()
 @Component({
@@ -34,16 +30,16 @@ export class QrScannerModal {
 
   constructor(
     private view: ViewController,
-    public navCtrl: NavController, private navParams: NavParams, public platform: Platform,
-    private barcodeScanner: BarcodeScanner, private alertCtrl: AlertController,
-    private translate: TranslateService, private otherService: OtherService
+    private navParams: NavParams,
+    public platform: Platform,
+    private barcodeScanner: BarcodeScanner,
+    private alertCtrl: AlertController,
+    private translate: TranslateService,
+    private otherService: OtherService
   ) {
     this.platform.registerBackButtonAction(this.closeModal,1);
 
     this.data = this.navParams.get('data');
-    if (this.data.type === 'addParcel' && (!this.data.name || !this.data.phone || !this.data.cellSize)) {
-      this.navCtrl.push(AddParcelPage);
-    }
   }
 
   ionViewWillEnter() {
@@ -51,6 +47,7 @@ export class QrScannerModal {
   }
 
   closeModal(data?: any) {
+    this.showError = false;
     this.view.dismiss(data ? data : null);
   }
 
@@ -107,7 +104,7 @@ export class QrScannerModal {
     this.otherService.openCell(data).subscribe(
       res => {
         this.otherService.cellOpenedAlert();
-        this.navCtrl.push(ProfilePage);
+        this.closeModal();
       },
       err => {
         this.otherService.handleError(err);
@@ -123,8 +120,8 @@ export class QrScannerModal {
     };
     this.otherService.withdrawFromCell(data).subscribe(
       res => {
-        this.otherService.cellOpenedAlert();
-        this.navCtrl.push(OrdersPage);
+        this.otherService.cellOpenedAlert("withdrawn");
+        this.closeModal();
       },
       err => {
         this.otherService.handleError(err);

@@ -56,9 +56,11 @@ export class OtherService {
     alert.present();
   }
 
-  cellOpenedAlert() {
+  cellOpenedAlert(type?: string) {
     let alert = this.alertCtrl.create({
-      subTitle: this.translate.instant('qrScanner.cellOpened'),
+      subTitle: type === "withdrawn"
+        ? this.translate.instant('qrScanner.cellOpened2')
+        : this.translate.instant('qrScanner.cellOpened'),
       buttons: [
         {
           text: this.translate.instant('qrScanner.ok'),

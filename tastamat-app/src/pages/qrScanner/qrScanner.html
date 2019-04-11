@@ -1,9 +1,9 @@
 <ion-content padding>
   <button class="tastamatApp__close" (click)="closeModal()"><ion-icon name="close"></ion-icon></button>
-  <p class="tastamatApp__alert">
+  <p class="tastamatApp__alert" *ngIf="showError">
     {{ 'global.cameraTrouble' | translate }}
   </p>
-  <button class="tastamatApp__fillUp" (click)="closeModal('error')">
+  <button class="tastamatApp__fillUp" (click)="closeModal('error')" *ngIf="showError">
     {{ 'global.inputManually' | translate }}
   </button>
 </ion-content>

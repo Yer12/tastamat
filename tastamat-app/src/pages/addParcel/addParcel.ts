@@ -49,10 +49,10 @@ export class AddParcelPage {
       phone: 7 + this.phone,
       cellSize: this.cellSize
     };
-    const BarcodeScannerModal: Modal = this.modal.create('QrScannerModal', { data: data });
-    BarcodeScannerModal.present();
+    const QrScannerModal: Modal = this.modal.create('QrScannerModal', { data: data });
+    QrScannerModal.present();
 
-    BarcodeScannerModal.onWillDismiss(data => {
+    QrScannerModal.onWillDismiss(data => {
       if (data === 'error')
         this.openModal();
     })

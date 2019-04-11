@@ -15,7 +15,4 @@ export class SmsService {
     return this.http.put(`${baseUrl}/api/rest/auth/phones/confirm`, data);
   }
 
-  forgotPasswordStep2(data): any {
-    return this.http.post(`${baseUrl}/api/rest/auth//forgotPasswordStep2`, data)
-  }
 }
