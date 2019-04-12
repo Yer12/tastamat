@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {
+  Modal,
+  NavController,
+  AlertController,
+  ModalController
+} from 'ionic-angular';
 import { ProfilePage } from "../profile/profile";
-import { QrScannerModal } from "../qrScanner/qrScanner";
 import { OtherService } from "../../services/other.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'page-orders',
@@ -13,12 +18,19 @@ export class OrdersPage {
     count: 0,
     list: []
   };
+  orderId: number;
   page: number = 0;
   limit: number;
   showMore: boolean = false;
   status: string = 'SENT';
 
-  constructor(public navCtrl: NavController, private otherService: OtherService) {
+  constructor(
+    public navCtrl: NavController,
+    private otherService: OtherService,
+    private modal: ModalController,
+    private alertCtrl: AlertController,
+    private translate: TranslateService
+  ) {
     this.limit = screen.height
       ? Math.round((screen.height - 300)/64)
       : 5;
@@ -50,12 +62,63 @@ export class OrdersPage {
     );
   }
 
-  goToQr(id) {
-    const data = {
+  chooseOpenType(id) {
+    this.orderId = id;
+    let alert = this.alertCtrl.create({
+      subTitle: this.translate.instant('orders.chooseOpenType'),
+      buttons: [
+        {
+          text: this.translate.instant('orders.manual'),
+          handler: () => {
+            this.openModal();
+            alert.dismiss();
+            return false;
+          }
+        },
+        {
+          text: this.translate.instant('orders.qr'),
+          handler: () => {
+            this.goToQr();
+            alert.dismiss();
+            return false;
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  goToQr() {
+    const QrScannerModal: Modal = this.modal.create('QrScannerModal', { data: {
       type: 'pickParcel',
-      id: id
-    };
-    this.navCtrl.push(QrScannerModal, {data: data})
+      id: this.orderId
+    }});
+    QrScannerModal.present();
+
+    QrScannerModal.onWillDismiss(data => {
+      if (data === 'error')
+        this.openModal();
+      else if (data)
+        this.withdrawnFromCell(data);
+    })
+  }
+
+  openModal() {
+    const ManualInputPage: Modal = this.modal.create('ManualInputPage', { 'type': 'accept' });
+    ManualInputPage.present();
+
+    ManualInputPage.onWillDismiss(data => {
+      if (data)
+        this.withdrawnFromCell(data.toUpperCase());
+    })
+  }
+
+  withdrawnFromCell(presenceCode) {
+    this.otherService.withdrawFromCell({id: this.orderId, locker: presenceCode})
+      .subscribe(
+        res => this.otherService.cellOpenedAlert("withdrawn"),
+        err => this.otherService.handleError(err)
+      )
   }
 
   async loadMore() {

@@ -55,6 +55,8 @@ export class AddParcelPage {
     QrScannerModal.onWillDismiss(data => {
       if (data === 'error')
         this.openModal();
+      else if (data)
+        this.openCell(data);
     })
   }
 
@@ -68,14 +70,13 @@ export class AddParcelPage {
     })
   }
 
-  async openCell(presenceCode) {
-    const data = await {
+  openCell(presenceCode) {
+    this.otherService.openCell({
       recipientName: this.name,
       recipientPhone: 7 + this.phone,
       size: this.cellSize,
       locker: presenceCode
-    };
-    this.otherService.openCell(data).subscribe(
+    }).subscribe(
       () => this.otherService.cellOpenedAlert(),
       err => this.otherService.handleError(err)
     );

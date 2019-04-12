@@ -41,7 +41,7 @@
             {{item.client.fullname}}
           </div>
           <!--<div class="orders__text">{{item.locker.name}}, {{item.locker.address}}</div>-->
-          <button class="orders__btn" (click)="goToQr(item.id)" *ngIf="item.status === 'SENT'">
+          <button class="orders__btn" (click)="chooseOpenType(item.id)" *ngIf="item.status === 'SENT'">
             {{'orders.pick' | translate}}
           </button>
         </div>
