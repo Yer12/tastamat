@@ -120,9 +120,10 @@
       "IN_PROCCESS": "В обработке",
       "EXPIRED": "Время ожидания истекло",
       "CANCELED": "Отмена оплаты",
-      "APPROVED": "Успешно",
+      "APPROVED": "Пополнение",
+      "CONFIRMED": "Пополнение",
       "FAILED": "Ошибка платежа",
-      "CONFIRMED": "Перевод завершен"
+      "SPENT": "Вложение"
     }
   },
   "verification": {

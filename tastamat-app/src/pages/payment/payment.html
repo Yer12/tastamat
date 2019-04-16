@@ -28,14 +28,18 @@
   <div *ngIf="type === 'history'">
     <p class="tastamatApp__list__title" *ngIf="!history.list.length" [innerHtml]="'global.notFound' | translate"></p>
     <div class="tastamatApp__list">
-      <div class="payment__listItem" *ngFor="let item of history.list">
+      <div class="payment__listItem" *ngFor="let item of history.list" ngClass="{{item.status}}">
         <div class="tastamatApp__col">
           <div class="payment__label">{{ 'payment.amount' | translate }}</div>
-          <div>{{item.amount}}</div>
+          <div class="payment__status">
+            <span *ngIf="item.status === 'SPENT'">-</span>
+            <span *ngIf="item.status === 'APPROVED' || item.status === 'CONFIRMED'">+</span>
+            {{item.amount}}
+          </div>
         </div>
         <div class="tastamatApp__col--end">
           <div class="payment__label">{{item.createDate | date: 'dd/MM/yy HH:mm'}}</div>
-          <div class="payment__status" ngClass="{{item.status}}">
+          <div class="payment__status">
             {{ 'payment.statuses.' + item.status | translate }}
             <button class="payment__refresh" *ngIf="item.status === 'IN_PROCCESS'" (click)="getCurrentStatus(item.id)">
               <ion-icon name="refresh"></ion-icon>

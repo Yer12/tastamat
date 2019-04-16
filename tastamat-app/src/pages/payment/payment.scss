@@ -13,16 +13,25 @@ page-payment {
       &:not(:first-of-type) {
         border-top: 0.25px solid #797979;
       }
-    }
-    &__status {
       &.IN_PROCCESS {
-        color: #7f7f7f;
+        & .payment__status {
+          color: #7f7f7f;
+        }
       }
       &.APPROVED, &.CONFIRMED {
-        color: #3ec330;
+        & .payment__status {
+          color: #3ec330;
+        }
       }
       &.EXPIRED, &.CANCELED, &.FAILED {
-        color: #c30015;
+        & .payment__status {
+          color: #ff001b;
+        }
+      }
+      &.SPENT {
+        & .payment__status {
+          color: #c30015;
+        }
       }
     }
     &__refresh {
