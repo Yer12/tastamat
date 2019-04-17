@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from "@ngx-translate/core";
 import { AlertController } from "ionic-angular";
 
-const baseUrl = "https://testplatform.tastamat.com";
+const baseUrl = "https://platform.tastamat.com/platform/v1/rest";
 
 @Injectable ()
 export class OtherService {
@@ -15,22 +15,22 @@ export class OtherService {
 
   getTastamats(lat, lng, page, limit, searchKey): any {
     return this.http.get(
-      `${baseUrl}/api/rest/lockers?page=${page}&limit=${limit}${
+      `${baseUrl}/lockers?page=${page}&limit=${limit}${
         lat && lng ? `&lat=${lat}&lng=${lng}` : ""
         }${searchKey ? `&searchKey=${searchKey}` : ""}`
     );
   }
 
   openCell(data): any {
-    return this.http.post(`${baseUrl}/api/rest/a/orders/book-drop`, data)
+    return this.http.post(`${baseUrl}/a/orders/book-drop`, data)
   }
 
   getOrders(status, page, limit): any {
-    return this.http.get(`${baseUrl}/api/rest/a/orders?status=${status}&page=${page}&limit=${limit}`)
+    return this.http.get(`${baseUrl}/a/orders?status=${status}&page=${page}&limit=${limit}`)
   }
 
   withdrawFromCell(data): any {
-    return this.http.put(`${baseUrl}/api/rest/a/orders/withdraw`, data)
+    return this.http.put(`${baseUrl}/a/orders/withdraw`, data)
   }
 
   handleError(data): any {

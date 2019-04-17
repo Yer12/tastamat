@@ -13,7 +13,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     this.loader.show();
-    if (request.url.includes("/api/rest/a/")) {
+    if (request.url.includes("/platform/v1/rest/a/")) {
       let promise = this.storage.get('token');
 
       return Observable.fromPromise(promise)
