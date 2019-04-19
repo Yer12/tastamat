@@ -24,14 +24,34 @@ import org.jooq.impl.SequenceImpl;
 public class Sequences {
 
     /**
+     * The sequence <code>public.tt_file_sequence</code>
+     */
+    public static final Sequence<Long> FILE_SEQUENCE = new SequenceImpl<Long>("tt_file_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
      * The sequence <code>public.tt_order_sequence</code>
      */
     public static final Sequence<Long> ORDER_SEQUENCE = new SequenceImpl<Long>("tt_order_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 
     /**
+     * The sequence <code>public.tt_organization_sequence</code>
+     */
+    public static final Sequence<Long> ORGANIZATION_SEQUENCE = new SequenceImpl<Long>("tt_organization_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.tt_payment_sequence</code>
+     */
+    public static final Sequence<Long> PAYMENT_SEQUENCE = new SequenceImpl<Long>("tt_payment_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
      * The sequence <code>public.tt_profile_sequence</code>
      */
     public static final Sequence<Long> PROFILE_SEQUENCE = new SequenceImpl<Long>("tt_profile_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
+
+    /**
+     * The sequence <code>public.tt_request_sequence</code>
+     */
+    public static final Sequence<Long> REQUEST_SEQUENCE = new SequenceImpl<Long>("tt_request_sequence", JqPublic.PUBLIC, org.jooq.impl.SQLDataType.BIGINT.nullable(false));
 
     /**
      * The sequence <code>public.tt_user_sequence</code>

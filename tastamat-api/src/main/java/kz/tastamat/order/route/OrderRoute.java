@@ -1,6 +1,7 @@
 package kz.tastamat.order.route;
 
 import io.vertx.core.AsyncResult;
+import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -9,9 +10,14 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import kz.tastamat.core.dto.OpenRequest;
 import kz.tastamat.db.model.dto.OrderDto;
+import kz.tastamat.order.dto.ActionDto;
 import kz.tastamat.order.dto.OrderInfoDto;
 import kz.tastamat.order.handler.OrderHandler;
 import kz.zx.api.app.BaseRoute;
+import kz.zx.utils.PaginatedList;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderRoute extends BaseRoute {
 
@@ -32,6 +38,25 @@ public class OrderRoute extends BaseRoute {
 	public Router route() {
 		Router router = Router.router(vertx);
 
+		router.get("/").handler(ctx -> {
+			MultiMap params = transformQueryParams(ctx.request().params());
+			params.add("user", ctx.get("user_id").toString());
+			handler.getOrders(params, ar -> {
+				if (ar.succeeded()) {
+					PaginatedList<OrderDto> list = ar.result();
+
+					List<JsonObject> jsonList = list.stream().map(JsonObject::mapFrom).collect(Collectors.toList());
+
+					JsonObject res = new JsonObject();
+					res.put("count", list.getCount());
+					res.put("list", jsonList);
+					ok(res, ctx);
+				} else {
+					ctx.fail(ar.cause());
+				}
+			});
+		});
+
 		router.get("/:identificator").handler(ctx -> {
 			String identificator = ctx.pathParam("identificator");
 			handler.getOrder(identificator, ar -> {
@@ -50,9 +75,10 @@ public class OrderRoute extends BaseRoute {
 			handler.create(orderDto, ar -> okEmpty(ar, ctx));
 		});
 
-		router.put("/open").handler(ctx -> {
-			OpenRequest openRequest = ctx.getBodyAsJson().mapTo(OpenRequest.class);
-			handler.open(openRequest, ar -> okEmpty(ar, ctx));
+		router.put("/withdraw").handler(ctx -> {
+			ActionDto actionDto = ctx.getBodyAsJson().mapTo(ActionDto.class);
+			actionDto.userId = ctx.get("user_id");
+			handler.withdraw(actionDto, ar -> okEmpty(ar, ctx));
 		});
 
 		return router;

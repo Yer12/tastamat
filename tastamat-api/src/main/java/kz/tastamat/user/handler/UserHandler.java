@@ -12,6 +12,7 @@ import kz.tastamat.sms.dto.SmsDto;
 import kz.tastamat.sms.handler.SmsHandler;
 import kz.tastamat.user.bean.UserBean;
 import kz.tastamat.auth.dto.LoginDto;
+import kz.tastamat.user.dto.UserInfoDto;
 import kz.zx.api.app.DbHandler;
 
 /**
@@ -26,6 +27,10 @@ public class UserHandler extends DbHandler {
 	public UserHandler(Vertx vertx) {
 		super(vertx);
 		this.smsHandler = new SmsHandler(vertx);
+	}
+
+	public void getFullInfo(Long id, Handler<AsyncResult<UserInfoDto>> handler) {
+		blocking(dsl -> new UserBean(dsl).getFullInfo(id), handler);
 	}
 
 	public void handleExists(String phone, Handler<AsyncResult<Boolean>> handler) {

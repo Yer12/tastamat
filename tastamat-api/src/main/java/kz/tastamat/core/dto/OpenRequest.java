@@ -23,11 +23,11 @@ public class OpenRequest {
         return dto;
     }
 
-    public static OpenRequest pick(OrderDto order) {
+    public static OpenRequest pick(String locker, String pickCode) {
 
         OpenRequest dto = new OpenRequest();
-        dto.locker = order.lockerCode;
-        dto.code = order.pickCode;
+        dto.locker = locker;
+        dto.code = pickCode;
 
         return dto;
     }

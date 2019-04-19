@@ -8,8 +8,11 @@ import kz.tastamat.dao.ProfileDao;
 import kz.tastamat.dao.UserDao;
 import kz.tastamat.dao.impl.ProfileDaoImpl;
 import kz.tastamat.dao.impl.UserDaoImpl;
+import kz.tastamat.db.model.dto.ProfileDto;
 import kz.tastamat.db.model.dto.UserDto;
 import kz.tastamat.enums.ConfigKey;
+import kz.tastamat.profile.dto.ProfileInfoDto;
+import kz.tastamat.user.dto.UserInfoDto;
 import kz.tastamat.utils.JsonUtils;
 import kz.zx.exceptions.ApiException;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -46,10 +49,20 @@ public class UserBean {
 		return new UserBean(ctx, config);
 	}
 
-	public UserDto getFullInfo(Long id) {
-		JsonObject userError = JsonUtils.getDictionary("not.found.user", "", "Пользователь не найден", "", "");
-		UserDto orderDto = getUserDao(this.ctx).findById(id).orElseThrow(() -> ApiException.notFound(userError.toString()));
-		return orderDto;
+	public UserInfoDto getFullInfo(Long id) {
+		return this.ctx.transactionResult(tr -> {
+			DSLContext dsl = tr.dsl();
+			JsonObject userError = JsonUtils.getDictionary("not.found.user", "", "Пользователь не найден", "", "");
+			UserDto userDto = getUserDao(dsl).findById(id).orElseThrow(() -> ApiException.notFound(userError.toString()));
+
+			UserInfoDto userInfo = UserInfoDto.build(userDto);
+
+			getProfileDao(dsl).findByUser(userDto.id).ifPresent(p -> {
+				userInfo.profile = ProfileInfoDto.build(p);
+			});
+
+			return userInfo;
+		});
 	}
 
 	public Boolean exists(String phone) {

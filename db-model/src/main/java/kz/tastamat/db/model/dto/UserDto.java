@@ -13,9 +13,12 @@ public class UserDto {
 	public Date modifyDate;
 	public Boolean enabled;
 	public Boolean confirmed;
+	public Boolean verified;
 	public String phone;
 	public String password;
 	public String smsCode;
+	public String email;
+	public String uid;
 	public Role role;
 
 	public static UserDto build(JqUserRecord u) {
@@ -28,7 +31,7 @@ public class UserDto {
 		user.phone = u.getPhone();
 		user.smsCode = u.getSmsCode();
 
-//		Optional.ofNullable(u.getRole()).map(Role::valueOf).ifPresent(role -> user.role = role);
+		Optional.ofNullable(u.getRole()).map(Role::valueOf).ifPresent(role -> user.role = role);
 
 		return user;
 	}

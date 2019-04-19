@@ -27,7 +27,7 @@ public class ProfileHandler extends DbHandler {
 		blocking(dsl -> new ProfileBean(dsl).getFullInfo(id), handler);
 	}
 
-	public void getUserProfile(Long id, Handler<AsyncResult<ProfileDto>> handler) {
+	public void getUserProfile(Long id, Handler<AsyncResult<ProfileInfoDto>> handler) {
 		blocking(dsl -> new ProfileBean(dsl).getFullInfoByUser(id), handler);
 	}
 

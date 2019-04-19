@@ -7,6 +7,7 @@ package kz.tastamat.db.model.jooq;
 import javax.annotation.Generated;
 
 import kz.tastamat.db.model.jooq.tables.JqOrder;
+import kz.tastamat.db.model.jooq.tables.JqPayment;
 import kz.tastamat.db.model.jooq.tables.JqProfile;
 import kz.tastamat.db.model.jooq.tables.JqUser;
 
@@ -28,6 +29,11 @@ public class Tables {
      * The table <code>public.tt_order</code>.
      */
     public static final JqOrder ORDER = kz.tastamat.db.model.jooq.tables.JqOrder.ORDER;
+
+    /**
+     * The table <code>public.tt_payment</code>.
+     */
+    public static final JqPayment PAYMENT = kz.tastamat.db.model.jooq.tables.JqPayment.PAYMENT;
 
     /**
      * The table <code>public.wx_profile</code>.

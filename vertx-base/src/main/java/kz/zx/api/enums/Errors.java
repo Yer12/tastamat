@@ -11,7 +11,7 @@ public enum Errors {
 	BUSINESS(580),
 	ACCESS(103),
 	DATA(400),
-	UNAUTHORIZED(401),;
+	UNAUTHORIZED(401);
 
 	private int code;
 

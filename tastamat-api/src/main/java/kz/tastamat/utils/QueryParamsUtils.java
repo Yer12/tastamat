@@ -1,6 +1,7 @@
 package kz.tastamat.utils;
 
 import io.vertx.core.MultiMap;
+import kz.tastamat.db.model.params.SearchParams;
 
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,17 @@ import java.util.List;
  * Created by baur on 10/22/17.
  */
 public class QueryParamsUtils {
+
+    public static SearchParams build(MultiMap queryParams) {
+
+        SearchParams searchParams = new SearchParams();
+        searchParams.status = QueryParamsUtils.asString(QueryParams.status, queryParams, null);
+        searchParams.page = QueryParamsUtils.asInteger(QueryParams.page, queryParams, 0);
+        searchParams.limit = QueryParamsUtils.asInteger(QueryParams.limit, queryParams, 5);
+        searchParams.user = QueryParamsUtils.asLong(QueryParams.user, queryParams, null);
+
+        return searchParams;
+    }
 
     public static Date asDate(QueryParams key, MultiMap queryParams, Date defaultValue) {
         if (queryParams.contains(key.toString())) {

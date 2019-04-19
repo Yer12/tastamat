@@ -7,6 +7,7 @@ package kz.tastamat.db.model.jooq;
 import javax.annotation.Generated;
 
 import kz.tastamat.db.model.jooq.tables.JqOrder;
+import kz.tastamat.db.model.jooq.tables.JqPayment;
 import kz.tastamat.db.model.jooq.tables.JqProfile;
 import kz.tastamat.db.model.jooq.tables.JqUser;
 
@@ -33,6 +34,7 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     public static final Index ORDER_PKEY = Indexes0.ORDER_PKEY;
+    public static final Index PAYMENT_PKEY = Indexes0.PAYMENT_PKEY;
     public static final Index PROFILE_PKEY = Indexes0.PROFILE_PKEY;
     public static final Index USER_PKEY = Indexes0.USER_PKEY;
 
@@ -42,6 +44,7 @@ public class Indexes {
 
     private static class Indexes0 extends AbstractKeys {
         public static Index ORDER_PKEY = createIndex("tt_order_pkey", JqOrder.ORDER, new OrderField[] { JqOrder.ORDER.ID }, true);
+        public static Index PAYMENT_PKEY = createIndex("tt_payment_pkey", JqPayment.PAYMENT, new OrderField[] { JqPayment.PAYMENT.ID }, true);
         public static Index PROFILE_PKEY = createIndex("wx_profile_pkey", JqProfile.PROFILE, new OrderField[] { JqProfile.PROFILE.ID }, true);
         public static Index USER_PKEY = createIndex("wx_user_pkey", JqUser.USER, new OrderField[] { JqUser.USER.ID }, true);
     }

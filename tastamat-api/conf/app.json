@@ -15,6 +15,11 @@
       "enabled": true,
       "verticle_class": "kz.tastamat.core.verticle.CoreVerticle",
       "instance_count": 1
+    },
+    {
+      "enabled": true,
+      "verticle_class": "kz.tastamat.payment.verticle.PaymentVerticle",
+      "instance_count": 1
     }
   ],
   "core": {
@@ -41,13 +46,19 @@
   "billing": {
     "price": 200
   },
+  "paypost": {
+    "url": "https://testpay.post.kz",
+    "token": "0fda436c3977481b447cc343fa4f55c4c3570ce4",
+    "link": "https://tastamat.kz/",
+    "webhook": "https://testtasta.tastamat.com/api/rest/payment/"
+  },
   "profile": {
     "wallet": 0,
     "template": "Вам поступила посылка в тастамат."
   },
   "web": {
     "host": "localhost",
-    "port": 10403,
+    "port": 10402,
     "prefix": "api"
   },
   "datasources": [

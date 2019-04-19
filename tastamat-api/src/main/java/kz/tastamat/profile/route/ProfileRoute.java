@@ -35,7 +35,7 @@ public class ProfileRoute extends BaseRoute {
 			Long id = Long.parseLong(ctx.pathParam("id"));
 			handler.getProfile(id, ar -> {
 				if(ar.succeeded()){
-					okProfileInfo(ar, ctx);
+					okProfile(ar, ctx);
 				} else {
 					ctx.fail(ar.cause());
 				}
@@ -57,16 +57,25 @@ public class ProfileRoute extends BaseRoute {
 			ProfileInfoDto profileDto = ctx.getBodyAsJson().mapTo(ProfileInfoDto.class);
 
 			profileDto.user = ctx.get("user_id");
-			handler.template(profileDto, ar -> okProfileInfo(ar, ctx));
+			handler.template(profileDto, ar -> okProfile(ar, ctx));
 		});
 
 		return router;
 	}
 
-	private void okProfileInfo(AsyncResult<ProfileDto> ar, RoutingContext ctx) {
+	private void okProfile(AsyncResult<ProfileDto> ar, RoutingContext ctx) {
 		if (ar.succeeded()) {
 			ProfileDto profile = ar.result();
 			ok(JsonObject.mapFrom(ProfileInfoDto.build(profile)), ctx);
+		} else {
+			ctx.fail(ar.cause());
+		}
+	}
+
+	private void okProfileInfo(AsyncResult<ProfileInfoDto> ar, RoutingContext ctx) {
+		if (ar.succeeded()) {
+			ProfileInfoDto profile = ar.result();
+			ok(JsonObject.mapFrom(profile), ctx);
 		} else {
 			ctx.fail(ar.cause());
 		}

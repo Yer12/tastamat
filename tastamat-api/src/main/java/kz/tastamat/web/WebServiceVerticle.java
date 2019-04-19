@@ -15,6 +15,8 @@ import kz.tastamat.auth.route.AuthRoute;
 import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.locker.route.LockerRoute;
 import kz.tastamat.order.route.OrderRoute;
+import kz.tastamat.payment.route.OpenPaymentRoute;
+import kz.tastamat.payment.route.PaymentRoute;
 import kz.tastamat.profile.route.ProfileRoute;
 import kz.tastamat.user.route.UserRoute;
 import kz.zx.api.app.AbstractWebServiceVerticle;
@@ -65,6 +67,11 @@ public class WebServiceVerticle extends AbstractWebServiceVerticle {
 		router.mountSubRouter("/a/lockers", LockerRoute.build(vertx).route());
 
 		router.mountSubRouter("/a/orders", OrderRoute.build(vertx).route());
+
+		router.mountSubRouter("/a/payment", PaymentRoute.build(vertx).route());
+
+		router.mountSubRouter("/payment", OpenPaymentRoute.build(vertx).route());
+
 	}
 
 	public void cors(Router router){

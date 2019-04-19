@@ -15,7 +15,7 @@ import java.util.Properties;
 public class Main {
     public static void main(String[] args) throws Exception {
         Properties properties = new Properties();
-        try (InputStream is = new FileInputStream("/home/baur/git/toolpar/tastamat-main/jooq-generator/run.properties")) {
+        try (InputStream is = new FileInputStream("/Users/baur/git/toolpar/tastamat/jooq-generator/run.properties")) {
             properties.load(is);
         }
 

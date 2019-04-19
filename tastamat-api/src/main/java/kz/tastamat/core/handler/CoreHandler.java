@@ -110,13 +110,15 @@ public class CoreHandler extends DbHandler {
 		});
 	}
 
-	public void open(OpenRequest openRequest, Handler<AsyncResult<OpenResponse>> handler) {
-		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(openRequest), OPEN_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
+	public void withdraw(String locker, String pickCode, Handler<AsyncResult<OpenResponse>> handler) {
+		OpenRequest request = OpenRequest.pick(locker, pickCode);
+		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(request), OPEN_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
 			if (ar.succeeded()) {
 				OpenResponse result = Mapper.map(OpenResponse.class, ar.result().body());
 				handler.handle(Future.succeededFuture(result));
 			} else {
-				handler.handle(Future.failedFuture(ar.cause()));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}

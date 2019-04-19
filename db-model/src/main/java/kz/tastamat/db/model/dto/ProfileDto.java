@@ -7,6 +7,8 @@ import java.util.Optional;
 
 public class ProfileDto {
 
+	public final static String className = "Profile";
+
 	public Long id;
 	public Date createDate;
 	public Date modifyDate;

@@ -14,4 +14,6 @@ public class SearchParams {
 	public Long to;
 	public Long locker;
 	public BoxSize size;
+	public Integer limit;
+	public Long user;
 }

@@ -1,9 +1,6 @@
 package kz.tastamat.order.handler;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Future;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
+import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -13,15 +10,21 @@ import kz.tastamat.core.dto.OpenResponse;
 import kz.tastamat.core.handler.CoreHandler;
 import kz.tastamat.db.model.dto.OrderDto;
 import kz.tastamat.db.model.dto.ProfileDto;
+import kz.tastamat.db.model.enums.OrderStatus;
+import kz.tastamat.db.model.params.SearchParams;
 import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.order.bean.OrderBean;
+import kz.tastamat.order.dto.ActionDto;
 import kz.tastamat.order.dto.OrderInfoDto;
 import kz.tastamat.profile.bean.ProfileBean;
+import kz.tastamat.profile.dto.ProfileInfoDto;
 import kz.tastamat.sms.dto.SmsDto;
 import kz.tastamat.sms.handler.SmsHandler;
 import kz.tastamat.utils.JsonUtils;
+import kz.tastamat.utils.QueryParamsUtils;
 import kz.zx.api.app.DbHandler;
 import kz.zx.exceptions.ApiException;
+import kz.zx.utils.PaginatedList;
 
 public class OrderHandler extends DbHandler {
 
@@ -43,8 +46,21 @@ public class OrderHandler extends DbHandler {
 		JsonObject core = config.getJsonObject(ConfigKey.CORE.key());
 		this.prefix = core.getString(ConfigKey.PREFIX.key());
 
-		this.coreHandler = new CoreHandler(vertx);
 		this.smsHandler = new SmsHandler(vertx);
+		this.coreHandler = new CoreHandler(vertx);
+	}
+
+	public void getOrders(MultiMap params, Handler<AsyncResult<PaginatedList<OrderDto>>> handler) {
+		SearchParams searchParams = QueryParamsUtils.build(params);
+		blocking(ctx -> {
+			return OrderBean.build(ctx).getOrders(searchParams);
+		}, ar -> {
+			if(ar.succeeded()){
+				handler.handle(Future.succeededFuture(ar.result()));
+			} else {
+				handler.handle(Future.failedFuture(ar.cause()));
+			}
+		});
 	}
 
 	public void getOrder(String identificator, Handler<AsyncResult<OrderInfoDto>> handler) {
@@ -64,7 +80,7 @@ public class OrderHandler extends DbHandler {
 			return ProfileBean.build(jq).getFullInfoByUser(orderDto.creatorId);
 		}, ur -> {
 			if(ur.succeeded()){
-				ProfileDto profile = ur.result();
+				ProfileInfoDto profile = ur.result();
 
 				if(profile.wallet < this.price){
 					JsonObject error = JsonUtils.getDictionary("not.enough.money", "", "Недостаточно средств", "", "");
@@ -135,13 +151,74 @@ public class OrderHandler extends DbHandler {
 		});
 	}
 
-	public void open(OpenRequest request, Handler<AsyncResult<Void>> handler) {
-		coreHandler.open(request, rr -> {
-			if(rr.succeeded()){
-				OpenResponse order = rr.result();
-				handler.handle(Future.succeededFuture());
+	public void withdraw(ActionDto actionDto, Handler<AsyncResult<Void>> handler) {
+		blocking(dsl -> {
+			return OrderBean.build(dsl).getFullInfo(actionDto.id);
+		}, br -> {
+			if (br.succeeded()) {
+				OrderDto order = br.result();
+
+				boolean ex = false;
+
+				if(!OrderStatus.SENT.equals(order.status)){
+					ex = true;
+					JsonObject statusError = JsonUtils.getDictionary("open.invalid.status", "", "Статус не валиден", "", "");
+					handler.handle(Future.failedFuture(ApiException.business(statusError.toString())));
+				}
+
+				if(actionDto.userId != order.creatorId){
+					ex = true;
+					JsonObject statusError = JsonUtils.getDictionary("open.invalid.user", "", "Вы не являетесь владельцем заказа", "", "");
+					handler.handle(Future.failedFuture(ApiException.business(statusError.toString())));
+				}
+
+				if(!ex){
+					coreHandler.withdraw(actionDto.locker, order.pickCode, or -> {
+						if(or.succeeded()){
+							blocking(dsl -> {
+								return OrderBean.build(dsl).withdraw(order.id);
+							}, rr -> {
+								if (rr.succeeded()) {
+									handler.handle(Future.succeededFuture());
+								} else {
+									handler.handle(Future.failedFuture(rr.cause()));
+								}
+							});
+						} else {
+							handler.handle(Future.failedFuture(or.cause()));
+						}
+					});
+				}
+
 			} else {
-				handler.handle(Future.failedFuture(rr.cause()));
+				handler.handle(Future.failedFuture(br.cause()));
+			}
+		});
+	}
+
+	public void pick(String code, Handler<AsyncResult<Void>> handler){
+		blocking(dsl -> {
+			return OrderBean.build(dsl).getFullInfoByPickCode(code);
+		}, br -> {
+			if (br.succeeded()) {
+				OrderDto order = br.result();
+
+				if(OrderStatus.SENT.equals(order.status)){
+					blocking(dsl -> {
+						return OrderBean.build(dsl).end(order.id);
+					}, rr -> {
+						if (rr.succeeded()) {
+							handler.handle(Future.succeededFuture());
+						} else {
+							handler.handle(Future.failedFuture(rr.cause()));
+						}
+					});
+				} else {
+					JsonObject pickError = JsonUtils.getDictionary("pick.invalid.status", "", "Статус посылки не валиден", "", "");
+					handler.handle(Future.failedFuture(ApiException.business(pickError.toString())));
+				}
+			} else {
+				handler.handle(Future.failedFuture(br.cause()));
 			}
 		});
 	}

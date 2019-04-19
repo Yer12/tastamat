@@ -11,6 +11,7 @@ import kz.tastamat.db.model.params.SearchParams;
 import kz.zx.utils.DateUtils;
 import kz.zx.utils.PaginatedList;
 import kz.zx.utils.StringUtils;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.InsertQuery;
 import org.jooq.SelectQuery;
@@ -37,44 +38,45 @@ public class OrderDaoImpl extends JooqDao implements OrderDao {
 		return ctx.selectFrom(o).where(o.ID.eq(id)).fetchOptional(OrderDto::build);
 	}
 
-//	@Override
-//	public List<OrderDto> find(SearchParams params) {
-//		SelectQuery<JqOrderRecord> query = ctx.selectQuery(o);
-//
-//		query.addConditions(o.STATUS.ne(OrderStatus.NEW.name()));
-//
-//		if(StringUtils.isNotEmpty(params.status)){
-//			query.addConditions(o.STATUS.eq(params.status));
-//		}
-//
-//		if(params.user != null){
-//			query.addConditions(o.COURIER.eq(params.user).or(o.CREATOR.eq(params.user)));
-//		}
-//
-//		if(StringUtils.isNotEmpty(params.index)){
-//			query.addConditions(o.LOCKER.eq(params.index));
-//		}
-//
-//		int count = ctx.fetchCount(query);
-//
-//		if (StringUtils.isNotEmpty(params.sortBy)) {
-//			if (params.sortBy.equals("createDate")) {
-//				if (params.sort.equals(Sort.desc)) {
-//					query.addOrderBy(o.CREATE_DATE.desc());
-//				} else {
-//					query.addOrderBy(o.CREATE_DATE.asc());
-//				}
-//			}
-//		} else {
-//			query.addOrderBy(o.CREATE_DATE.desc());
-//		}
-//
-//		query.addOffset(params.page * params.limit);
-//		query.addLimit(params.limit);
-//
-//		List<OrderDto> lockers = query.fetch(r -> OrderDto.build(r.into(o)));
-//		return new PaginatedList<>(lockers, (long) count);
-//	}
+	@Override
+	public Optional<OrderDto> findByPickCode(String code) {
+		return ctx.selectFrom(o).where(o.PICK_CODE.eq(code).and(o.STATUS.in(OrderStatus.RESERVED.name(), OrderStatus.SENT.name()))).fetchOptional(OrderDto::build);
+	}
+
+	@Override
+	public List<OrderDto> find(SearchParams params) {
+		SelectQuery<JqOrderRecord> query = ctx.selectQuery(o);
+
+		if(params.user != null){
+			query.addConditions(o.CREATOR.eq(params.user));
+		}
+
+		query.addConditions(o.STATUS.ne(OrderStatus.NEW.name()));
+
+		if(StringUtils.isNotEmpty(params.status)){
+			query.addConditions(o.STATUS.eq(params.status));
+		}
+
+		int count = ctx.fetchCount(query);
+
+		if (StringUtils.isNotEmpty(params.sortBy)) {
+			if (params.sortBy.equals("createDate")) {
+				if (params.sort.equals(Sort.desc)) {
+					query.addOrderBy(o.CREATE_DATE.desc());
+				} else {
+					query.addOrderBy(o.CREATE_DATE.asc());
+				}
+			}
+		} else {
+			query.addOrderBy(o.CREATE_DATE.desc());
+		}
+
+		query.addOffset(params.page * params.limit);
+		query.addLimit(params.limit);
+
+		List<OrderDto> orders = query.fetch(r -> OrderDto.build(r.into(o)));
+		return new PaginatedList<>(orders, (long) count);
+	}
 
 	@Override
 	public OrderDto create(OrderDto dto) {
@@ -136,6 +138,13 @@ public class OrderDaoImpl extends JooqDao implements OrderDao {
 	@Override
 	public int sms(Long id) {
 		return ctx.update(o).set(o.SMS, true).where(o.ID.eq(id)).execute();
+	}
+
+	@Override
+	public int withdraw(Long id) {
+		Date current = new Date();
+		OffsetDateTime odt = OffsetDateTime.ofInstant(current.toInstant(), ZoneId.systemDefault());
+		return ctx.update(o).set(o.STATUS, OrderStatus.WITHDRAWN.name()).set(o.PICK_DATE, odt).where(o.ID.eq(id)).execute();
 	}
 
 }

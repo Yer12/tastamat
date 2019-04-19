@@ -7,9 +7,11 @@ package kz.tastamat.db.model.jooq;
 import javax.annotation.Generated;
 
 import kz.tastamat.db.model.jooq.tables.JqOrder;
+import kz.tastamat.db.model.jooq.tables.JqPayment;
 import kz.tastamat.db.model.jooq.tables.JqProfile;
 import kz.tastamat.db.model.jooq.tables.JqUser;
 import kz.tastamat.db.model.jooq.tables.records.JqOrderRecord;
+import kz.tastamat.db.model.jooq.tables.records.JqPaymentRecord;
 import kz.tastamat.db.model.jooq.tables.records.JqProfileRecord;
 import kz.tastamat.db.model.jooq.tables.records.JqUserRecord;
 
@@ -42,6 +44,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<JqOrderRecord> ORDER_PKEY = UniqueKeys0.ORDER_PKEY;
+    public static final UniqueKey<JqPaymentRecord> PAYMENT_PKEY = UniqueKeys0.PAYMENT_PKEY;
     public static final UniqueKey<JqProfileRecord> PROFILE_PKEY = UniqueKeys0.PROFILE_PKEY;
     public static final UniqueKey<JqUserRecord> USER_PKEY = UniqueKeys0.USER_PKEY;
 
@@ -50,6 +53,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final ForeignKey<JqOrderRecord, JqUserRecord> ORDER__FK_TT_ORDER_CREATOR = ForeignKeys0.ORDER__FK_TT_ORDER_CREATOR;
+    public static final ForeignKey<JqPaymentRecord, JqUserRecord> PAYMENT__FK_TT_PAYMENT_USER = ForeignKeys0.PAYMENT__FK_TT_PAYMENT_USER;
     public static final ForeignKey<JqProfileRecord, JqUserRecord> PROFILE__FK_WX_PROFILE_USER = ForeignKeys0.PROFILE__FK_WX_PROFILE_USER;
 
     // -------------------------------------------------------------------------
@@ -58,12 +62,14 @@ public class Keys {
 
     private static class UniqueKeys0 extends AbstractKeys {
         public static final UniqueKey<JqOrderRecord> ORDER_PKEY = createUniqueKey(JqOrder.ORDER, "tt_order_pkey", JqOrder.ORDER.ID);
+        public static final UniqueKey<JqPaymentRecord> PAYMENT_PKEY = createUniqueKey(JqPayment.PAYMENT, "tt_payment_pkey", JqPayment.PAYMENT.ID);
         public static final UniqueKey<JqProfileRecord> PROFILE_PKEY = createUniqueKey(JqProfile.PROFILE, "wx_profile_pkey", JqProfile.PROFILE.ID);
         public static final UniqueKey<JqUserRecord> USER_PKEY = createUniqueKey(JqUser.USER, "wx_user_pkey", JqUser.USER.ID);
     }
 
     private static class ForeignKeys0 extends AbstractKeys {
         public static final ForeignKey<JqOrderRecord, JqUserRecord> ORDER__FK_TT_ORDER_CREATOR = createForeignKey(kz.tastamat.db.model.jooq.Keys.USER_PKEY, JqOrder.ORDER, "tt_order__fk_tt_order_creator", JqOrder.ORDER.CREATOR);
+        public static final ForeignKey<JqPaymentRecord, JqUserRecord> PAYMENT__FK_TT_PAYMENT_USER = createForeignKey(kz.tastamat.db.model.jooq.Keys.USER_PKEY, JqPayment.PAYMENT, "tt_payment__fk_tt_payment_user", JqPayment.PAYMENT.USER);
         public static final ForeignKey<JqProfileRecord, JqUserRecord> PROFILE__FK_WX_PROFILE_USER = createForeignKey(kz.tastamat.db.model.jooq.Keys.USER_PKEY, JqProfile.PROFILE, "wx_profile__fk_wx_profile_user", JqProfile.PROFILE.USER);
     }
 }

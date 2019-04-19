@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class JqProfile extends TableImpl<JqProfileRecord> {
 
-    private static final long serialVersionUID = -709059883;
+    private static final long serialVersionUID = -1656441765;
 
     /**
      * The reference instance of <code>public.wx_profile</code>
@@ -74,6 +74,36 @@ public class JqProfile extends TableImpl<JqProfileRecord> {
      * The column <code>public.wx_profile.user_</code>.
      */
     public final TableField<JqProfileRecord, Long> USER = createField("user_", org.jooq.impl.SQLDataType.BIGINT, this, "");
+
+    /**
+     * The column <code>public.wx_profile.firstname_</code>.
+     */
+    public final TableField<JqProfileRecord, String> FIRSTNAME = createField("firstname_", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.wx_profile.lastname_</code>.
+     */
+    public final TableField<JqProfileRecord, String> LASTNAME = createField("lastname_", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.wx_profile.birth_date_</code>.
+     */
+    public final TableField<JqProfileRecord, OffsetDateTime> BIRTH_DATE = createField("birth_date_", org.jooq.impl.SQLDataType.TIMESTAMPWITHTIMEZONE, this, "");
+
+    /**
+     * The column <code>public.wx_profile.doc_type_</code>.
+     */
+    public final TableField<JqProfileRecord, String> DOC_TYPE = createField("doc_type_", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.wx_profile.doc_number_</code>.
+     */
+    public final TableField<JqProfileRecord, String> DOC_NUMBER = createField("doc_number_", org.jooq.impl.SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>public.wx_profile.doc_exp_date_</code>.
+     */
+    public final TableField<JqProfileRecord, OffsetDateTime> DOC_EXP_DATE = createField("doc_exp_date_", org.jooq.impl.SQLDataType.TIMESTAMPWITHTIMEZONE, this, "");
 
     /**
      * The column <code>public.wx_profile.wallet_</code>.

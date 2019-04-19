@@ -13,6 +13,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.jooq.DSLContext;
 import org.jooq.InsertQuery;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -34,7 +37,7 @@ public class ProfileDaoImpl extends JooqDao implements ProfileDao {
 
 	@Override
 	public Optional<ProfileDto> findByUser(Long userId) {
-		return ctx.selectFrom(p).where(p.USER.eq(userId)).fetchOptional(ProfileDto::build);
+		return ctx.selectFrom(p).where(p.USER.eq(userId)).limit(1).fetchOptional(ProfileDto::build);
 	}
 
 	@Override

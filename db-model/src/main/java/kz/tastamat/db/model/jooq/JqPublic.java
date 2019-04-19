@@ -11,6 +11,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 import kz.tastamat.db.model.jooq.tables.JqOrder;
+import kz.tastamat.db.model.jooq.tables.JqPayment;
 import kz.tastamat.db.model.jooq.tables.JqProfile;
 import kz.tastamat.db.model.jooq.tables.JqUser;
 
@@ -33,7 +34,7 @@ import org.jooq.impl.SchemaImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class JqPublic extends SchemaImpl {
 
-    private static final long serialVersionUID = -324017967;
+    private static final long serialVersionUID = 780162726;
 
     /**
      * The reference instance of <code>public</code>
@@ -44,6 +45,11 @@ public class JqPublic extends SchemaImpl {
      * The table <code>public.tt_order</code>.
      */
     public final JqOrder ORDER = kz.tastamat.db.model.jooq.tables.JqOrder.ORDER;
+
+    /**
+     * The table <code>public.tt_payment</code>.
+     */
+    public final JqPayment PAYMENT = kz.tastamat.db.model.jooq.tables.JqPayment.PAYMENT;
 
     /**
      * The table <code>public.wx_profile</code>.
@@ -80,8 +86,12 @@ public class JqPublic extends SchemaImpl {
 
     private final List<Sequence<?>> getSequences0() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.FILE_SEQUENCE,
             Sequences.ORDER_SEQUENCE,
+            Sequences.ORGANIZATION_SEQUENCE,
+            Sequences.PAYMENT_SEQUENCE,
             Sequences.PROFILE_SEQUENCE,
+            Sequences.REQUEST_SEQUENCE,
             Sequences.USER_SEQUENCE);
     }
 
@@ -95,6 +105,7 @@ public class JqPublic extends SchemaImpl {
     private final List<Table<?>> getTables0() {
         return Arrays.<Table<?>>asList(
             JqOrder.ORDER,
+            JqPayment.PAYMENT,
             JqProfile.PROFILE,
             JqUser.USER);
     }

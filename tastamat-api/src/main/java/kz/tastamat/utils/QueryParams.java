@@ -10,5 +10,7 @@ public enum QueryParams {
     sortBy,
     searchKey,
     from,
-    to
+    to,
+    limit,
+    user
 }

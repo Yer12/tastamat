@@ -1,8 +1,6 @@
 package kz.tastamat.profile.dto;
 
 import kz.tastamat.db.model.dto.ProfileDto;
-import kz.tastamat.db.model.dto.UserDto;
-import kz.tastamat.db.model.enums.Role;
 
 public class ProfileInfoDto {
 

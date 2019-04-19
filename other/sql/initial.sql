@@ -25,6 +25,15 @@ CREATE SEQUENCE public.tt_order_sequence
 ALTER TABLE public.tt_order_sequence
   OWNER TO postgres;
 
+CREATE SEQUENCE public.tt_payment_sequence
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER TABLE public.tt_payment_sequence
+  OWNER TO postgres;
+
 CREATE OR REPLACE FUNCTION public.generic_stamp()
   RETURNS trigger AS
 $BODY$
@@ -70,6 +79,37 @@ CREATE TRIGGER wx_user_timestamp
   FOR EACH ROW
   EXECUTE PROCEDURE public.generic_stamp();
 
+CREATE TABLE public.wx_profile
+(
+  id_ bigint NOT NULL,
+  create_date_ timestamp with time zone,
+  modify_date_ timestamp with time zone,
+  user_ bigint,
+  firstname_ text,
+  lastname_ text,
+  birth_date_ timestamp with time zone,
+  doc_type_ text,
+  doc_number_ text,
+  doc_exp_date_ timestamp with time zone,
+  wallet_ bigint,
+  template_ text,
+  CONSTRAINT wx_profile_pkey PRIMARY KEY (id_),
+  CONSTRAINT fk_wx_profile_user FOREIGN KEY (user_)
+      REFERENCES public.wx_user (id_) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.wx_profile
+  OWNER TO postgres;
+
+CREATE TRIGGER wx_profile_timestamp
+  BEFORE INSERT OR UPDATE
+  ON public.wx_profile
+  FOR EACH ROW
+  EXECUTE PROCEDURE public.generic_stamp();
+
 CREATE TABLE public.tt_order
 (
   id_ bigint NOT NULL,
@@ -105,26 +145,28 @@ CREATE TRIGGER tt_order_timestamp
   FOR EACH ROW
   EXECUTE PROCEDURE public.generic_stamp();
 
-CREATE TABLE public.wx_profile
+CREATE TABLE public.tt_payment
 (
   id_ bigint NOT NULL,
   create_date_ timestamp with time zone,
   modify_date_ timestamp with time zone,
+  identificator_ text,
   user_ bigint,
-  wallet_ bigint,
-  template_ text,
-  CONSTRAINT wx_profile_pkey PRIMARY KEY (id_),
-  CONSTRAINT fk_wx_profile_user FOREIGN KEY (user_)
+  amount_ bigint,
+  pid_ text,
+  status_ text,
+  CONSTRAINT tt_payment_pkey PRIMARY KEY (id_),
+  CONSTRAINT fk_tt_payment_user FOREIGN KEY (user_)
       REFERENCES public.wx_user (id_) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
 );
-ALTER TABLE public.wx_profile
+ALTER TABLE public.tt_payment
   OWNER TO postgres;
 
-CREATE TRIGGER wx_profile_timestamp
+CREATE TRIGGER tt_payment_timestamp
   BEFORE INSERT OR UPDATE
   ON public.wx_profile
   FOR EACH ROW
