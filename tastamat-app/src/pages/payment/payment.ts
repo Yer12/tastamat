@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, ViewController, NavParams } from 'ionic-angular';
+import { IonicPage, ViewController, NavParams, Platform } from 'ionic-angular';
 import { InAppBrowser, InAppBrowserOptions } from '@ionic-native/in-app-browser';
 import { PaymentService } from "../../services/payment.service";
-import {OtherService} from "../../services/other.service";
+import { OtherService} from "../../services/other.service";
 
 @IonicPage()
 @Component({
@@ -34,13 +34,15 @@ export class PaymentPage {
     private iab: InAppBrowser,
     private paymentService: PaymentService,
     private otherService: OtherService,
-    private navParams: NavParams
+    private navParams: NavParams,
+    public platform: Platform
   ) {
     this.type = this.navParams.get('type');
     this.price = this.navParams.get('price');
     this.limit = screen.height
       ? Math.round((screen.height - 70)/64)
       : 5;
+    this.platform.registerBackButtonAction(() => this.closeModal(),1);
   }
 
   ngAfterViewChecked() {
@@ -87,7 +89,7 @@ export class PaymentPage {
       if (event.url === 'https://tastamat.kz/') {
         this.paymentService.successPayment(this.payment.id).subscribe(
           res => console.log(res),
-          err => console.log(err)
+          err => this.otherService.handleError(err)
         );
         browser.close();
       }

@@ -92,21 +92,10 @@ export class SignInPage {
       async response => {
         await this.storage.set('token', response.token);
         this.storage.set('user', response.user);
+        this.storage.set('profile', response.user.profile);
         this.navCtrl.push(TabsPage);
       },
-      error => {
-        console.log(error.error);
-        let alert = this.alertCtrl.create({
-          title: this.translate.instant('signIn.incorrectPassword'),
-          buttons: [
-            {
-              text: this.translate.instant('signIn.tryAgain'),
-              role: 'cancel'
-            }
-          ]
-        });
-        alert.present();
-      }
+      error => this.otherService.handleError(error)
     );
   };
 

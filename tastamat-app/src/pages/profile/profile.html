@@ -16,7 +16,7 @@
         {{ 'profile.yourBalance' | translate }}
       </p>
       <p class="profile__balance__text--bold">
-        {{ user && user.system.balance > 0 ? (user.system.balance | mask: 'separator') : 0 }}
+        {{ user && user.profile.wallet > 0 ? (user.profile.wallet | mask: 'separator') : 0 }}
         {{ 'profile.tg' | translate }}
       </p>
     </div>
@@ -29,10 +29,10 @@
       <ion-icon name="cash" item-start></ion-icon>
       {{ 'profile.paymentHistory' | translate }}
     </ion-item>
-    <!--<ion-item (click)="goTo()">-->
-      <!--<ion-icon name="text" item-start></ion-icon>-->
-      <!--{{ 'profile.smsTemplate' | translate }}-->
-    <!--</ion-item>-->
+    <ion-item (click)="goTo()">
+      <ion-icon name="text" item-start></ion-icon>
+      {{ 'profile.smsTemplate' | translate }}
+    </ion-item>
     <ion-item>
       <ion-icon name="call" item-start></ion-icon>
       <a href="tel:+77760082782" class="profile__link">

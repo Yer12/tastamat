@@ -11,7 +11,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-segment [(ngModel)]="status" (ionChange)="getOrders(true)">
+  <ion-segment [(ngModel)]="status" (ionChange)="reloadOrders()">
     <ion-segment-button value="SENT">
       {{ 'orders.SENT' | translate }}
     </ion-segment-button>
@@ -31,14 +31,14 @@
          (click)="expand(item)"
     >
       <div class="tastamatApp__list__title">
-        <span>{{item.client.phone}}</span>
-        <span>{{item.createDate | date: 'dd/MM/yy HH:mm'}}</span>
+        <span>{{item.recipientPhone}}</span>
+        <span>{{item.createDate | date: 'dd.MM.yy - HH:mm'}}</span>
       </div>
       <div class="orders__info">
         <div class="orders__info__text">
           <div class="orders__text">
             <span class="orders__recipient">{{'orders.recipient' | translate}}</span>
-            {{item.client.fullname}}
+            {{item.recipientName}}
           </div>
           <!--<div class="orders__text">{{item.locker.name}}, {{item.locker.address}}</div>-->
           <button class="orders__btn" (click)="chooseOpenType(item.id)" *ngIf="item.status === 'SENT'">

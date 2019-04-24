@@ -65,6 +65,7 @@ export class SetPasswordPage {
                     async response => {
                       await this.storage.set('token', response.token);
                       this.storage.set('user', response.user);
+                      this.storage.set('profile', response.user.profile);
                       this.navCtrl.push(TabsPage);
                     },
                     error => this.otherService.handleError(error)

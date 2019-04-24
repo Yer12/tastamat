@@ -6,9 +6,10 @@ import { HttpClient } from "@angular/common/http";
 import { Storage } from "@ionic/storage";
 import { LoaderProvider } from "../../providers/loader.provider";
 import { VerifyService } from "../../services/verify.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SignInPage} from "../signIn/signIn";
-import {AuthService} from "../../services/auth.service";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { SignInPage } from "../signIn/signIn";
+import { AuthService } from "../../services/auth.service";
+import { OtherService } from "../../services/other.service";
 
 @Component({
   selector: 'verification-page',
@@ -84,7 +85,8 @@ export class Verification_step2Page {
     private storage: Storage,
     private loader: LoaderProvider,
     private verifyService: VerifyService,
-    private authService: AuthService
+    private authService: AuthService,
+    private otherService: OtherService
   ) {
     this.form = this.navParams.get('form');
     console.log(this.form);
@@ -100,6 +102,7 @@ export class Verification_step2Page {
       res => {
         this.user = res;
         this.storage.set('user', res);
+        this.storage.set('profile', res.profile);
         try { this.userFiles = res.profile.files; } catch (e) {}
       },
       err => {
@@ -120,7 +123,6 @@ export class Verification_step2Page {
     };
 
     this.camera.getPicture(options).then((imageData) => {
-      console.log(imageData);
       this.uploadPhoto(imageData);
     }, (err) => {});
   }
@@ -146,13 +148,13 @@ export class Verification_step2Page {
   private uploadImage(formData: FormData) {
     this.verifyService.uploadPhoto(this.user.id, formData).subscribe(
       response => this.userFiles.push(response),
-      err => console.log(err));
+      err => this.otherService.handleError(err));
   }
 
   deletePhoto(id) {
     this.verifyService.deletePhoto(id).subscribe(
       res => this.updateUser(),
-      err => console.log(err)
+      err => this.otherService.handleError(err)
     );
   }
 
@@ -163,7 +165,7 @@ export class Verification_step2Page {
   send() {
     this.verifyService.sendForm(this.user.id, this.form).subscribe(
       response => this.navCtrl.push(Verification_step3Page),
-      err => console.log(err));
+      err => this.otherService.handleError(err));
   }
 }
 

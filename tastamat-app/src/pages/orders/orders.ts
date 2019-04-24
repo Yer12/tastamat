@@ -40,12 +40,16 @@ export class OrdersPage {
     this.getOrders(false);
   }
 
-  async doRefresh(refresher) {
-    this.page = await 0;
-    this.getOrders(true);
+  doRefresh(refresher) {
+    this.reloadOrders();
     setTimeout(() => {
       refresher.complete();
     }, 2000);
+  }
+
+  async reloadOrders() {
+    this.page = await 0;
+    this.getOrders(true);
   }
 
   getOrders(refresh) {
@@ -116,7 +120,10 @@ export class OrdersPage {
   withdrawnFromCell(presenceCode) {
     this.otherService.withdrawFromCell({id: this.orderId, locker: presenceCode})
       .subscribe(
-        res => this.otherService.cellOpenedAlert("withdrawn"),
+        res => {
+          this.otherService.cellOpenedAlert("withdrawn");
+          this.reloadOrders();
+        },
         err => this.otherService.handleError(err)
       )
   }
@@ -132,15 +139,7 @@ export class OrdersPage {
 
   expand(item) {
     const button = document.getElementById(item.id+item.createDate);
-    if (button.className.indexOf('expanded') > -1) {
-      button.classList.remove('expanded');
-    } else {
-      const otherButtons = document.querySelectorAll('.tastamatApp__list__item');
-      for (let i = 0; i < otherButtons.length; i++) {
-        otherButtons[i].classList.remove('expanded');
-      }
-      button.classList.add('expanded');
-    }
+    button.classList.toggle('expanded');
   }
 
 }

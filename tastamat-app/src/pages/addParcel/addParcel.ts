@@ -11,11 +11,15 @@ export class AddParcelPage {
   name: string;
   phone: string;
   cellSize: string;
+  price: number;
   user: {
     id: number;
     phone: string;
-    role: string
-    system: {};
+    profile: {
+      id: number,
+      template: string,
+      wallet: number
+    }
   };
 
   constructor(
@@ -27,7 +31,10 @@ export class AddParcelPage {
 
   ionViewDidEnter() {
     this.storage.get('user').then(user => {
-      if (user) { this.user = user; }
+      if (user) {
+        this.user = user;
+        this.price = user.profile.price || 250;
+      }
     });
   }
 
@@ -75,7 +82,7 @@ export class AddParcelPage {
       recipientName: this.name,
       recipientPhone: 7 + this.phone,
       size: this.cellSize,
-      locker: presenceCode
+      presenceCode: presenceCode
     }).subscribe(
       () => this.otherService.cellOpenedAlert(),
       err => this.otherService.handleError(err)

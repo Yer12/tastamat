@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
 import { OtherService } from "../../services/other.service";
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: 'page-tastamats',
@@ -17,11 +18,17 @@ export class TastamatsPage {
   limit: number;
   showMore: boolean = false;
   searchText: string;
+  lang: string;
 
-  constructor(private geolocation: Geolocation, private otherService: OtherService) {
+  constructor(
+    private geolocation: Geolocation,
+    private otherService: OtherService,
+    private translateService: TranslateService
+  ) {
     this.limit = screen.height
       ? Math.round((screen.height - 300)/64)
       : 5;
+    this.lang = this.translateService.currentLang;
   }
 
   ionViewDidLoad() {
@@ -40,7 +47,7 @@ export class TastamatsPage {
         this.getTastamats(resp.coords.latitude, resp.coords.longitude, refresh);
       })
       .catch((error) => {
-        console.log('Error getting location', error);
+        this.getTastamats(null, null, true);
       });
   }
 
@@ -49,7 +56,7 @@ export class TastamatsPage {
     this.getLocation(true);
     setTimeout(() => {
       refresher.complete();
-    }, 2000);
+    }, 1000);
   }
 
   async getTastamats(lat, lng, refresh) {
@@ -63,7 +70,10 @@ export class TastamatsPage {
 
         this.showMore = !(response.count === this.tastamats.list.length);
       },
-      error => this.tastamats.list = []
+      error => {
+        this.tastamats.list = [];
+        this.otherService.handleError(error);
+      }
     );
   }
 
@@ -74,15 +84,7 @@ export class TastamatsPage {
 
   expand(item) {
     const button = document.getElementById(item.id);
-    if (button.className.indexOf('expanded') > -1) {
-      button.classList.remove('expanded');
-    } else {
-      const otherButtons = document.querySelectorAll('.tastamatApp__list__item');
-      for (let i = 0; i < otherButtons.length; i++) {
-        otherButtons[i].classList.remove('expanded');
-      }
-      button.classList.add('expanded');
-    }
+    button.classList.toggle('expanded');
   }
 
 }

@@ -24,13 +24,32 @@
   <div class="tastamatApp__list">
     <div *ngFor="let item of tastamats.list" id="{{item.id}}" class="tastamatApp__list__item" (click)="expand(item)">
       <div class="tastamatApp__list__title">
-        <span>{{item.address.buildingShortRu}}</span>
+        <span>
+          {{
+          item.address['buildingShort' + (lang | titlecase)]
+            ? item.address['buildingShort' + (lang | titlecase)]
+            : item.address.buildingShortRu
+          }}
+        </span>
         <span>~{{item.location.distance}} {{ 'tastamats.meter' | translate }}</span>
       </div>
       <div class="tastamats__info">
         <div class="tastamats__info__text">
-          <div class="tastamats__address">{{item.address.streetShortRu}} {{item.address.buildingNumber}}</div>
-          <div class="tastamats__text">{{item.location.descriptionRu}}</div>
+          <div class="tastamats__address">
+            {{
+            item.address['streetShort' + (lang | titlecase)]
+              ? item.address['streetShort' + (lang | titlecase)]
+              : item.address.streetShortRu
+            }}
+            {{item.address.buildingNumber}}
+          </div>
+          <div class="tastamats__text">
+            {{
+            item.location['description' + (lang | titlecase)]
+              ? item.location['description' + (lang | titlecase)]
+              : item.location.descriptionRu
+            }}
+          </div>
         </div>
         <a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="tastamats__info__map"></a>
       </div>

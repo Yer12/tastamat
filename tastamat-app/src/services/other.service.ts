@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from "@ngx-translate/core";
 import { AlertController } from "ionic-angular";
 
-const baseUrl = "https://platform.tastamat.com/platform/v1/rest";
+export const baseUrl = "https://tasta.tastamat.com/insta/rest";
 
 @Injectable ()
 export class OtherService {
@@ -15,7 +15,7 @@ export class OtherService {
 
   getTastamats(lat, lng, page, limit, searchKey): any {
     return this.http.get(
-      `${baseUrl}/lockers?page=${page}&limit=${limit}${
+      `${baseUrl}/a/lockers?page=${page}&limit=${limit}${
         lat && lng ? `&lat=${lat}&lng=${lng}` : ""
         }${searchKey ? `&searchKey=${searchKey}` : ""}`
     );
@@ -33,16 +33,17 @@ export class OtherService {
     return this.http.put(`${baseUrl}/a/orders/withdraw`, data)
   }
 
-  handleError(data): any {
-    let errorMessage = "";
+  async handleError(data): Promise<any> {
+    let errorMessage = undefined;
     try {
-      errorMessage = JSON.parse(data.error.message)[this.translate.getDefaultLang()]
+      errorMessage = await JSON.parse(data.error.message)[this.translate.currentLang]
+        || JSON.parse(data.error.message)[this.translate.getDefaultLang()];
     }
-    catch (e) {
-      errorMessage = this.translate.instant('global.unexpectedError')
-    }
+    catch (e) {}
     let alert = this.alertCtrl.create({
-      subTitle: errorMessage,
+      subTitle: errorMessage
+        ? errorMessage
+        : this.translate.instant('global.unexpectedError'),
       buttons: [
         {
           text: 'OK',
@@ -56,8 +57,8 @@ export class OtherService {
     alert.present();
   }
 
-  cellOpenedAlert(type?: string) {
-    let alert = this.alertCtrl.create({
+  async cellOpenedAlert(type?: string) {
+    let alert = await this.alertCtrl.create({
       subTitle: type === "withdrawn"
         ? this.translate.instant('qrScanner.cellOpened2')
         : this.translate.instant('qrScanner.cellOpened'),

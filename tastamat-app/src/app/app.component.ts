@@ -36,6 +36,7 @@ export class MyApp {
         this.authService.getAccount().subscribe(
           res => {
             this.storage.set('user', res);
+            this.storage.set('profile', res.profile);
             // console.log(res);
             // if (!res.verified && !res.request)
             //   this.nav.setRoot(Verification_step1Page);
@@ -54,22 +55,23 @@ export class MyApp {
         this.nav.setRoot(SignInPage);
     });
 
-    platform.ready().then(async () => {
+    platform.ready().then(() => {
 
+      translate.setDefaultLang('ru');
       this.globalization.getPreferredLanguage()
-        .then(res => console.log(res))
+        .then(res => translate.use(res.value.substr(0,2)))
         .catch(e => console.log(e));
 
-      if (platform.is('android')) {
+      if (platform.is('android'))
         statusBar.backgroundColorByHexString('#cc5418');
-      } else {
+      else
         statusBar.styleDefault();
-      }
-      splashScreen.hide();
-      await translate.setDefaultLang('ru');
+
       translate.get('tabs.back').subscribe(backLabel => {
         this.config.set('backButtonText', backLabel);
       });
+
+      splashScreen.hide();
     });
   }
 }

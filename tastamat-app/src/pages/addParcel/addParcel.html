@@ -6,10 +6,10 @@
 
 <ion-content padding>
   <div>
-    <p class="tastamatApp__alert" *ngIf="user && (user.system.balance < user.system.price)">
+    <p class="tastamatApp__alert" *ngIf="user && (user.profile.wallet < price)">
       {{ 'addParcel.notEnoughBalance' | translate }}
     </p>
-    <button class="tastamatApp__fillUp" *ngIf="user && (user.system.balance < user.system.price)" (click)="fillWallet()">
+    <button class="tastamatApp__fillUp" *ngIf="user && (user.profile.wallet < price)" (click)="fillWallet()">
       {{ 'addParcel.fillUpBalance' | translate }}
     </button>
     <p class="tastamatApp__title">{{ 'addParcel.step1' | translate }}</p>

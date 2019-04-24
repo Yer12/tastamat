@@ -1,3 +1,148 @@
 {
-  "tastamats": "Tastamats"
+  "global": {
+    "notFound": "Nothing found.<br>Pull down to refresh",
+    "showMore": "Show more",
+    "back": "Back",
+    "further": "Next",
+    "cancel": "Cancel",
+    "done": "Done",
+    "signOut": "Sign out",
+    "unexpectedError": "Unexpected error",
+    "cameraTrouble": "There are some troubles with opening the camera. Allow access to the camera in the settings. Or enter the code manually",
+    "inputManually": "Enter manually"
+  },
+  "tabs": {
+    "tastamats": "Tastamats",
+    "profile": "Profile",
+    "drop": "Put in",
+    "orders": "Orders",
+    "back": "Back"
+  },
+  "signIn": {
+    "password": "Password",
+    "offer": "I&nbsp;<a>AGREE WITH THE TERMS</a>&nbsp;AND CONDITIONS",
+    "logIn": "Log in",
+    "further": "Next",
+    "info": "SMS will be sent to the number +7{{phone}}",
+    "continue": "Continue",
+    "incorrectPassword": "Incorrect password",
+    "tryAgain": "Try again",
+    "forgotPassword": "Forgot password?"
+  },
+  "enterSmsCode": {
+    "title": "SMS code sent to the number",
+    "sendAgain": "Send code again"
+  },
+  "tastamats": {
+    "title": "Tastamats",
+    "find": "Tastamat search",
+    "closer": "Nearest terminals:",
+    "meter": "m"
+  },
+  "addParcel": {
+    "title": "Put in the parcel",
+    "step1": "1. Enter the recipient name",
+    "step2": "2. Select the cell size",
+    "step3": "3. Scan the QR-code on tastamat",
+    "namePlaceholder": "Name",
+    "phonePlaceholder": "Phone number",
+    "smallCell": "Small cell<br/>10x40x40sm",
+    "middleCell": "Medium cell<br/>20x40x40sm",
+    "bigCell": "Large cell<br/>40x40x40sm",
+    "scan": "SCAN THE QR-CODE",
+    "presenceCode": "Tastamat code",
+    "open": "Open the cell",
+    "manualInput": "or enter the code manually",
+    "manualInputTitle": "Enter the code manually",
+    "info": "After scanning, a cell will be opened for enclosing the parcel, funds will be debited from the personal account of the application, and SMS will be sent to the recipient.",
+    "notEnoughBalance": "Not enough funds to put in",
+    "fillUpBalance": "Fill up the balance"
+  },
+  "orders": {
+    "title": "Orders",
+    "myOrders": "My orders",
+    "recipient": "Recipient: ",
+    "SENT": "Current",
+    "END": "Done",
+    "WITHDRAWN": "Withdrawn",
+    "pick": "Withdraw",
+    "chooseOpenType": "Select opening type",
+    "qr": "Scan the QR-code",
+    "manual": "Enter the code manually"
+  },
+  "profile": {
+    "title": "Profile",
+    "yourBalance": "Your balance:",
+    "fillUp": "Fill up the balance",
+    "smsTemplate": "SMS template",
+    "callCenter": "Call center",
+    "signOut": "Sign out",
+    "tg": "tenge",
+    "paymentHistory": "Payment history"
+  },
+  "smsTemplate": {
+    "title": "SMS template",
+    "currentSmsExample": "Current SMS example:",
+    "editSms": "Edit SMS",
+    "save": "Save"
+  },
+  "setPassword": {
+    "title": "Create password",
+    "password": "Password",
+    "repeatPassword": "Repeat password",
+    "save": "Create",
+    "incorrectPass": "Passwords not matched",
+    "ok": "ОК",
+    "success": "Entered password saved successfully",
+    "signIn": "Sign in"
+  },
+  "alerts": {
+    "incorrectCode": "Incorrect code",
+    "ok": "OK"
+  },
+  "qrScanner": {
+    "scan": "Point the camera at the QR-code of Tastamat",
+    "cellOpened": "Cell is opened! Put in the parcel and close the cell",
+    "cellOpened2": "Cell is opened! Pick up the parcel and close the cell",
+    "ok": "OK",
+    "incorrectQR": "Incorrect QR-code",
+    "tryAgain": "Try again"
+  },
+  "payment": {
+    "fillUp": "Fill up the balance",
+    "history": "Payment history",
+    "writeAmount": "Enter the amount",
+    "amount": "Amount",
+    "accept": "Accept",
+    "currentTariff": "Current price: ",
+    "currency": "tenge",
+    "statuses": {
+      "IN_PROCCESS": "In process",
+      "EXPIRED": "Timed out",
+      "CANCELED": "Cancel payment",
+      "APPROVED": "Approved",
+      "CONFIRMED": "Confirmed",
+      "FAILED": "Payment error",
+      "SPENT": "Put in",
+      "NEW": "New"
+    }
+  },
+  "verification": {
+    "title": "Verification",
+    "firstName": "First name",
+    "lastName": "Surname",
+    "birthDate": "Birth date",
+    "docType": "Document type",
+    "nationalId": "National ID",
+    "passport": "Passport",
+    "docNumber": "Document number",
+    "docExpDate": "Document expiry date",
+    "uploadPhoto": "Upload photo",
+    "takePhoto": "Take photo",
+    "openGallery": "Choose from gallery",
+    "send": "Send",
+    "requestSent": "Thank you!<br/>Your application is queued for review.<br/>Our manager will contact you to confirm the data.",
+    "requestInProgress": "Thank you!<br/>Your application is queued for review.<br/>Our manager will contact you to confirm the data.",
+    "requestDeclined": "Sorry, your request was rejected by the manager"
+  }
 }

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-const baseUrl = "https://platform.tastamat.com/platform/v1/rest";
+import { baseUrl } from "./other.service";
 
 @Injectable ()
 export class VerifyService {
