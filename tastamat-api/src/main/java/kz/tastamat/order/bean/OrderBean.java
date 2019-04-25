@@ -47,6 +47,12 @@ public class OrderBean {
 		return orderDto;
 	}
 
+	public OrderDto getFullInfoByIdentificator(String code) {
+		JsonObject orderError = JsonUtils.getDictionary("order.not.found", "", "Посылка не найдена", "", "");
+		OrderDto orderDto = getOrderDao(this.ctx).findByIdentificator(code).orElseThrow(() -> ApiException.notFound(orderError.toString()));
+		return orderDto;
+	}
+
 	public OrderDto create(OrderDto order) {
 		return getOrderDao(this.ctx).create(order);
 	}

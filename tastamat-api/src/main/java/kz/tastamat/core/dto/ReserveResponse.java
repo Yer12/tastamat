@@ -10,4 +10,6 @@ public class ReserveResponse {
 	public OrderStatus status;
 
 	public LockerInfoDto locker;
+
+	public Boolean active;
 }

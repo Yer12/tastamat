@@ -27,8 +27,14 @@ public interface UserDao {
 
     UserDto confirm(Long id);
 
-    UserDto enable(Long id, String password);
+    UserDto enable(Long id);
 
-//    UserDto save(UserDto dto);
+    UserDto initialize(UserDto dto);
+
+    UserDto sms(Long id, String smsCode);
+
+    UserDto password(Long id, String password);
+
+//   UserDto save(UserDto dto);
 
 }

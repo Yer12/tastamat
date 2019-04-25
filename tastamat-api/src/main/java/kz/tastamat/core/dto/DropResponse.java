@@ -10,4 +10,6 @@ public class DropResponse {
 	public OrderStatus status;
 
 	public LockerInfoDto locker;
+
+	public Boolean active;
 }

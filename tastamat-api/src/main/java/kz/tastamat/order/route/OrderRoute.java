@@ -68,7 +68,7 @@ public class OrderRoute extends BaseRoute {
 			});
 		});
 
-		router.post("/").handler(ctx -> {
+		router.post("/book-drop").handler(ctx -> {
 			OrderDto orderDto = ctx.getBodyAsJson().mapTo(OrderDto.class);
 
 			orderDto.creatorId = ctx.get("user_id");

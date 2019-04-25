@@ -53,47 +53,128 @@ public class PaymentHandler extends DbHandler {
 		});
 	}
 
-	public void create(PaymentDto payment, Handler<AsyncResult<PaymentResponse>> handler) {
+	public void request(Long userId, PaymentDto payment, Handler<AsyncResult<PaymentResponse>> handler) {
+		initialize(userId, payment, cr -> {
+			if (cr.succeeded()) {
+				submit(cr.result(), sr -> {
+					if (sr.succeeded()) {
+						handler.handle(Future.succeededFuture(sr.result()));
+					} else {
+						handler.handle(Future.failedFuture(sr.cause()));
+					}
+				});
+			} else {
+				handler.handle(Future.failedFuture(cr.cause()));
+			}
+		});
+	}
+
+	public void initialize(Long userId, PaymentDto payment, Handler<AsyncResult<PaymentDto>> handler) {
 		validatePayment(payment);
 		blocking(jooq -> {
-			return PaymentBean.build(jooq).create(payment);
+			return PaymentBean.build(jooq).initialize(userId, payment);
 		}, pr -> {
 			if (pr.succeeded()) {
 				PaymentDto dto = pr.result();
-
-				String amount = dto.amount.toString();
-				String link = this.link;
-				String webhook = this.webhook+dto.identificator;
-
-				PaymentRequest request = PaymentRequest.build(amount, link, webhook);
-				vertx.eventBus().send(PaymentVerticle.ADDRESS, JsonObject.mapFrom(request), MAKE_PAYMENT, (AsyncResult<Message<JsonObject>> ar) -> {
-					if (ar.succeeded()) {
-						PaymentResponse result = Mapper.map(PaymentResponse.class, ar.result().body());
-						blocking(dsl -> {
-							return PaymentBean.build(dsl).pid(dto.id, result.payment);
-						}, dr -> {
-							if (dr.succeeded()) {
-								handler.handle(Future.succeededFuture(result));
-							} else {
-								handler.handle(Future.failedFuture(dr.cause()));
-							}
-						});
-					} else {
-						handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
-					}
-				});
+				handler.handle(Future.succeededFuture(dto));
 			} else {
 				handler.handle(Future.failedFuture(pr.cause()));
 			}
 		});
 	}
 
-	public void approve(String identificator, Handler<AsyncResult<Void>> handler) {
+	public void submit(PaymentDto dto, Handler<AsyncResult<PaymentResponse>> handler) {
+		String amount = dto.amount.toString();
+		String link = this.link;
+		String webhook = this.webhook + dto.identificator;
+
+		PaymentRequest request = PaymentRequest.build(amount, link, webhook);
+		vertx.eventBus().send(PaymentVerticle.ADDRESS, JsonObject.mapFrom(request), MAKE_PAYMENT, (AsyncResult<Message<JsonObject>> ar) -> {
+			if (ar.succeeded()) {
+				PaymentResponse result = Mapper.map(PaymentResponse.class, ar.result().body());
+				result.id = dto.id;
+				blocking(dsl -> {
+					return PaymentBean.build(dsl).pid(dto.id, result.payment);
+				}, dr -> {
+					if (dr.succeeded()) {
+						handler.handle(Future.succeededFuture(result));
+					} else {
+						handler.handle(Future.failedFuture(dr.cause()));
+					}
+				});
+			} else {
+				handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
+			}
+		});
+	}
+
+	public void create(Long userId, PaymentDto payment, Handler<AsyncResult<PaymentDto>> handler) {
+		validatePayment(payment);
+		blocking(jooq -> {
+			return PaymentBean.build(jooq).create(userId, payment);
+		}, pr -> {
+			if (pr.succeeded()) {
+				PaymentDto dto = pr.result();
+				handler.handle(Future.succeededFuture(dto));
+			} else {
+				handler.handle(Future.failedFuture(pr.cause()));
+			}
+		});
+	}
+
+	public void succeeded(Long id, Handler<AsyncResult<Void>> handler) {
+		blocking(jooq -> {
+			return PaymentBean.build(jooq).getFullInfo(id);
+		}, pr -> {
+			if (pr.succeeded()) {
+				PaymentDto dto = pr.result();
+
+				if (!PaymentStatus.NEW.equals(dto.status)) {
+					JsonObject error = JsonUtils.getDictionary("invalid.payment.status", "", "Статус платежа невалиден", "", "");
+					handler.handle(Future.failedFuture(error.encode()));
+				} else {
+					blocking(dsl -> {
+						return PaymentBean.build(dsl).succeeded(id);
+					}, dr -> {
+						if (dr.succeeded()) {
+							handler.handle(Future.succeededFuture());
+						} else {
+							handler.handle(Future.failedFuture(dr.cause()));
+						}
+					});
+				}
+			} else {
+				handler.handle(Future.failedFuture(pr.cause()));
+			}
+		});
+	}
+
+	public void trigger(String identificator, Handler<AsyncResult<Void>> handler) {
 		blocking(dsl -> {
-			return PaymentBean.build(dsl).approve(identificator);
+			return PaymentBean.build(dsl).getFullInfoByIdentifier(identificator);
 		}, dr -> {
 			if (dr.succeeded()) {
-				handler.handle(Future.succeededFuture());
+				PaymentDto dto = dr.result();
+				if (!PaymentStatus.IN_PROCCESS.equals(dto.status)) {
+					handler.handle(Future.succeededFuture());
+				} else {
+					status(dto.pid, res -> {
+						if (res.succeeded()) {
+							PaymentStatusResponse response = res.result();
+							blocking(dsl -> {
+								return PaymentBean.build(dsl).status(dto.id, response.status);
+							}, sr -> {
+								if (dr.succeeded()) {
+									handler.handle(Future.succeededFuture());
+								} else {
+									handler.handle(Future.failedFuture(sr.cause()));
+								}
+							});
+						} else {
+							handler.handle(Future.failedFuture(res.cause()));
+						}
+					});
+				}
 			} else {
 				handler.handle(Future.failedFuture(dr.cause()));
 			}
@@ -107,15 +188,14 @@ public class PaymentHandler extends DbHandler {
 			if (pr.succeeded()) {
 				PaymentDto dto = pr.result();
 
-				if(!PaymentStatus.IN_PROCCESS.equals(dto.status)){
+				if (!PaymentStatus.IN_PROCCESS.equals(dto.status)) {
 					handler.handle(Future.succeededFuture(PaymentInfoDto.build(dto)));
 				} else {
-					PaymentStatusRequest request = PaymentStatusRequest.build(dto.pid);
-					vertx.eventBus().send(PaymentVerticle.ADDRESS, JsonObject.mapFrom(request), STATUS_PAYMENT, (AsyncResult<Message<JsonObject>> ar) -> {
-						if (ar.succeeded()) {
-							PaymentStatusResponse result = Mapper.map(PaymentStatusResponse.class, ar.result().body());
+					status(dto.pid, res -> {
+						if (res.succeeded()) {
+							PaymentStatusResponse response = res.result();
 							blocking(dsl -> {
-								return PaymentBean.build(dsl).status(id, result.status);
+								return PaymentBean.build(dsl).status(id, response.status);
 							}, dr -> {
 								if (dr.succeeded()) {
 									PaymentDto paymentDto = dr.result();
@@ -125,7 +205,7 @@ public class PaymentHandler extends DbHandler {
 								}
 							});
 						} else {
-							handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
+							handler.handle(Future.failedFuture(res.cause()));
 						}
 					});
 				}
@@ -136,8 +216,20 @@ public class PaymentHandler extends DbHandler {
 		});
 	}
 
+	public void status(String pid, Handler<AsyncResult<PaymentStatusResponse>> handler) {
+		PaymentStatusRequest request = PaymentStatusRequest.build(pid);
+		vertx.eventBus().send(PaymentVerticle.ADDRESS, JsonObject.mapFrom(request), STATUS_PAYMENT, (AsyncResult<Message<JsonObject>> ar) -> {
+			if (ar.succeeded()) {
+				PaymentStatusResponse result = Mapper.map(PaymentStatusResponse.class, ar.result().body());
+				handler.handle(Future.succeededFuture(result));
+			} else {
+				handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
+			}
+		});
+	}
+
 	private void validatePayment(PaymentDto payment) {
-		if(payment.amount == null){
+		if (payment.amount == null) {
 			JsonObject error = JsonUtils.getDictionary("empty.payment.amount", "", "Сумма не указана", "", "");
 			throw ApiException.data(error.toString());
 		}

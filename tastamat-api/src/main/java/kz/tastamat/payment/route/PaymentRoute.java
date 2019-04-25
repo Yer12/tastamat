@@ -60,13 +60,24 @@ public class PaymentRoute extends BaseRoute {
 			PaymentDto payment = ctx.getBodyAsJson().mapTo(PaymentDto.class);
 
 			payment.userId = ctx.get("user_id");
-			handler.create(payment, ar -> okPaymentResponse(ar, ctx));
+			handler.request(payment.userId, payment, ar -> okPaymentResponse(ar, ctx));
+		});
+
+		router.put("/:id/succeeded").handler(ctx -> {
+			Long id = Long.parseLong(ctx.pathParam("id"));
+			handler.succeeded(id, ar -> {
+				if (ar.succeeded()) {
+					okEmpty(ar, ctx);
+				} else {
+					ctx.fail(ar.cause());
+				}
+			});
 		});
 
 		router.put("/:id/status").handler(ctx -> {
 			Long id = Long.parseLong(ctx.pathParam("id"));
 			handler.status(id, ar -> {
-				if(ar.succeeded()){
+				if (ar.succeeded()) {
 					okPaymentInfo(ar, ctx);
 				} else {
 					ctx.fail(ar.cause());

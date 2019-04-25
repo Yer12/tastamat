@@ -119,15 +119,51 @@ public class UserDaoImpl extends JooqDao implements UserDao {
 	}
 
 	@Override
-	public UserDto enable(Long id, String password) {
+	public UserDto initialize(UserDto dto) {
+
+		JqUserRecord record = ctx.newRecord(u);
+		record.setId(ctx.nextval(Sequences.USER_SEQUENCE));
+		record.setPhone(dto.phone);
+
+		Optional.ofNullable(dto.role).ifPresent(role -> record.setRole(role.name()));
+
+		JqUserRecord saved = ctx.insertInto(u).set(record).returning().fetchOne();
+
+		return UserDto.build(saved);
+	}
+
+	@Override
+	public UserDto sms(Long id, String smsCode) {
+		JqUserRecord record = ctx.newRecord(u);
+
+		record.setSmsCode(smsCode);
+
+		JqUserRecord saved = ctx.update(u).set(record).where(u.ID.eq(id)).returning().fetchOne();
+
+		return UserDto.build(saved);
+	}
+
+	@Override
+	public UserDto enable(Long id) {
 		Objects.requireNonNull(id);
 
 		JqUserRecord record = ctx.newRecord(u);
-		record.setId(id);
-		record.setPassword(password);
-		record.setEnabled(true);
-		record.update();
 
-		return UserDto.build(record);
+		record.setEnabled(true);
+
+		JqUserRecord saved = ctx.update(u).set(record).where(u.ID.eq(id)).returning().fetchOne();
+		return UserDto.build(saved);
+	}
+
+	@Override
+	public UserDto password(Long id, String password) {
+		Objects.requireNonNull(id);
+
+		JqUserRecord record = ctx.newRecord(u);
+		record.setPassword(password);
+
+		JqUserRecord saved = ctx.update(u).set(record).where(u.ID.eq(id)).returning().fetchOne();
+
+		return UserDto.build(saved);
 	}
 }

@@ -62,10 +62,10 @@ public class AuthRoute extends BaseRoute {
 	public Router route() {
 		Router router = Router.router(vertx);
 
-		router.get("/:phone/exists").handler(ctx -> {
+		router.get("/phones/:phone/exists").handler(ctx -> {
 			String phone = ctx.pathParam("phone");
 			handler.handleExists(phone, ar -> {
-				if(ar.succeeded()) {
+				if (ar.succeeded()) {
 					JsonObject object = new JsonObject();
 					object.put("exists", ar.result());
 					ok(object, ctx);
@@ -75,22 +75,11 @@ public class AuthRoute extends BaseRoute {
 			});
 		});
 
-		router.put("/:phone/sms").handler(ctx -> {
-			String phone = ctx.pathParam("phone");
-			handler.handleSms(phone, ar -> {
-				if(ar.succeeded()) {
-					okConfirm(ar, ctx);
-				} else {
-					error(ar, ctx);
-				}
-			});
-		});
-
-		router.put("/confirm").handler(ctx -> {
-			ConfirmDto confirmDto = ctx.getBodyAsJson().mapTo(ConfirmDto.class);
-			handler.handleConfirm(confirmDto,  ar -> {
-				if(ar.succeeded()) {
-					okConfirm(ar, ctx);
+		router.post("/initialize").handler(ctx -> {
+			UserInfoDto userInfoDto = ctx.getBodyAsJson().mapTo(UserInfoDto.class);
+			handler.initialize(userInfoDto, ar -> {
+				if (ar.succeeded()) {
+					okUserInfo(ar, ctx);
 				} else {
 					error(ar, ctx);
 				}
@@ -99,8 +88,8 @@ public class AuthRoute extends BaseRoute {
 
 		router.put("/password").handler(ctx -> {
 			ConfirmDto confirmDto = ctx.getBodyAsJson().mapTo(ConfirmDto.class);
-			handler.handlePassword(confirmDto,  ar -> {
-				if(ar.succeeded()) {
+			handler.password(confirmDto, ar -> {
+				if (ar.succeeded()) {
 					okAuth(ar, ctx);
 				} else {
 					errorAuth(ar, ctx);
@@ -110,8 +99,8 @@ public class AuthRoute extends BaseRoute {
 
 		router.put("/login").handler(ctx -> {
 			LoginDto loginDto = ctx.getBodyAsJson().mapTo(LoginDto.class);
-			handler.handleLogin(loginDto, ar -> {
-				if(ar.succeeded()) {
+			handler.login(loginDto, ar -> {
+				if (ar.succeeded()) {
 					okAuth(ar, ctx);
 				} else {
 					errorAuth(ar, ctx);
@@ -119,12 +108,43 @@ public class AuthRoute extends BaseRoute {
 			});
 		});
 
+		router.put("/phones/:phone/sms").handler(ctx -> {
+			String phone = ctx.pathParam("phone");
+			handler.sms(phone, ar -> {
+				if (ar.succeeded()) {
+					okConfirm(ar, ctx);
+				} else {
+					error(ar, ctx);
+				}
+			});
+		});
+
+		router.put("/phones/confirm").handler(ctx -> {
+			ConfirmDto confirmDto = ctx.getBodyAsJson().mapTo(ConfirmDto.class);
+			handler.confirm(confirmDto, ar -> {
+				if (ar.succeeded()) {
+					okConfirm(ar, ctx);
+				} else {
+					error(ar, ctx);
+				}
+			});
+		});
+
 		return router;
 	}
 
-	private void okConfirm(AsyncResult<UserDto> ar, RoutingContext ctx) {
+	private void okUserInfo(AsyncResult<UserInfoDto> ar, RoutingContext ctx) {
 		if (ar.succeeded()) {
-			UserDto user = ar.result();
+			UserInfoDto user = ar.result();
+			ok(JsonObject.mapFrom(user), ctx);
+		} else {
+			error(ar, ctx);
+		}
+	}
+
+	private void okConfirm(AsyncResult<UserInfoDto> ar, RoutingContext ctx) {
+		if (ar.succeeded()) {
+			UserInfoDto user = ar.result();
 			ConfirmDto confirm = ConfirmDto.build(user);
 			ok(JsonObject.mapFrom(confirm), ctx);
 		} else {
@@ -132,12 +152,12 @@ public class AuthRoute extends BaseRoute {
 		}
 	}
 
-	private void okAuth(AsyncResult<UserDto> ar, RoutingContext ctx) {
+	private void okAuth(AsyncResult<UserInfoDto> ar, RoutingContext ctx) {
 		if (ar.succeeded()) {
-			UserDto user = ar.result();
+			UserInfoDto user = ar.result();
 			AuthDto auth = new AuthDto();
 			JWTOptions options = new JWTOptions();
-			auth.user = UserInfoDto.build(user);
+			auth.user = user;
 			auth.token = jwtAuth.generateToken(new JsonObject().put("sub", user.id), options);
 			ok(JsonObject.mapFrom(auth), ctx);
 		} else {

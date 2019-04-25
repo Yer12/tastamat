@@ -11,6 +11,7 @@ import kz.tastamat.db.model.params.SearchParams;
 import kz.zx.utils.DateUtils;
 import kz.zx.utils.PaginatedList;
 import kz.zx.utils.StringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.InsertQuery;
@@ -41,6 +42,15 @@ public class OrderDaoImpl extends JooqDao implements OrderDao {
 	@Override
 	public Optional<OrderDto> findByPickCode(String code) {
 		return ctx.selectFrom(o).where(o.PICK_CODE.eq(code).and(o.STATUS.in(OrderStatus.RESERVED.name(), OrderStatus.SENT.name()))).fetchOptional(OrderDto::build);
+	}
+
+	@Override
+	public Optional<OrderDto> findByIdentificator(String code) {
+		return ctx.selectFrom(o)
+				.where(o.IDENTIFICATOR.eq(code))
+				.orderBy(o.ID.desc())
+				.limit(1)
+				.fetchOptional(OrderDto::build);
 	}
 
 	@Override
@@ -88,7 +98,7 @@ public class OrderDaoImpl extends JooqDao implements OrderDao {
 		record.setRecipientPhone(dto.recipientPhone);
 		record.setLockerId(dto.lockerId);
 		record.setLockerCode(dto.lockerCode);
-//		record.setIdentificator(dto.identificator);
+		record.setIdentificator(RandomStringUtils.randomNumeric(6));
 		Optional.ofNullable(dto.size).ifPresent(size -> record.setBoxSize(size.name()));
 		record.setStatus(OrderStatus.NEW.name());
 

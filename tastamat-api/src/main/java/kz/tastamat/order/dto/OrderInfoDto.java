@@ -26,6 +26,8 @@ public class OrderInfoDto {
 //	public BoxDto box;
 	public OrderStatus status;
 
+	public Boolean active;
+
 //	public static OrderInfoDto build(OrderDto order) {
 //
 //		OrderInfoDto dto = new OrderInfoDto();

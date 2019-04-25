@@ -9,22 +9,30 @@ import kz.tastamat.core.dto.OpenRequest;
 import kz.tastamat.core.dto.OpenResponse;
 import kz.tastamat.core.handler.CoreHandler;
 import kz.tastamat.db.model.dto.OrderDto;
+import kz.tastamat.db.model.dto.PaymentDto;
 import kz.tastamat.db.model.dto.ProfileDto;
 import kz.tastamat.db.model.enums.OrderStatus;
+import kz.tastamat.db.model.enums.PaymentStatus;
 import kz.tastamat.db.model.params.SearchParams;
 import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.order.bean.OrderBean;
 import kz.tastamat.order.dto.ActionDto;
 import kz.tastamat.order.dto.OrderInfoDto;
+import kz.tastamat.order.dto.StatusRequest;
+import kz.tastamat.order.dto.StatusResponse;
+import kz.tastamat.payment.handler.PaymentHandler;
 import kz.tastamat.profile.bean.ProfileBean;
 import kz.tastamat.profile.dto.ProfileInfoDto;
 import kz.tastamat.sms.dto.SmsDto;
 import kz.tastamat.sms.handler.SmsHandler;
+import kz.tastamat.utils.EncryptUtils;
 import kz.tastamat.utils.JsonUtils;
 import kz.tastamat.utils.QueryParamsUtils;
 import kz.zx.api.app.DbHandler;
 import kz.zx.exceptions.ApiException;
 import kz.zx.utils.PaginatedList;
+
+import java.util.Date;
 
 public class OrderHandler extends DbHandler {
 
@@ -32,6 +40,7 @@ public class OrderHandler extends DbHandler {
 
 	private final CoreHandler coreHandler;
 	private final SmsHandler smsHandler;
+	private PaymentHandler paymentHandler;
 
 	protected String prefix;
 	protected Long price;
@@ -48,6 +57,7 @@ public class OrderHandler extends DbHandler {
 
 		this.smsHandler = new SmsHandler(vertx);
 		this.coreHandler = new CoreHandler(vertx);
+		this.paymentHandler = new PaymentHandler(vertx);
 	}
 
 	public void getOrders(MultiMap params, Handler<AsyncResult<PaginatedList<OrderDto>>> handler) {
@@ -91,6 +101,7 @@ public class OrderHandler extends DbHandler {
 					}, pr -> {
 						if (pr.succeeded()) {
 							OrderDto dto = pr.result();
+							orderDto.identificator = dto.identificator;
 							coreHandler.drop(orderDto, rr -> {
 								if(rr.succeeded()){
 									DropResponse result = rr.result();
@@ -124,6 +135,15 @@ public class OrderHandler extends DbHandler {
 																return OrderBean.build(dsl).sms(dto.id);
 															}, res -> {
 															});
+														}
+													});
+
+													PaymentDto paymentDto = new PaymentDto();
+													paymentDto.amount = this.price;
+													paymentDto.status = PaymentStatus.SPENT;
+													paymentHandler.create(orderDto.creatorId, paymentDto, sr -> {
+														if (sr.failed()) {
+															log.error("sms error {}", sr.cause());
 														}
 													});
 
@@ -221,5 +241,39 @@ public class OrderHandler extends DbHandler {
 				handler.handle(Future.failedFuture(br.cause()));
 			}
 		});
+	}
+
+	public void status(StatusRequest request, Handler<AsyncResult<StatusResponse>> handler){
+		StatusResponse response = new StatusResponse();
+		response.date = new Date();
+		response.result = StatusResponse.Result.SUCCESS;
+		if(OrderStatus.END.equals(request.status)){
+			blocking(dsl -> {
+				return OrderBean.build(dsl).getFullInfoByIdentificator(request.identificator);
+			}, br -> {
+				if (br.succeeded()) {
+					OrderDto order = br.result();
+
+					if(OrderStatus.SENT.equals(order.status)){
+						blocking(dsl -> {
+							return OrderBean.build(dsl).end(order.id);
+						}, rr -> {
+							if (rr.succeeded()) {
+								handler.handle(Future.succeededFuture(response));
+							} else {
+								handler.handle(Future.failedFuture(rr.cause()));
+							}
+						});
+					} else {
+						JsonObject pickError = JsonUtils.getDictionary("pick.invalid.status", "", "Статус посылки не валиден", "", "");
+						handler.handle(Future.failedFuture(ApiException.business(pickError.toString())));
+					}
+				} else {
+					handler.handle(Future.failedFuture(br.cause()));
+				}
+			});
+		} else {
+			handler.handle(Future.succeededFuture(response));
+		}
 	}
 }

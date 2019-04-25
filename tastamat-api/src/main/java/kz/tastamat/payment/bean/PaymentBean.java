@@ -40,32 +40,25 @@ public class PaymentBean {
 		return paymentDto;
 	}
 
-	public PaymentDto create(PaymentDto payment) {
-		return getPaymentDao(this.ctx).create(payment);
+	public PaymentDto getFullInfoByIdentifier(String identifier) {
+		PaymentDto paymentDto = getPaymentDao(this.ctx).findByIdentificator(identifier).orElseThrow(() -> ApiException.notFound("payment.not.found"));
+		return paymentDto;
+	}
+
+	public PaymentDto initialize(Long userId, PaymentDto payment) {
+		return getPaymentDao(this.ctx).initialize(userId, payment);
+	}
+
+	public PaymentDto create(Long userId, PaymentDto payment) {
+		return getPaymentDao(this.ctx).create(userId, payment);
+	}
+
+	public int succeeded(Long id) {
+		return getPaymentDao(this.ctx).succeeded(id);
 	}
 
 	public int pid(Long id, String pid) {
 		return getPaymentDao(this.ctx).pid(id, pid);
-	}
-
-	public int approve(String identificator) {
-		return this.ctx.transactionResult(tr -> {
-			DSLContext dsl = tr.dsl();
-			PaymentDao paymentDao = getPaymentDao(dsl);
-			ProfileDao profileDao = getProfileDao(dsl);
-			PaymentDto paymentDto = paymentDao.findByIdentificator(identificator).orElseThrow(() -> ApiException.notFound("payment.not.found"));
-			if(!PaymentStatus.IN_PROCCESS.equals(paymentDto.status)){
-				throw ApiException.business("payment.finished");
-			}
-			ProfileDto profileDto = profileDao.findByUser(paymentDto.userId).orElseThrow(() -> ApiException.notFound("profile.not.found"));
-			log.info("paymentDto.id {}", paymentDto.id);
-			log.info("profileDto.wallet {}", profileDto.wallet);
-			log.info("paymentDto.amount {}", paymentDto.amount);
-			Long wallet = profileDto.wallet+paymentDto.amount;
-			log.info("wallet {}", wallet);
-			profileDao.wallet(profileDto.id, wallet);
-			return paymentDao.approve(identificator);
-		});
 	}
 
 	public PaymentDto status(Long id, String status) {
@@ -75,14 +68,10 @@ public class PaymentBean {
 			DSLContext dsl = tr.dsl();
 			PaymentDao paymentDao = getPaymentDao(dsl);
 			PaymentDto paymentDto = paymentDao.findById(id).orElseThrow(() -> ApiException.notFound("payment.not.found"));
-			if(PaymentStatus.APPROVED.equals(stat)){
+			if (PaymentStatus.APPROVED.equals(stat)) {
 				ProfileDao profileDao = getProfileDao(dsl);
 				ProfileDto profileDto = profileDao.findByUser(paymentDto.userId).orElseThrow(() -> ApiException.notFound("profile.not.found"));
-				log.info("paymentDto.id {}", paymentDto.id);
-				log.info("profileDto.wallet {}", profileDto.wallet);
-				log.info("paymentDto.amount {}", paymentDto.amount);
-				Long wallet = profileDto.wallet+paymentDto.amount;
-				log.info("wallet {}", wallet);
+				Long wallet = profileDto.wallet + paymentDto.amount;
 				profileDao.wallet(profileDto.id, wallet);
 			}
 			paymentDao.status(id, stat);

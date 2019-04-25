@@ -20,6 +20,7 @@ import org.jooq.SelectQuery;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,14 +46,14 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 	}
 
 	@Override
-	public PaymentDto create(PaymentDto dto) {
+	public PaymentDto create(Long userId, PaymentDto dto) {
 
 		JqPaymentRecord record = ctx.newRecord(p);
 		record.setId(ctx.nextval(Sequences.PAYMENT_SEQUENCE));
 		record.setIdentificator(UUID.randomUUID().toString());
 		record.setAmount(dto.amount);
-		record.setUser(dto.userId);
-		record.setStatus(OrderStatus.NEW.name());
+		record.setUser(userId);
+		Optional.ofNullable(dto.status).ifPresent(status -> record.setStatus(status.name()));
 
 		InsertQuery<JqPaymentRecord> query = ctx.insertQuery(p);
 		query.addRecord(record);
@@ -93,7 +94,7 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 
 	@Override
 	public int pid(Long id, String pid) {
-		return ctx.update(p).set(p.STATUS, PaymentStatus.IN_PROCCESS.name()).set(p.PID, pid).where(p.ID.eq(id)).execute();
+		return ctx.update(p).set(p.PID, pid).where(p.ID.eq(id)).execute();
 	}
 
 	@Override
@@ -104,6 +105,27 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 	@Override
 	public int status(Long id, PaymentStatus status) {
 		return ctx.update(p).set(p.STATUS, status.name()).where(p.ID.eq(id)).execute();
+	}
+
+	@Override
+	public PaymentDto initialize(Long userId, PaymentDto dto) {
+		Objects.requireNonNull(userId);
+
+		JqPaymentRecord record = ctx.newRecord(p);
+		record.setId(ctx.nextval(Sequences.PAYMENT_SEQUENCE));
+		record.setIdentificator(UUID.randomUUID().toString());
+		record.setAmount(dto.amount);
+		record.setUser(userId);
+		record.setStatus(OrderStatus.NEW.name());
+
+		JqPaymentRecord saved = ctx.insertInto(p).set(record).returning().fetchOne();
+
+		return PaymentDto.build(saved);
+	}
+
+	@Override
+	public int succeeded(Long id) {
+		return ctx.update(p).set(p.STATUS, PaymentStatus.IN_PROCCESS.name()).where(p.ID.eq(id)).execute();
 	}
 
 }

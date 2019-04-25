@@ -36,6 +36,7 @@ public class CoreHandler extends DbHandler {
 	private static final DeliveryOptions RESERVE_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.RESERVE.name());
 	private static final DeliveryOptions DROP_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.DROP.name());
 	private static final DeliveryOptions OPEN_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.OPEN.name());
+	private static final DeliveryOptions WITHDRAW_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.WITHDRAW.name());
 
 //	private static final DeliveryOptions INFO_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.INFO.name());
 //	private static final DeliveryOptions PICK_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.PICK.name());
@@ -55,7 +56,8 @@ public class CoreHandler extends DbHandler {
 						result.getLong("count"));
 				handler.handle(Future.succeededFuture(list));
 			} else {
-				handler.handle(Future.failedFuture(ar.cause()));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}
@@ -68,7 +70,8 @@ public class CoreHandler extends DbHandler {
 				LockerInfoDto locker = Mapper.map(LockerInfoDto.class, ar.result().body());
 				handler.handle(Future.succeededFuture(locker));
 			} else {
-				handler.handle(Future.failedFuture(ar.cause()));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}
@@ -81,7 +84,8 @@ public class CoreHandler extends DbHandler {
 				OrderInfoDto order = Mapper.map(OrderInfoDto.class, ar.result().body());
 				handler.handle(Future.succeededFuture(order));
 			} else {
-				handler.handle(Future.failedFuture(ar.cause()));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}
@@ -93,7 +97,8 @@ public class CoreHandler extends DbHandler {
 				ReserveResponse result = Mapper.map(ReserveResponse.class, ar.result().body());
 				handler.handle(Future.succeededFuture(result));
 			} else {
-				handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}
@@ -105,14 +110,15 @@ public class CoreHandler extends DbHandler {
 				DropResponse result = Mapper.map(DropResponse.class, ar.result().body());
 				handler.handle(Future.succeededFuture(result));
 			} else {
-				handler.handle(Future.failedFuture(ApiException.unexpected(ar.cause().getMessage())));
+				JsonObject message = new JsonObject(ar.cause().getMessage());
+				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
 			}
 		});
 	}
 
 	public void withdraw(String locker, String pickCode, Handler<AsyncResult<OpenResponse>> handler) {
 		OpenRequest request = OpenRequest.pick(locker, pickCode);
-		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(request), OPEN_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
+		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(request), WITHDRAW_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
 			if (ar.succeeded()) {
 				OpenResponse result = Mapper.map(OpenResponse.class, ar.result().body());
 				handler.handle(Future.succeededFuture(result));
@@ -122,44 +128,5 @@ public class CoreHandler extends DbHandler {
 			}
 		});
 	}
-
-//
-//	public void info(String code, Handler<AsyncResult<InfoResponse>> handler) {
-//		LockerRequest request = LockerRequest.build(code);
-//		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(request), INFO_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
-//			if (ar.succeeded()) {
-//				OrderResponse result = Mapper.map(OrderResponse.class, ar.result().body());
-//				InfoResponse response = new InfoResponse();
-//				response.status = result.status;
-//				response.locker = result.locker;
-//				response.rating = result.rating;
-//				handler.handle(Future.succeededFuture(response));
-//			} else {
-//				handler.handle(Future.failedFuture(ar.cause()));
-//			}
-//		});
-//	}
-//
-//	public void pick(OpenRequest openRequest, Handler<AsyncResult<OpenResponse>> handler) {
-//		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(openRequest), PICK_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
-//			if (ar.succeeded()) {
-//				OpenResponse result = Mapper.map(OpenResponse.class, ar.result().body());
-//				handler.handle(Future.succeededFuture(result));
-//			} else {
-//				handler.handle(Future.failedFuture(ar.cause()));
-//			}
-//		});
-//	}
-//
-//	public void rate(RateRequest rateRequest, Handler<AsyncResult<RateResponse>> handler) {
-//		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(rateRequest), RATE_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
-//			if (ar.succeeded()) {
-//				RateResponse result = Mapper.map(RateResponse.class, ar.result().body());
-//				handler.handle(Future.succeededFuture(result));
-//			} else {
-//				handler.handle(Future.failedFuture(ar.cause()));
-//			}
-//		});
-//	}
 
 }

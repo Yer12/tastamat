@@ -15,6 +15,8 @@ import kz.tastamat.profile.dto.ProfileInfoDto;
 import kz.tastamat.user.dto.UserInfoDto;
 import kz.tastamat.utils.JsonUtils;
 import kz.zx.exceptions.ApiException;
+import kz.zx.utils.Holder;
+import kz.zx.utils.StringUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jooq.DSLContext;
@@ -69,84 +71,101 @@ public class UserBean {
 		return getUserDao(this.ctx).findEnabledByPhone(phone).isPresent();
 	}
 
-	public UserDto sms(String phone){
-		Optional<UserDto> result = getUserDao(this.ctx).findByPhone(phone);
+	public UserInfoDto initialize(UserDto dto) {
 
-		if(result.isPresent()) {
-			UserDto user = result.get();
+		UserDao userDao = getUserDao(this.ctx);
+		Holder<UserInfoDto> holder = new Holder<>();
 
-			JsonObject userError = JsonUtils.getDictionary("not.found.auth.invalid.user", "", "Пользователь уже существует", "", "");
+		if (StringUtils.isNotEmpty(dto.phone)) {
+			userDao.findByPhone(dto.phone).ifPresent(user -> {
+				JsonObject userError = JsonUtils.getDictionary("phone.exists.user", "", "Пользователь с таким телефоном уже существует", "", "");
+				if (user.enabled) {
+					throw ApiException.business(userError.encode());
+				} else {
+					holder.set(UserInfoDto.build(user));
+				}
+			});
+		}
 
-			if(user.enabled){
-				throw ApiException.business(userError.toString());
-			}
+		JsonObject profile = this.config.getJsonObject(ConfigKey.PROFILE.key());
+		Long wallet = profile.getLong(ConfigKey.WALLET.key());
+		String template = profile.getString(ConfigKey.TEMPLATE.key());
 
-			String smsCode = RandomStringUtils.randomNumeric(4);
-			UserDto userDto = getUserDao(this.ctx).clean(user.id, smsCode);
-			userDto.phone = phone;
-			return userDto;
+		if (holder.get() != null) {
+			return holder.get();
 		} else {
-			String smsCode = RandomStringUtils.randomNumeric(4);
-
-			JsonObject profile = this.config.getJsonObject(ConfigKey.PROFILE.key());
-			Long wallet = profile.getLong(ConfigKey.WALLET.key());
-			String template = profile.getString(ConfigKey.TEMPLATE.key());
-
-			return ctx.transactionResult(tr -> {
+			return this.ctx.transactionResult(tr -> {
 				DSLContext dsl = tr.dsl();
-
-				UserDto user = getUserDao(dsl).create(phone, smsCode);
+				UserInfoDto user = UserInfoDto.build(getUserDao(dsl).initialize(dto));
 				getProfileDao(dsl).create(user.id, wallet, template);
 				return user;
 			});
 		}
 	}
 
+	public UserDto sms(String phone) {
+		JsonObject userError = JsonUtils.getDictionary("phone.not.found.user", "", "Пользователь не най", "", "");
+		UserDto user = getUserDao(this.ctx).findByPhone(phone).orElseThrow(() -> ApiException.notFound(userError.encode()));
+		String smsCode = RandomStringUtils.randomNumeric(4);
+		return getUserDao(this.ctx).sms(user.id, smsCode);
+	}
+
 	public UserDto confirm(ConfirmDto confirmDto) {
 		JsonObject error = JsonUtils.getDictionary("not.found.auth.user", "", "Пользователь не найден", "", "");
 		UserDto userDto = getUserDao(this.ctx).findById(confirmDto.id).orElseThrow(() -> ApiException.notFound(error.toString()));
 
-		JsonObject userError = JsonUtils.getDictionary("not.found.auth.invalid.user", "", "Пользователь уже существует", "", "");
-		if(userDto.enabled){
-			throw ApiException.business(userError.toString());
-		}
-
 		JsonObject phoneError = JsonUtils.getDictionary("not.found.auth.invalid.phone", "", "Телефон не верен", "", "");
-		if(!confirmDto.phone.equals(userDto.phone)){
+		if (!confirmDto.phone.equals(userDto.phone)) {
 			throw ApiException.business(phoneError.toString());
 		}
 
 		JsonObject codeError = JsonUtils.getDictionary("not.found.auth.invalid.code", "", "Код не верен", "", "");
-		if(!confirmDto.code.equals(userDto.smsCode)){
+		if (!confirmDto.code.equals(userDto.smsCode)) {
 			throw ApiException.business(codeError.toString());
 		}
 
-		return getUserDao(this.ctx).confirm(userDto.id);
+		return userDto;
 	}
 
-	public UserDto password(ConfirmDto dto) {
+	public UserInfoDto password(ConfirmDto dto) {
 		JsonObject error = JsonUtils.getDictionary("not.found.auth.user", "", "Пользователь не найден", "", "");
 		UserDto userDto = getUserDao(this.ctx).findById(dto.id).orElseThrow(() -> ApiException.notFound(error.toString()));
 
-		JsonObject userError = JsonUtils.getDictionary("not.found.auth.invalid.user", "", "Пользователь уже существует", "", "");
-		if(userDto.enabled){
-			throw ApiException.business(userError.toString());
+		JsonObject phoneError = JsonUtils.getDictionary("not.found.auth.invalid.phone", "", "Телефон не верен", "", "");
+		if (!dto.phone.equals(userDto.phone)) {
+			throw ApiException.business(phoneError.toString());
 		}
 
-		JsonObject phoneError = JsonUtils.getDictionary("not.found.auth.invalid.phone", "", "Телефон не верен", "", "");
-		if(!dto.phone.equals(userDto.phone)){
-			throw ApiException.business(phoneError.toString());
+		JsonObject codeError = JsonUtils.getDictionary("not.found.auth.invalid.code", "", "Код не верен", "", "");
+		if (!dto.code.equals(userDto.smsCode)) {
+			throw ApiException.business(codeError.toString());
 		}
 
 		String pass = DigestUtils.md5Hex(dto.password);
 
-		return getUserDao(this.ctx).enable(userDto.id, pass);
+		return this.ctx.transactionResult(tr -> {
+			DSLContext dsl = tr.dsl();
+
+			getUserDao(dsl).enable(userDto.id);
+			UserDto u = getUserDao(dsl).password(userDto.id, pass);
+			UserInfoDto user = UserInfoDto.build(u);
+			getProfileDao(dsl).findByUser(u.id).ifPresent(profileDto -> user.profile = ProfileInfoDto.build(profileDto));
+
+			return user;
+		});
 	}
 
-	public UserDto login(String phone, String password) {
-		JsonObject error = JsonUtils.getDictionary("not.found.auth.user", "", "Пользователь не найден", "", "");
-		UserDto userDto = getUserDao(this.ctx).findByPhonePassword(phone, password).orElseThrow(() -> ApiException.notFound(error.toString()));
-		return userDto;
+	public UserInfoDto login(String phone, String password) {
+		return this.ctx.transactionResult(tr -> {
+			DSLContext dsl = tr.dsl();
+
+			JsonObject error = JsonUtils.getDictionary("not.found.auth.user", "", "Пользователь не найден", "", "");
+			UserDto userDto = getUserDao(dsl).findByPhonePassword(phone, password).orElseThrow(() -> ApiException.notFound(error.toString()));
+			UserInfoDto user = UserInfoDto.build(userDto);
+
+			getProfileDao(dsl).findByUser(userDto.id).ifPresent(dto -> user.profile = ProfileInfoDto.build(dto));
+			return user;
+		});
 	}
 
 //	public boolean hasRole(String email, Role role) {

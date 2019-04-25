@@ -37,15 +37,31 @@ public class UserHandler extends DbHandler {
 		blocking(dsl -> new UserBean(dsl).exists(phone), handler);
 	}
 
-	public void handleSms(String phone, Handler<AsyncResult<UserDto>> handler) {
+	public void initialize(UserInfoDto dto, Handler<AsyncResult<UserInfoDto>> handler) {
+		UserDto user = new UserDto();
+		user.phone = dto.phone;
+
 		blocking(dsl -> {
-			return UserBean.build(dsl, this.config).sms(phone);
+			return UserBean.build(dsl, this.config).initialize(user);
 		}, br -> {
-			if(br.succeeded()){
+			if (br.succeeded()) {
+				UserInfoDto u = br.result();
+				handler.handle(Future.succeededFuture(u));
+			} else {
+				handler.handle(Future.failedFuture(br.cause()));
+			}
+		});
+	}
+
+	public void sms(String phone, Handler<AsyncResult<UserInfoDto>> handler) {
+		blocking(dsl -> {
+			return UserBean.build(dsl).sms(phone);
+		}, br -> {
+			if (br.succeeded()) {
 				UserDto user = br.result();
 				SmsDto smsDto = new SmsDto();
 				smsDto.phone = user.phone;
-				smsDto.message = "Ваш тастамат код: "+user.smsCode;
+				smsDto.message = "Ваш тастамат код: " + user.smsCode;
 
 				smsHandler.sendSms(smsDto, ar -> {
 					if (ar.failed()) {
@@ -53,23 +69,23 @@ public class UserHandler extends DbHandler {
 					}
 				});
 
-				handler.handle(Future.succeededFuture(user));
+				handler.handle(Future.succeededFuture(UserInfoDto.build(user)));
 			} else {
 				handler.handle(Future.failedFuture(br.cause()));
 			}
 		});
 	}
 
-	public void handleConfirm(ConfirmDto confirmDto, Handler<AsyncResult<UserDto>> handler) {
-		blocking(dsl -> new UserBean(dsl).confirm(confirmDto), handler);
+	public void confirm(ConfirmDto confirmDto, Handler<AsyncResult<UserInfoDto>> handler) {
+		blocking(dsl -> UserInfoDto.build(UserBean.build(dsl).confirm(confirmDto)), handler);
 	}
 
-	public void handlePassword(ConfirmDto dto, Handler<AsyncResult<UserDto>> handler) {
-		blocking(dsl -> new UserBean(dsl).password(dto), handler);
+	public void password(ConfirmDto dto, Handler<AsyncResult<UserInfoDto>> handler) {
+		blocking(dsl -> UserBean.build(dsl).password(dto), handler);
 	}
 
-	public void handleLogin(LoginDto dto, Handler<AsyncResult<UserDto>> handler) {
+	public void login(LoginDto dto, Handler<AsyncResult<UserInfoDto>> handler) {
 		log.info("login {}, password {}", dto.phone, dto.password);
-		blocking(dsl -> new UserBean(dsl).login(dto.phone, dto.password), handler);
+		blocking(dsl -> UserBean.build(dsl).login(dto.phone, dto.password), handler);
 	}
 }

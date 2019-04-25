@@ -31,6 +31,7 @@ public class CoreVerticle extends BaseVerticle {
         RESERVE,
         DROP,
         OPEN,
+        WITHDRAW,
         INFO,
         PICK,
         RATE
@@ -60,6 +61,7 @@ public class CoreVerticle extends BaseVerticle {
                 .on(Action.RESERVE, this::reserve)
                 .on(Action.DROP, this::drop)
                 .on(Action.OPEN, this::open)
+                .on(Action.WITHDRAW, this::withdraw)
 //                .on(Action.INFO, this::handleGetInfo)
 //                .on(Action.PICK, this::handlePick)
 //                .on(Action.RATE, this::handleRate)
@@ -68,7 +70,6 @@ public class CoreVerticle extends BaseVerticle {
 
     private void getLockers(Message<JsonObject> mes){
         CoreRequest coreRequest = Mapper.map(CoreRequest.class, mes.body());
-
         Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
         client.getAbs(coreUrl+"/lockers"+coreRequest.query, rh -> {
             rh.exceptionHandler(exHandler);
@@ -78,8 +79,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end();
     }
@@ -96,8 +101,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end();
     }
@@ -114,8 +123,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end();
     }
@@ -127,7 +140,7 @@ public class CoreVerticle extends BaseVerticle {
         ReserveRequest reserveDto = Mapper.map(ReserveRequest.class, mes.body());
         String body = JsonObject.mapFrom(reserveDto).toString();
         String hmac = HmacUtils.hmacSign(token, body);
-        client.postAbs(coreUrl+"/a/orders/reserve", rh -> {
+        client.postAbs(coreUrl+"/i/orders/reserve", rh -> {
             rh.exceptionHandler(exHandler);
             if(200 == rh.statusCode()){
                 rh.bodyHandler(bh -> {
@@ -135,8 +148,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .putHeader("x-hmac-key",key)
@@ -153,7 +170,7 @@ public class CoreVerticle extends BaseVerticle {
         dropRequest.locker = dropRequest.locker.toUpperCase();
         String body = JsonObject.mapFrom(dropRequest).toString();
         String hmac = HmacUtils.hmacSign(token, body);
-        client.putAbs(coreUrl+"/a/orders/drop", rh -> {
+        client.postAbs(coreUrl+"/i/orders/book-drop", rh -> {
             rh.exceptionHandler(exHandler);
             if(200 == rh.statusCode()){
                 rh.bodyHandler(bh -> {
@@ -161,8 +178,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .putHeader("x-hmac-key",key)
@@ -180,7 +201,7 @@ public class CoreVerticle extends BaseVerticle {
         openRequest.locker = openRequest.locker.toUpperCase();
         String body = JsonObject.mapFrom(openRequest).toString();
         String hmac = HmacUtils.hmacSign(token, body);
-        client.putAbs(coreUrl+"/a/orders/open", rh -> {
+        client.putAbs(coreUrl+"/i/orders/open", rh -> {
             rh.exceptionHandler(exHandler);
             if(200 == rh.statusCode()){
                 rh.bodyHandler(bh -> {
@@ -188,8 +209,12 @@ public class CoreVerticle extends BaseVerticle {
                     handle(mes, b);
                 });
             } else {
-                log.error(rh.statusMessage());
-                handle(mes, ApiException.unexpected(rh.statusMessage()));
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
             }
         }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
                 .putHeader("x-hmac-key",key)
@@ -199,105 +224,34 @@ public class CoreVerticle extends BaseVerticle {
                 .end();
     }
 
-//    private void handleGetLocker(Message<JsonObject> mes) {
-//        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
-//
-//        LockerRequest lockerRequest = Mapper.map(LockerRequest.class, mes.body());
-//
-//        client.getAbs(coreUrl+"/lockers/"+lockerRequest.code, rh -> {
-//            rh.exceptionHandler(exHandler);
-//            if(200 == rh.statusCode()){
-//                rh.bodyHandler(bh -> {
-//                    JsonObject b = bh.toJsonObject();
-//                    handle(mes, b);
-//                });
-//            } else {
-//                log.error(rh.statusMessage());
-//                handle(mes, ApiException.unexpected(rh.statusMessage()));
-//            }
-//        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end();
-//    }
-//
-//    private void handleGetInfo(Message<JsonObject> mes) {
-//
-//        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
-//
-//        LockerRequest lockerRequest = Mapper.map(LockerRequest.class, mes.body());
-//        lockerRequest.code = lockerRequest.code.toUpperCase();
-//        String body = JsonObject.mapFrom(lockerRequest).toString();
-//        String hmac = HmacUtils.hmacSign(token, body);
-//        client.putAbs(coreUrl+"/a/orders/status", rh -> {
-//            rh.exceptionHandler(exHandler);
-//            if(200 == rh.statusCode()){
-//                rh.bodyHandler(bh -> {
-//                    JsonObject b = bh.toJsonObject();
-//                    handle(mes, b);
-//                });
-//            } else {
-//                log.error(rh.statusMessage());
-//                handle(mes, ApiException.unexpected(rh.statusMessage()));
-//            }
-//        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-//                .putHeader("x-hmac-key", key)
-//                .putHeader("x-hmac", hmac)
-//                .setChunked(true)
-//                .write(body)
-//                .end();
-//    }
-//
-//    private void handlePick(Message<JsonObject> mes) {
-//
-//        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
-//
-//        OpenRequest openRequest = Mapper.map(OpenRequest.class, mes.body());
-//        openRequest.code = openRequest.code.toUpperCase();
-//        openRequest.locker = openRequest.locker.toUpperCase();
-//        String body = JsonObject.mapFrom(openRequest).toString();
-//        String hmac = HmacUtils.hmacSign(token, body);
-//        client.putAbs(coreUrl+"/a/orders/open", rh -> {
-//            rh.exceptionHandler(exHandler);
-//            if(200 == rh.statusCode()){
-//                rh.bodyHandler(bh -> {
-//                    JsonObject b = bh.toJsonObject();
-//                    handle(mes, b);
-//                });
-//            } else {
-//                log.error(rh.statusMessage());
-//                handle(mes, ApiException.unexpected(rh.statusMessage()));
-//            }
-//        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-//                .putHeader("x-hmac-key",key)
-//                .putHeader("x-hmac", hmac)
-//                .setChunked(true)
-//                .write(body)
-//                .end();
-//    }
-//
-//    private void handleRate(Message<JsonObject> mes) {
-//
-//        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
-//
-//        RateRequest rateRequest = Mapper.map(RateRequest.class, mes.body());
-//        rateRequest.code = rateRequest.code.toUpperCase();
-//        rateRequest.locker = rateRequest.locker.toUpperCase();
-//        String body = JsonObject.mapFrom(rateRequest).toString();
-//        String hmac = HmacUtils.hmacSign(token, body);
-//        client.postAbs(coreUrl+"/a/orders/rate", rh -> {
-//            rh.exceptionHandler(exHandler);
-//            if(200 == rh.statusCode()){
-//                rh.bodyHandler(bh -> {
-//                    JsonObject b = bh.toJsonObject();
-//                    handle(mes, b);
-//                });
-//            } else {
-//                log.error(rh.statusMessage());
-//                handle(mes, ApiException.unexpected(rh.statusMessage()));
-//            }
-//        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
-//                .putHeader("x-hmac-key", this.key)
-//                .putHeader("x-hmac", hmac)
-//                .setChunked(true)
-//                .write(body)
-//                .end();
-//    }
+    private void withdraw(Message<JsonObject> mes){
+        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
+
+        OpenRequest openRequest = Mapper.map(OpenRequest.class, mes.body());
+        openRequest.code = openRequest.code.toUpperCase();
+        openRequest.locker = openRequest.locker.toUpperCase();
+        String body = JsonObject.mapFrom(openRequest).toString();
+        String hmac = HmacUtils.hmacSign(token, body);
+        client.putAbs(coreUrl+"/i/orders/withdraw", rh -> {
+            rh.exceptionHandler(exHandler);
+            if(200 == rh.statusCode()){
+                rh.bodyHandler(bh -> {
+                    JsonObject b = bh.toJsonObject();
+                    handle(mes, b);
+                });
+            } else {
+                rh.bodyHandler(bh -> {
+                    log.error(bh.toString());
+                    JsonObject b = bh.toJsonObject();
+                    JsonObject error = new JsonObject(b.getString("message"));
+                    handle(mes, ApiException.unexpected(error.encode()));
+                });
+            }
+        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON)
+                .putHeader("x-hmac-key",key)
+                .putHeader("x-hmac", hmac)
+                .setChunked(true)
+                .write(body)
+                .end();
+    }
 }

@@ -9,6 +9,9 @@ import kz.zx.api.app.DbHandler;
 import kz.zx.utils.Holder;
 import kz.zx.utils.PaginatedList;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class LockerHandler extends DbHandler {
 
 	private Logger log = LoggerFactory.getLogger(LockerHandler.class);
@@ -30,7 +33,16 @@ public class LockerHandler extends DbHandler {
 			if(!s.equals("?")){
 				s += "&";
 			}
-			s += stringStringEntry.getKey()+"="+stringStringEntry.getValue();
+			String key = stringStringEntry.getKey();
+			String value = stringStringEntry.getValue();
+			if("searchKey".equals(key)){
+				try {
+					value = URLEncoder.encode(value, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					log.error("error", "e");
+				}
+			}
+			s += key+"="+value;
 			holder.set(s);
 		});
 

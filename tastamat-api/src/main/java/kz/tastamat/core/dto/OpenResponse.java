@@ -10,4 +10,6 @@ public class OpenResponse {
 	public OrderStatus status;
 
 	public LockerDto locker;
+
+	public Boolean active;
 }

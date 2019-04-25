@@ -34,8 +34,8 @@ public class OpenPaymentRoute extends BaseRoute {
 
 		router.get("/:identificator").handler(ctx -> {
 			String identificator = ctx.pathParam("identificator");
-			handler.approve(identificator, ar -> {
-				if(ar.succeeded()){
+			handler.trigger(identificator, ar -> {
+				if (ar.succeeded()) {
 					okEmpty(ctx);
 				} else {
 					ctx.fail(ar.cause());

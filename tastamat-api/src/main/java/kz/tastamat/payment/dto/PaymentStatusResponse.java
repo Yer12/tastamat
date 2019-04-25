@@ -10,5 +10,6 @@ public class PaymentStatusResponse {
 	public String currency;
 	public String used_amount;
 	public String refund_amount;
+	public Boolean is_kazpost_card;
 
 }

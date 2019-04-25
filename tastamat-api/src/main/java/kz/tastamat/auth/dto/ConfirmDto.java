@@ -1,20 +1,20 @@
 package kz.tastamat.auth.dto;
 
-import kz.tastamat.db.model.dto.UserDto;
+import kz.tastamat.user.dto.UserInfoDto;
 
 public class ConfirmDto {
 
     public Long id;
     public String phone;
+    public String email;
     public String code;
     public String password;
-    public Boolean confirmed;
 
-    public static ConfirmDto build(UserDto u) {
+    public static ConfirmDto build(UserInfoDto u) {
         ConfirmDto dto = new ConfirmDto();
         dto.id = u.id;
         dto.phone = u.phone;
-        dto.confirmed = u.confirmed;
+        dto.email = u.email;
 
         return dto;
     }

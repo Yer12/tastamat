@@ -12,6 +12,7 @@ public interface OrderDao {
 
     Optional<OrderDto> findById(Long id);
     Optional<OrderDto> findByPickCode(String id);
+    Optional<OrderDto> findByIdentificator(String id);
     List<OrderDto> find(SearchParams params);
     OrderDto create(OrderDto dto);
     int reserved(String dropCode, String pickCode, Long id);

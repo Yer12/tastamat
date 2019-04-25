@@ -11,10 +11,14 @@ public interface PaymentDao {
 
     Optional<PaymentDto> findById(Long id);
     Optional<PaymentDto> findByIdentificator(String identificator);
-    PaymentDto create(PaymentDto dto);
+    PaymentDto create(Long userId, PaymentDto dto);
     List<PaymentDto> find(SearchParams params);
 
     int pid(Long id, String pid);
     int approve(String identificator);
     int status(Long id, PaymentStatus status);
+
+    PaymentDto initialize(Long userId, PaymentDto dto);
+
+    int succeeded(Long id);
 }

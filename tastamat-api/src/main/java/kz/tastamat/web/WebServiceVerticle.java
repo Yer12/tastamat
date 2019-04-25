@@ -14,6 +14,7 @@ import kz.tastamat.app.handler.SecurityHandler;
 import kz.tastamat.auth.route.AuthRoute;
 import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.locker.route.LockerRoute;
+import kz.tastamat.order.route.OpenOrderRoute;
 import kz.tastamat.order.route.OrderRoute;
 import kz.tastamat.payment.route.OpenPaymentRoute;
 import kz.tastamat.payment.route.PaymentRoute;
@@ -43,9 +44,9 @@ public class WebServiceVerticle extends AbstractWebServiceVerticle {
 
 		JWTAuth jwtAuth = JWTAuth.create(vertx, authConfig);
 
-		router.route("/api/rest/a/*").handler(JWTAuthHandler.create(jwtAuth));
+		router.route("/insta/rest/a/*").handler(JWTAuthHandler.create(jwtAuth));
 
-		router.route("/api/rest/a/*").handler(ctx -> {
+		router.route("/insta/rest/a/*").handler(ctx -> {
 			JsonObject principal = ctx.user().principal();
 
 			log.info(principal.toString());
@@ -68,9 +69,11 @@ public class WebServiceVerticle extends AbstractWebServiceVerticle {
 
 		router.mountSubRouter("/a/orders", OrderRoute.build(vertx).route());
 
-		router.mountSubRouter("/a/payment", PaymentRoute.build(vertx).route());
+		router.mountSubRouter("/orders", OpenOrderRoute.build(vertx).route());
 
-		router.mountSubRouter("/payment", OpenPaymentRoute.build(vertx).route());
+		router.mountSubRouter("/a/payments", PaymentRoute.build(vertx).route());
+
+		router.mountSubRouter("/payments", OpenPaymentRoute.build(vertx).route());
 
 	}
 
