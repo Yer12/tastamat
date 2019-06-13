@@ -21,6 +21,8 @@ import kz.zx.exceptions.ApiException;
 import kz.zx.json.Mapper;
 import kz.zx.utils.PaginatedList;
 
+import java.util.Arrays;
+
 public class PaymentHandler extends DbHandler {
 
 	private Logger log = LoggerFactory.getLogger(PaymentHandler.class);
@@ -155,7 +157,7 @@ public class PaymentHandler extends DbHandler {
 		}, dr -> {
 			if (dr.succeeded()) {
 				PaymentDto dto = dr.result();
-				if (!PaymentStatus.IN_PROCCESS.equals(dto.status)) {
+				if (!Arrays.asList(PaymentStatus.IN_PROCCESS, PaymentStatus.NEW).contains(dto.status)) {
 					handler.handle(Future.succeededFuture());
 				} else {
 					status(dto.pid, res -> {
