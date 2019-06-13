@@ -68,7 +68,7 @@ public class PaymentBean {
 			DSLContext dsl = tr.dsl();
 			PaymentDao paymentDao = getPaymentDao(dsl);
 			PaymentDto paymentDto = paymentDao.findById(id).orElseThrow(() -> ApiException.notFound("payment.not.found"));
-			if (PaymentStatus.APPROVED.equals(stat)) {
+			if (PaymentStatus.CONFIRMED.equals(stat)) {
 				ProfileDao profileDao = getProfileDao(dsl);
 				ProfileDto profileDto = profileDao.findByUser(paymentDto.userId).orElseThrow(() -> ApiException.notFound("profile.not.found"));
 				Long wallet = profileDto.wallet + paymentDto.amount;
