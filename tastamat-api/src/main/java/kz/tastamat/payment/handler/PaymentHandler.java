@@ -157,26 +157,22 @@ public class PaymentHandler extends DbHandler {
 		}, dr -> {
 			if (dr.succeeded()) {
 				PaymentDto dto = dr.result();
-				if (!Arrays.asList(PaymentStatus.IN_PROCCESS, PaymentStatus.NEW).contains(dto.status)) {
-					handler.handle(Future.succeededFuture());
-				} else {
-					status(dto.pid, res -> {
-						if (res.succeeded()) {
-							PaymentStatusResponse response = res.result();
-							blocking(dsl -> {
-								return PaymentBean.build(dsl).status(dto.id, response.status);
-							}, sr -> {
-								if (dr.succeeded()) {
-									handler.handle(Future.succeededFuture());
-								} else {
-									handler.handle(Future.failedFuture(sr.cause()));
-								}
-							});
-						} else {
-							handler.handle(Future.failedFuture(res.cause()));
-						}
-					});
-				}
+				status(dto.pid, res -> {
+					if (res.succeeded()) {
+						PaymentStatusResponse response = res.result();
+						blocking(dsl -> {
+							return PaymentBean.build(dsl).status(dto.id, response.status);
+						}, sr -> {
+							if (dr.succeeded()) {
+								handler.handle(Future.succeededFuture());
+							} else {
+								handler.handle(Future.failedFuture(sr.cause()));
+							}
+						});
+					} else {
+						handler.handle(Future.failedFuture(res.cause()));
+					}
+				});
 			} else {
 				handler.handle(Future.failedFuture(dr.cause()));
 			}
@@ -189,29 +185,23 @@ public class PaymentHandler extends DbHandler {
 		}, pr -> {
 			if (pr.succeeded()) {
 				PaymentDto dto = pr.result();
-
-				if (!PaymentStatus.IN_PROCCESS.equals(dto.status)) {
-					handler.handle(Future.succeededFuture(PaymentInfoDto.build(dto)));
-				} else {
-					status(dto.pid, res -> {
-						if (res.succeeded()) {
-							PaymentStatusResponse response = res.result();
-							blocking(dsl -> {
-								return PaymentBean.build(dsl).status(id, response.status);
-							}, dr -> {
-								if (dr.succeeded()) {
-									PaymentDto paymentDto = dr.result();
-									handler.handle(Future.succeededFuture(PaymentInfoDto.build(paymentDto)));
-								} else {
-									handler.handle(Future.failedFuture(dr.cause()));
-								}
-							});
-						} else {
-							handler.handle(Future.failedFuture(res.cause()));
-						}
-					});
-				}
-
+				status(dto.pid, res -> {
+					if (res.succeeded()) {
+						PaymentStatusResponse response = res.result();
+						blocking(dsl -> {
+							return PaymentBean.build(dsl).status(id, response.status);
+						}, dr -> {
+							if (dr.succeeded()) {
+								PaymentDto paymentDto = dr.result();
+								handler.handle(Future.succeededFuture(PaymentInfoDto.build(paymentDto)));
+							} else {
+								handler.handle(Future.failedFuture(dr.cause()));
+							}
+						});
+					} else {
+						handler.handle(Future.failedFuture(res.cause()));
+					}
+				});
 			} else {
 				handler.handle(Future.failedFuture(pr.cause()));
 			}

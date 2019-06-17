@@ -16,7 +16,7 @@ public interface PaymentDao {
 
     int pid(Long id, String pid);
     int approve(String identificator);
-    int status(Long id, PaymentStatus status);
+    PaymentDto status(Long id, PaymentStatus status);
 
     PaymentDto initialize(Long userId, PaymentDto dto);
 

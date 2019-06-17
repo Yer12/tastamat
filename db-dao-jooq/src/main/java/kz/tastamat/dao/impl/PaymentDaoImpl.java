@@ -103,8 +103,16 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 	}
 
 	@Override
-	public int status(Long id, PaymentStatus status) {
-		return ctx.update(p).set(p.STATUS, status.name()).where(p.ID.eq(id)).execute();
+	public PaymentDto status(Long id, PaymentStatus status) {
+		Objects.requireNonNull(id);
+
+		JqPaymentRecord record = ctx.newRecord(p);
+
+		record.setStatus(status.name());
+
+		JqPaymentRecord saved = ctx.update(p).set(record).where(p.ID.eq(id)).returning().fetchOne();
+
+		return PaymentDto.build(saved);
 	}
 
 	@Override
