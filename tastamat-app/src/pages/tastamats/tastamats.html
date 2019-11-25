@@ -25,7 +25,7 @@
     <div *ngFor="let item of tastamats.list" id="{{item.id}}" class="tastamatApp__list__item" (click)="expand(item)">
       <div class="tastamatApp__list__title">
         <span>
-          {{
+          {{item.index}} - {{
           item.address['buildingShort' + (lang | titlecase)]
             ? item.address['buildingShort' + (lang | titlecase)]
             : item.address.buildingShortRu
@@ -51,7 +51,7 @@
             }}
           </div>
         </div>
-        <a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="tastamats__info__map"></a>
+        <a href="{{item.gisUrl ? item.gisUrl : 'https://2gis.kz'}}" class="tastamats__info__map" target="_system"></a>
       </div>
     </div>
   </div>
