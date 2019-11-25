@@ -23,10 +23,10 @@
     }
   ],
   "core": {
-    "url": "http://test.tastamat.com/api/rest",
+    "url": "http://docker.for.mac.localhost/platform/v1/rest",
     "key": "tastamat",
     "token": "dba99fdf-855e-45cd-a9f3-88bb5cc91e9e",
-    "prefix": "http://open.tatamat.com/open/"
+    "prefix": "http://localhost/i/open/"
   },
   "auth": {
     "type": "jceks",
@@ -44,7 +44,7 @@
     "priority": 2
   },
   "billing": {
-    "price": 200
+    "price": 0
   },
   "paypost": {
     "url": "https://testpay.post.kz",
@@ -57,14 +57,14 @@
     "template": "Вам поступила посылка в тастамат."
   },
   "web": {
-    "host": "localhost",
-    "port": 10402,
-    "prefix": "api"
+    "host": "0.0.0.0",
+    "port": 8080,
+    "prefix": "insta"
   },
   "datasources": [
     {
       "name": "default",
-      "jdbc_url": "jdbc:postgresql://localhost:5432/tastamat",
+      "jdbc_url": "jdbc:postgresql://db:5432/tastamat",
       "username": "postgres",
       "password": "postgres",
       "max_pool_size": 10

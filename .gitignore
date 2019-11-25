@@ -25,3 +25,6 @@ tastamat-api/conf/local
 tastamat-api/file-uploads
 
 run.properties
+
+volumes
+.vscode

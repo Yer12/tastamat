@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateService } from "@ngx-translate/core";
 import { AlertController } from "ionic-angular";
 
-export const baseUrl = "https://tasta.tastamat.com/insta/rest";
+export const baseUrl = "/insta/rest";
 
 @Injectable ()
 export class OtherService {
