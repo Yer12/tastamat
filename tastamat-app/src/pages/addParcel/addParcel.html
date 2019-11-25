@@ -16,8 +16,8 @@
 
     <input type="text" class="tastamatApp__input--person" [(ngModel)]="name"
            placeholder="{{ 'addParcel.namePlaceholder' | translate }}" />
-    <input type="tel" class="tastamatApp__input--phone" [(ngModel)]="phone" prefix="+7 " mask="000 000 00 00"
-           #phoneInput (keyup)="this.phone.length === 10 ? phoneInput.blur() : null"
+    <input type="tel" class="tastamatApp__input--phone" [(ngModel)]="phone"
+           #phoneInput
            placeholder="{{ 'addParcel.phonePlaceholder' | translate }}" />
 
     <p class="tastamatApp__title">{{ 'addParcel.step2' | translate }}</p>

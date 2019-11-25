@@ -41,19 +41,16 @@ export class SignInPage {
     , 1000);
   }
 
-  checkNumber(element) {
-    if (this.phone.length === 10) {
-      element.blur();
-      this.authService.checkNumber(this.phone).subscribe(
-        response =>  this.exists = response.exists,
-        error => this.otherService.handleError(error)
-      );
-    }
+  checkNumber() {
+    this.authService.checkNumber(this.formatPhoneNumber(this.phone)).subscribe(
+      response =>  this.exists = response.exists,
+      error => this.otherService.handleError(error)
+    );
   }
 
   sendSms() {
     let alert = this.alertCtrl.create({
-      subTitle: this.translate.instant('signIn.info', {phone: this.phone}),
+      subTitle: this.translate.instant('signIn.info', {phone: this.formatPhoneNumber(this.phone)}),
       buttons: [
         {
           text: this.translate.instant('global.cancel'),
@@ -62,7 +59,7 @@ export class SignInPage {
         {
           text: this.translate.instant('signIn.continue'),
           handler: () => {
-            this.smsService.sendSms('7'+this.phone).subscribe(
+            this.smsService.sendSms(this.formatPhoneNumber(this.phone)).subscribe(
               (response: SignInPage) => this.navCtrl.push(EnterSmsCodePage, { data: response }),
               error => this.otherService.handleError(error)
             );
@@ -74,21 +71,22 @@ export class SignInPage {
   }
 
   initializeUser() {
-    this.authService.initUser('7'+this.phone).subscribe(
+    this.authService.initUser(this.formatPhoneNumber(this.phone)).subscribe(
       res => this.sendSms(),
       err => this.otherService.handleError(err)
     );
   }
 
   checkForm() {
-    if (this.phone)
-      return !this.password || (this.phone && this.phone.length !== 10);
+    let phone = this.formatPhoneNumber(this.phone)
+    if (phone)
+      return !this.password || !this.phoneNumberValid(phone);
     else
       return true;
   };
 
   async signIn() {
-    this.authService.signIn({phone: 7 + this.phone, password: this.password}).subscribe(
+    this.authService.signIn({phone: this.formatPhoneNumber(this.phone), password: this.password}).subscribe(
       async response => {
         await this.storage.set('token', response.token);
         this.storage.set('user', response.user);
@@ -107,5 +105,19 @@ export class SignInPage {
     };
     const url = encodeURIComponent('https://tastamat.kz/offer.pdf');
     this.iab.create('https://docs.google.com/viewer?url=' + url, '_blank', options);
+  }
+
+  formatPhoneNumber(phone) {
+    if (phone) {
+      let formattedPhoneNumber = phone.replace(/\D/g,'')
+      return formattedPhoneNumber.length > 0 ? formattedPhoneNumber : null
+    } else {
+      return null
+    }
+  }
+
+  phoneNumberValid(phone) {
+    let phoneToCheck = this.formatPhoneNumber(phone)
+    return phoneToCheck && phoneToCheck.length >= 10
   }
 }

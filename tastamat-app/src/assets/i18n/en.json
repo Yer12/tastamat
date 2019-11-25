@@ -14,7 +14,7 @@
   "tabs": {
     "tastamats": "Tastamats",
     "profile": "Profile",
-    "drop": "Put in",
+    "drop": "Drop",
     "orders": "Orders",
     "back": "Back"
   },
@@ -23,7 +23,7 @@
     "offer": "I&nbsp;<a>AGREE WITH THE TERMS</a>&nbsp;AND CONDITIONS",
     "logIn": "Log in",
     "further": "Next",
-    "info": "SMS will be sent to the number +7{{phone}}",
+    "info": "SMS will be sent to the number {{phone}}",
     "continue": "Continue",
     "incorrectPassword": "Incorrect password",
     "tryAgain": "Try again",
@@ -35,15 +35,15 @@
   },
   "tastamats": {
     "title": "Tastamats",
-    "find": "Tastamat search",
-    "closer": "Nearest terminals:",
+    "find": "Search tastamats",
+    "closer": "Closest terminals:",
     "meter": "m"
   },
   "addParcel": {
-    "title": "Put in the parcel",
-    "step1": "1. Enter the recipient name",
-    "step2": "2. Select the cell size",
-    "step3": "3. Scan the QR-code on tastamat",
+    "title": "Drop the parcel",
+    "step1": "1. Enter recipient name",
+    "step2": "2. Select cell size",
+    "step3": "3. Scan the tastamat QR-code",
     "namePlaceholder": "Name",
     "phonePlaceholder": "Phone number",
     "smallCell": "Small cell<br/>10x40x40sm",
@@ -55,8 +55,8 @@
     "manualInput": "or enter the code manually",
     "manualInputTitle": "Enter the code manually",
     "info": "After scanning, a cell will be opened for enclosing the parcel, funds will be debited from the personal account of the application, and SMS will be sent to the recipient.",
-    "notEnoughBalance": "Not enough funds to put in",
-    "fillUpBalance": "Fill up the balance"
+    "notEnoughBalance": "Not enough funds to drop",
+    "fillUpBalance": "Refill your account"
   },
   "orders": {
     "title": "Orders",
@@ -72,8 +72,8 @@
   },
   "profile": {
     "title": "Profile",
-    "yourBalance": "Your balance:",
-    "fillUp": "Fill up the balance",
+    "yourBalance": "Your account balance:",
+    "fillUp": "Refill your balance",
     "smsTemplate": "SMS template",
     "callCenter": "Call center",
     "signOut": "Sign out",
@@ -102,14 +102,14 @@
   },
   "qrScanner": {
     "scan": "Point the camera at the QR-code of Tastamat",
-    "cellOpened": "Cell is opened! Put in the parcel and close the cell",
+    "cellOpened": "Cell is opened! Drop the parcel and close the cell",
     "cellOpened2": "Cell is opened! Pick up the parcel and close the cell",
     "ok": "OK",
     "incorrectQR": "Incorrect QR-code",
     "tryAgain": "Try again"
   },
   "payment": {
-    "fillUp": "Fill up the balance",
+    "fillUp": "Refill your balance",
     "history": "Payment history",
     "writeAmount": "Enter the amount",
     "amount": "Amount",
@@ -123,7 +123,7 @@
       "APPROVED": "Approved",
       "CONFIRMED": "Confirmed",
       "FAILED": "Payment error",
-      "SPENT": "Put in",
+      "SPENT": "Drop",
       "NEW": "New"
     }
   },

@@ -7,7 +7,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   checkNumber(phone): any {
-    return this.http.get(`${baseUrl}/auth/phones/7${phone}/exists`)
+    return this.http.get(`${baseUrl}/auth/phones/${phone}/exists`)
   }
 
   setPassword(data): any {

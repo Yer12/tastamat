@@ -43,8 +43,9 @@ export class AddParcelPage {
   }
 
   checkForm() {
-    if (this.phone)
-      return !this.name || (this.phone && this.phone.length !== 10) || !this.cellSize;
+    let phone = this.formatPhoneNumber(this.phone)
+    if (phone)
+      return !this.name || !this.phoneNumberValid(phone) || !this.cellSize;
     else
       return true;
   }
@@ -53,7 +54,7 @@ export class AddParcelPage {
     const data = {
       type: 'addParcel',
       name: this.name,
-      phone: 7 + this.phone,
+      phone: this.formatPhoneNumber(this.phone),
       cellSize: this.cellSize
     };
     const QrScannerModal: Modal = this.modal.create('QrScannerModal', { data: data });
@@ -80,7 +81,7 @@ export class AddParcelPage {
   openCell(presenceCode) {
     this.otherService.openCell({
       recipientName: this.name,
-      recipientPhone: 7 + this.phone,
+      recipientPhone: this.formatPhoneNumber(this.phone),
       size: this.cellSize,
       presenceCode: presenceCode
     }).subscribe(
@@ -92,5 +93,19 @@ export class AddParcelPage {
   fillWallet() {
     const myModal: Modal = this.modal.create('PaymentPage', { 'type': 'fillUp' });
     myModal.present();
+  }
+
+  formatPhoneNumber(phone) {
+    if (phone) {
+      let formattedPhoneNumber = phone.replace(/\D/g,'')
+      return formattedPhoneNumber.length > 0 ? formattedPhoneNumber : null
+    } else {
+      return null
+    }
+  }
+
+  phoneNumberValid(phone) {
+    let phoneToCheck = this.formatPhoneNumber(phone)
+    return phoneToCheck && phoneToCheck.length >= 10
   }
 }
