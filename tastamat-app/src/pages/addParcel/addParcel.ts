@@ -3,6 +3,8 @@ import { Modal, ModalController } from 'ionic-angular';
 import { OtherService } from "../../services/other.service";
 import { Storage } from "@ionic/storage";
 
+import { Contacts, Contact, ContactField } from '@ionic-native/contacts';
+
 @Component({
   selector: 'page-addParcel',
   templateUrl: 'addParcel.html'
@@ -25,7 +27,8 @@ export class AddParcelPage {
   constructor(
     private modal: ModalController,
     private otherService: OtherService,
-    private storage: Storage
+    private storage: Storage,
+    private contacts: Contacts
   ) {
   }
 
@@ -107,5 +110,28 @@ export class AddParcelPage {
   phoneNumberValid(phone) {
     let phoneToCheck = this.formatPhoneNumber(phone)
     return phoneToCheck && phoneToCheck.length >= 10
+  }
+
+  selectContact() {
+    try {
+      this.contacts.pickContact()
+        .then((contact: Contact) => {
+          this.name = contact.name ? contact.name.formatted : null
+          this.phone = contact.phoneNumbers ? contact.phoneNumbers
+            .reduce((a: string, b: ContactField) => {
+              if (b.type && (b.type === 'mobile' || b.type === 'iPhone') && b.value) {
+                return b.value
+              } else if (a === null && b.value) {
+                return b.value
+              } else {
+                return a
+              }
+            }, null) : null
+          }).catch((err: any) => {
+
+        });
+    } catch(error) {
+      alert('Error: ' + error);
+    }
   }
 }

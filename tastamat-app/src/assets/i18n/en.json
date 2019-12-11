@@ -56,7 +56,9 @@
     "manualInputTitle": "Enter the code manually",
     "info": "After scanning, a cell will be opened for enclosing the parcel, funds will be debited from the personal account of the application, and SMS will be sent to the recipient.",
     "notEnoughBalance": "Not enough funds to drop",
-    "fillUpBalance": "Refill your account"
+    "fillUpBalance": "Refill your account",
+    "or": "or",
+    "selectContact": "pick a contact"
   },
   "orders": {
     "title": "Orders",

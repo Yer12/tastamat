@@ -4,8 +4,9 @@ Is is used to
 
 ## Development Environment
 
-### NPM
+### NodeJS, NPM & NVM
 
+Use [NVM](http://nvm.sh) to manage node version & use node version 8.
 
 ### Ionic
 
@@ -22,8 +23,10 @@ $ npm install -g ios-sim
 $ npm install -g ios-deploy
 ```
 
+Use Cordova 8:
+
 ```
-$ npm i -g cordova
+$ npm i -g cordova@8
 ```
 
 ## Build

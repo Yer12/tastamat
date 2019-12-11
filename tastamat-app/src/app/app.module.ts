@@ -23,6 +23,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Camera } from '@ionic-native/camera';
+import { Contacts } from '@ionic-native/contacts';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -98,6 +99,7 @@ export function setTranslateLoader(httpClient: HttpClient) {
     BarcodeScanner,
     InAppBrowser,
     Camera,
+    Contacts,
     File,
     SmsService,
     AuthService,

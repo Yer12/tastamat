@@ -12,7 +12,13 @@
     <button class="tastamatApp__fillUp" *ngIf="user && (user.profile.wallet < price)" (click)="fillWallet()">
       {{ 'addParcel.fillUpBalance' | translate }}
     </button>
-    <p class="tastamatApp__title">{{ 'addParcel.step1' | translate }}</p>
+    <p class="tastamatApp__title">
+      {{ 'addParcel.step1' | translate }}
+      {{ 'addParcel.or' | translate }}
+      <a class="tastamatApp__selectContact" (click)="selectContact()">
+        {{ 'addParcel.selectContact' | translate }}
+      </a>
+    </p>
 
     <input type="text" class="tastamatApp__input--person" [(ngModel)]="name"
            placeholder="{{ 'addParcel.namePlaceholder' | translate }}" />
