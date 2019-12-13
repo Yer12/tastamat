@@ -31,7 +31,7 @@
          (click)="expand(item)"
     >
       <div class="tastamatApp__list__title">
-        <span>{{item.recipientPhone}}</span>
+        <span>{{item.recipientPhone | mask: '+0 000 000 00 00'}}</span>
         <span>{{item.createDate | date: 'dd.MM.yy - HH:mm'}}</span>
       </div>
       <div class="orders__info">

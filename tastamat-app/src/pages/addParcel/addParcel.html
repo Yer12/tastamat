@@ -23,8 +23,10 @@
     <input type="text" class="tastamatApp__input--person" [(ngModel)]="name"
            placeholder="{{ 'addParcel.namePlaceholder' | translate }}" />
     <input type="tel" class="tastamatApp__input--phone" [(ngModel)]="phone"
+           mask="+0 000 000 00 00"
            #phoneInput
-           placeholder="{{ 'addParcel.phonePlaceholder' | translate }}" />
+           placeholder="{{ 'addParcel.phonePlaceholder' | translate }}"
+           (input)="formatEnteredPhoneNumber($event)" />
 
     <p class="tastamatApp__title">{{ 'addParcel.step2' | translate }}</p>
     <div class="addParcel__buttonsRow">

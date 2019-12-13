@@ -110,14 +110,30 @@ export class SignInPage {
   formatPhoneNumber(phone) {
     if (phone) {
       let formattedPhoneNumber = phone.replace(/\D/g,'')
+      if (formattedPhoneNumber && formattedPhoneNumber.length > 0 && formattedPhoneNumber.charAt(0) === '8') {
+        formattedPhoneNumber = '7' + formattedPhoneNumber.substring(1)
+      }
       return formattedPhoneNumber.length > 0 ? formattedPhoneNumber : null
     } else {
       return null
     }
   }
 
+  formatEnteredPhoneNumber(event) {
+    this.exists = null;
+    if (event && event.target && event.target.value && !event.target.value.startsWith('+7')) {
+      if (event.target.value.startsWith('8')) {
+        event.target.value = '+7' + event.target.value.substring(1)
+      } else if (event.target.value.startsWith('+8')) {
+        event.target.value = '+7' + event.target.value.substring(2)
+      } else if (event.target.value.length >= 2) {
+        event.target.value = '+7' + event.target.value.substring(2)
+      }
+    }
+  }
+
   phoneNumberValid(phone) {
     let phoneToCheck = this.formatPhoneNumber(phone)
-    return phoneToCheck && phoneToCheck.length >= 10
+    return phoneToCheck && phoneToCheck.length === 11 && phoneToCheck.charAt(0) === '7'
   }
 }

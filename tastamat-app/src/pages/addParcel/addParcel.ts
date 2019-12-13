@@ -101,15 +101,30 @@ export class AddParcelPage {
   formatPhoneNumber(phone) {
     if (phone) {
       let formattedPhoneNumber = phone.replace(/\D/g,'')
+      if (formattedPhoneNumber && formattedPhoneNumber.length > 0 && formattedPhoneNumber.charAt(0) === '8') {
+        formattedPhoneNumber = '7' + formattedPhoneNumber.substring(1)
+      }
       return formattedPhoneNumber.length > 0 ? formattedPhoneNumber : null
     } else {
       return null
     }
   }
 
+  formatEnteredPhoneNumber(event) {
+    if (event && event.target && event.target.value && !event.target.value.startsWith('+7')) {
+      if (event.target.value.startsWith('8')) {
+        event.target.value = '+7' + event.target.value.substring(1)
+      } else if (event.target.value.startsWith('+8')) {
+        event.target.value = '+7' + event.target.value.substring(2)
+      } else if (event.target.value.length >= 2) {
+        event.target.value = '+7' + event.target.value.substring(2)
+      }
+    }
+  }
+
   phoneNumberValid(phone) {
     let phoneToCheck = this.formatPhoneNumber(phone)
-    return phoneToCheck && phoneToCheck.length >= 10
+    return phoneToCheck && phoneToCheck.length === 11 && phoneToCheck.charAt(0) === '7'
   }
 
   selectContact() {
@@ -119,10 +134,10 @@ export class AddParcelPage {
           this.name = contact.name ? contact.name.formatted : null
           this.phone = contact.phoneNumbers ? contact.phoneNumbers
             .reduce((a: string, b: ContactField) => {
-              if (b.type && (b.type === 'mobile' || b.type === 'iPhone') && b.value) {
-                return b.value
-              } else if (a === null && b.value) {
-                return b.value
+              if (b.type && (b.type === 'mobile' || b.type === 'iPhone') && b.value && this.phoneNumberValid(b.value)) {
+                return this.formatPhoneNumber(b.value)
+              } else if (a === null && b.value && this.phoneNumberValid(b.value)) {
+                return this.formatPhoneNumber(b.value)
               } else {
                 return a
               }
