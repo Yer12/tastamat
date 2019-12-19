@@ -36,6 +36,8 @@ $ ionic cordova prepare ios
 $ ionic cordova prepare android
 ```
 
+### Android
+
 If you face this error:
 ```
 ERROR: Could not find method leftShift() for arguments [build_1o7oa8h4zgt9598snalt19rye$_run_closure6@5dbcd76e] on task ':app:cdvPrintProps' of type org.gradle.api.DefaultTask.
@@ -45,5 +47,19 @@ here is the solution:
 
 https://stackoverflow.com/questions/55793095/could-not-find-method-leftshift-for-arguments-after-updating-studio-3-4
 
+### iOS
+
+https://stackoverflow.com/questions/52413338/missinig-provisoning-profile-error-when-building-an-ios-ionic-app-using-xcode-10
+
 
 - https://ionicframework.com/docs/building/ios
+
+## Distribute
+
+### Android
+
+https://ionicframework.com/docs/publishing/play-store
+
+### iOS
+
+https://ionicframework.com/docs/publishing/app-store
