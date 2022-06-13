@@ -11,6 +11,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import io.vertx.ext.web.handler.JWTAuthHandler;
 import kz.tastamat.app.handler.SecurityHandler;
+import kz.tastamat.application.route.ApplicationRoute;
 import kz.tastamat.auth.route.AuthRoute;
 import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.locker.route.LockerRoute;
@@ -68,6 +69,8 @@ public class WebServiceVerticle extends AbstractWebServiceVerticle {
 		router.mountSubRouter("/a/lockers", LockerRoute.build(vertx).route());
 
 		router.mountSubRouter("/a/orders", OrderRoute.build(vertx).route());
+
+		router.mountSubRouter("/a/applications", ApplicationRoute.build(vertx).route());
 
 		router.mountSubRouter("/orders", OpenOrderRoute.build(vertx).route());
 

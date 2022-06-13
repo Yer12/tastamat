@@ -16,6 +16,8 @@ public class PaymentDto {
     public String pid;
     public Long userId;
     public PaymentStatus status;
+    public String ref;
+    public String code;
 
     public static PaymentDto build(JqPaymentRecord p) {
         PaymentDto payment = new PaymentDto();
@@ -26,6 +28,8 @@ public class PaymentDto {
         payment.amount = p.getAmount();
         payment.pid = p.getPid();
         payment.userId = p.getUser();
+        payment.ref = p.getRef();
+        payment.code = p.getCode();
 
 		Optional.ofNullable(p.getStatus()).map(PaymentStatus::valueOf).ifPresent(status -> payment.status = status);
 

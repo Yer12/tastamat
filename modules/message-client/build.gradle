@@ -1,0 +1,17 @@
+dependencies {
+	compile project.vertx,
+		project.vertxWebClient,
+		project.commonsLang,
+		project.vertxCodegen
+
+	annotationProcessor project.vertxCodegenProc
+
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ["${projectDir}/src/main/java", "${projectDir}/src/main/generated"]
+		}
+	}
+}

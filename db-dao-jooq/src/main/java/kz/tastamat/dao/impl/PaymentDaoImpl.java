@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 /**
  * Created by baur on 10/18/17.
@@ -43,6 +44,12 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 	@Override
 	public Optional<PaymentDto> findByIdentificator(String identificator) {
 		return ctx.selectFrom(p).where(p.IDENTIFICATOR.eq(identificator)).fetchOptional(PaymentDto::build);
+	}
+
+	@Override
+	public <T> PaymentDto insert(Supplier<T> supplier) {
+		JqPaymentRecord savedRecord = ctx.insertInto(p).set((JqPaymentRecord) supplier.get()).returning().fetchOne();
+		return PaymentDto.build(savedRecord);
 	}
 
 	@Override
@@ -70,6 +77,8 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 		if(params.user != null){
 			query.addConditions(p.USER.eq(params.user));
 		}
+
+		query.addConditions(p.STATUS.ne(PaymentStatus.NEW.name()));
 
 		int count = ctx.fetchCount(query);
 
@@ -124,7 +133,23 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 		record.setIdentificator(UUID.randomUUID().toString());
 		record.setAmount(dto.amount);
 		record.setUser(userId);
-		record.setStatus(OrderStatus.NEW.name());
+		record.setStatus(PaymentStatus.NEW.name());
+
+		JqPaymentRecord saved = ctx.insertInto(p).set(record).returning().fetchOne();
+
+		return PaymentDto.build(saved);
+	}
+
+	@Override
+	public PaymentDto epayInitialize(Long userId, PaymentDto dto) {
+		Objects.requireNonNull(userId);
+
+		JqPaymentRecord record = ctx.newRecord(p);
+		record.setId(ctx.nextval(Sequences.PAYMENT_SEQUENCE));
+		record.setIdentificator(UUID.randomUUID().toString());
+		record.setAmount(dto.amount);
+		record.setUser(userId);
+		record.setStatus(PaymentStatus.IN_PROCCESS.name());
 
 		JqPaymentRecord saved = ctx.insertInto(p).set(record).returning().fetchOne();
 
@@ -136,4 +161,28 @@ public class PaymentDaoImpl extends JooqDao implements PaymentDao {
 		return ctx.update(p).set(p.STATUS, PaymentStatus.IN_PROCCESS.name()).where(p.ID.eq(id)).execute();
 	}
 
+	@Override
+	public List<PaymentDto> findByStatus(PaymentStatus status) {
+		return ctx.selectFrom(p).where(p.STATUS.eq(status.name())).fetch(PaymentDto::build);
+	}
+
+	@Override
+	public PaymentDto epayApprove(Long id, String ref, String code) {
+		Objects.requireNonNull(id);
+
+		JqPaymentRecord record = ctx.newRecord(p);
+
+		record.setStatus(PaymentStatus.APPROVED.name());
+		record.setRef(ref);
+		record.setCode(code);
+
+		JqPaymentRecord saved = ctx.update(p).set(record).where(p.ID.eq(id)).returning().fetchOne();
+
+		return PaymentDto.build(saved);
+	}
+
+	@Override
+	public Optional<PaymentDto> findByPid(String pid) {
+		return ctx.selectFrom(p).where(p.PID.eq(pid)).fetchOptional(PaymentDto::build);
+	}
 }
