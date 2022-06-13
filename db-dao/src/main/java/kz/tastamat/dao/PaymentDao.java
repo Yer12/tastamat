@@ -6,8 +6,11 @@ import kz.tastamat.db.model.params.SearchParams;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public interface PaymentDao {
+
+    <T> PaymentDto insert(Supplier<T> supplier);
 
     Optional<PaymentDto> findById(Long id);
     Optional<PaymentDto> findByIdentificator(String identificator);
@@ -20,5 +23,13 @@ public interface PaymentDao {
 
     PaymentDto initialize(Long userId, PaymentDto dto);
 
+    PaymentDto epayInitialize(Long userId, PaymentDto dto);
+
     int succeeded(Long id);
+
+    List<PaymentDto> findByStatus(PaymentStatus status);
+
+    PaymentDto epayApprove(Long id, String ref, String code);
+
+    Optional<PaymentDto> findByPid(String pid);
 }

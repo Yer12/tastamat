@@ -5,15 +5,15 @@ plugins {
 
 dependencies {
 
-    compile  \
-        project(':vertx-base'),
+    compile project(':vertx-base'),
         project.vertx,
         project.db,
         project.log,
 		project(':db-dao'),
 		project(':db-dao-jooq'),
         project.vertxJwt,
-        project(':ws-clients:sms-ws-client')
+        project(':ws-clients:sms-ws-client'),
+        project(':modules:message-client')
 }
 
 mainClassName = 'kz.tastamat.bootstrap.AppLauncher'

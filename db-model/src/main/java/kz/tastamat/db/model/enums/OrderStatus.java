@@ -1,5 +1,5 @@
 package kz.tastamat.db.model.enums;
 
 public enum OrderStatus {
-	NEW, RESERVED, SENT, WITHDRAWN, END
+	NEW, UNRESERVED, RESERVED, SENT, WITHDRAWN, END
 }

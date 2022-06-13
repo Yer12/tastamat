@@ -57,6 +57,18 @@ public class OrderRoute extends BaseRoute {
 			});
 		});
 
+
+		router.get("/tracking/:identifier").handler(ctx -> {
+			String identifier = ctx.pathParam("identifier");
+			handler.getTracking(identifier).setHandler(ar -> {
+				if (ar.succeeded()) {
+					ok(ar.result(), ctx);
+				} else {
+					ctx.fail(ar.cause());
+				}
+			});
+		});
+
 		router.get("/:identificator").handler(ctx -> {
 			String identificator = ctx.pathParam("identificator");
 			handler.getOrder(identificator, ar -> {

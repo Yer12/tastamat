@@ -9,9 +9,12 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import kz.tastamat.db.model.dto.PaymentDto;
+import kz.tastamat.enums.ConfigKey;
 import kz.tastamat.payment.dto.PaymentInfoDto;
 import kz.tastamat.payment.dto.PaymentResponse;
 import kz.tastamat.payment.handler.PaymentHandler;
+import kz.tastamat.payment.utils.KKB;
+import kz.tastamat.utils.EncryptUtils;
 import kz.zx.api.app.BaseRoute;
 import kz.zx.utils.PaginatedList;
 
@@ -26,7 +29,7 @@ public class PaymentRoute extends BaseRoute {
 
 	private PaymentRoute(Vertx vertx) {
 		super(vertx);
-		handler = new PaymentHandler(vertx);
+		handler = new PaymentHandler(vertx, config);
 	}
 
 	public static PaymentRoute build(Vertx vertx) {
@@ -36,6 +39,21 @@ public class PaymentRoute extends BaseRoute {
 	@Override
 	public Router route() {
 		Router router = Router.router(vertx);
+
+		router.get("/:id/epayinfo/status").handler(this::handleGetEpayStatus);
+
+		router.get("/epayinfo").handler(this::handleGetEpayInfo);
+
+		router.put("/:id/epaysucceeded").handler(ctx -> {
+			Long id = Long.parseLong(ctx.pathParam("id"));
+			handler.epaySucceeded(id, ar -> {
+				if (ar.succeeded()) {
+					okEmpty(ar, ctx);
+				} else {
+					ctx.fail(ar.cause());
+				}
+			});
+		});
 
 		router.get("/").handler(ctx -> {
 			MultiMap params = transformQueryParams(ctx.request().params());
@@ -86,6 +104,47 @@ public class PaymentRoute extends BaseRoute {
 		});
 
 		return router;
+	}
+
+	private void handleGetEpayInfo(RoutingContext ctx) {
+
+		PaymentDto paymentDto = new PaymentDto();
+		paymentDto.amount = Long.valueOf(queryParam("amount", ctx));
+		paymentDto.userId = ctx.get("user_id");
+
+		handler.epayInitialize(paymentDto.userId, paymentDto, ar -> {
+			if (ar.succeeded()) {
+				PaymentDto paymentResult = ar.result();
+				JsonObject epayConfigs = config.getJsonObject(ConfigKey.EPAY.key());
+				String paymentId = EncryptUtils.obfuscate(paymentResult.id, 211192, 6);
+				String base64encoded = KKB.build64(epayConfigs.getString("path") + "/kkbsign.cfg", paymentResult.amount.toString(), paymentId);
+				JsonObject responsePayload = new JsonObject()
+						.put("paymentId", paymentResult.id)
+						.put("postLink", epayConfigs.getString("postLink"))
+						.put("postFailureLink", epayConfigs.getString("postFailureLink"))
+						.put("postFailureBackLink", epayConfigs.getString("postFailureBackLink"))
+						.put("postBackLink", epayConfigs.getString("postBackLink"))
+						.put("orderInfo", base64encoded);
+
+				ok(responsePayload, ctx);
+			} else {
+				ctx.fail(ar.cause());
+			}
+		});
+	}
+
+	private void handleGetEpayStatus(RoutingContext ctx) {
+
+		JsonObject epayConfigs = config.getJsonObject(ConfigKey.EPAY.key());
+
+		Long id = Long.parseLong(ctx.pathParam("id"));
+		handler.epayStatus(id,epayConfigs, ar -> {
+			if (ar.succeeded()) {
+				okPaymentInfo(ar, ctx);
+			} else {
+				ctx.fail(ar.cause());
+			}
+		});
 	}
 
 	private void okPaymentResponse(AsyncResult<PaymentResponse> ar, RoutingContext ctx) {

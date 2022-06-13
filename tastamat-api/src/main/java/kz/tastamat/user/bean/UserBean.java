@@ -104,7 +104,7 @@ public class UserBean {
 	}
 
 	public UserDto sms(String phone) {
-		JsonObject userError = JsonUtils.getDictionary("phone.not.found.user", "", "Пользователь не най", "", "");
+		JsonObject userError = JsonUtils.getDictionary("phone.not.found.user", "", "Пользователь не найден", "", "");
 		UserDto user = getUserDao(this.ctx).findByPhone(phone).orElseThrow(() -> ApiException.notFound(userError.encode()));
 		String smsCode = RandomStringUtils.randomNumeric(4);
 		return getUserDao(this.ctx).sms(user.id, smsCode);
