@@ -7,6 +7,5 @@ include 'tastamat-api',
 		'db-dao',
 		'db-dao-jooq',
 		'jooq-generator',
-		'ws-clients:sms-ws-client',
-		'modules:message-client'
+		'ws-clients:sms-ws-client'
 

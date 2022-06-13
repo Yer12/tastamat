@@ -38,8 +38,6 @@ public class CoreHandler extends DbHandler {
 	private static final DeliveryOptions OPEN_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.OPEN.name());
 	private static final DeliveryOptions WITHDRAW_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.WITHDRAW.name());
 
-	private static final DeliveryOptions TRACKING = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.TRACKING.name());
-
 //	private static final DeliveryOptions INFO_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.INFO.name());
 //	private static final DeliveryOptions PICK_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.PICK.name());
 //	private static final DeliveryOptions RATE_ACTION = new DeliveryOptions().addHeader(Key.action, CoreVerticle.Action.RATE.name());
@@ -123,18 +121,6 @@ public class CoreHandler extends DbHandler {
 		vertx.eventBus().send(CoreVerticle.ADDRESS, JsonObject.mapFrom(request), WITHDRAW_ACTION, (AsyncResult<Message<JsonObject>> ar) -> {
 			if (ar.succeeded()) {
 				OpenResponse result = Mapper.map(OpenResponse.class, ar.result().body());
-				handler.handle(Future.succeededFuture(result));
-			} else {
-				JsonObject message = new JsonObject(ar.cause().getMessage());
-				handler.handle(Future.failedFuture(ApiException.unexpected(message.getString("message"))));
-			}
-		});
-	}
-
-	public void getTracking(String identifier, Handler<AsyncResult<JsonObject>> handler) {
-		vertx.eventBus().send(CoreVerticle.ADDRESS, new JsonObject().put("identifier", identifier), TRACKING, (AsyncResult<Message<JsonObject>> ar) -> {
-			if (ar.succeeded()) {
-				JsonObject result = ar.result().body();
 				handler.handle(Future.succeededFuture(result));
 			} else {
 				JsonObject message = new JsonObject(ar.cause().getMessage());

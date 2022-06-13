@@ -34,7 +34,6 @@ public class DateUtils {
 	private static final String DATE_HOUR_MINUTE_FORMAT = "dd.MM.yyyy HH:mm";
 	private static final String SHORT_HUMAN_FORMAT = "HH:mm";
 	private static final String HUMAN_DATE_FORMAT = "dd.MM.yyyy";
-	private static final String TGTHR_DATE_FORMAT = "yyyyMMddHHmmss";
 	private static DatatypeFactory factory;
 	private static final long SECONDS_IN_DAY = 24 * 60 * 60;
 	private static final long MILLIS_IN_DAY = SECONDS_IN_DAY * 1000;
@@ -601,10 +600,5 @@ public class DateUtils {
 			return 4;
 		}
 		return 0;
-	}
-
-	public static Date parseTgthr(String value) throws ParseException {
-		if (value == null) return null;
-		return new SimpleDateFormat(TGTHR_DATE_FORMAT).parse(value);
 	}
 }

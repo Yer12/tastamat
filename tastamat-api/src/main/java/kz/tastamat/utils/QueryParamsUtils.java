@@ -18,21 +18,6 @@ public class QueryParamsUtils {
         searchParams.page = QueryParamsUtils.asInteger(QueryParams.page, queryParams, 0);
         searchParams.limit = QueryParamsUtils.asInteger(QueryParams.limit, queryParams, 5);
         searchParams.user = QueryParamsUtils.asLong(QueryParams.user, queryParams, null);
-        searchParams.txn_id = QueryParamsUtils.asLong(QueryParams.txn_id, queryParams, null);
-        searchParams.sum = QueryParamsUtils.asDouble(QueryParams.sum, queryParams, null);
-        searchParams.txn_date = QueryParamsUtils.asString(QueryParams.txn_date, queryParams, null);
-        searchParams.account = QueryParamsUtils.asString(QueryParams.account, queryParams, null);
-        searchParams.command = QueryParamsUtils.asString(QueryParams.command, queryParams, null);
-
-        return searchParams;
-    }
-
-    public static SearchParams vip(MultiMap queryParams) {
-
-        SearchParams searchParams = new SearchParams();
-        searchParams.phone = QueryParamsUtils.asString(QueryParams.phone, queryParams, null);
-        searchParams.password = QueryParamsUtils.asString(QueryParams.password, queryParams, null);
-        searchParams.sum = QueryParamsUtils.asDouble(QueryParams.sum, queryParams, null);
 
         return searchParams;
     }
@@ -59,9 +44,5 @@ public class QueryParamsUtils {
 
     public static <T> List<T> asList(QueryParams key, MultiMap queryParams, List<T> defaultValue) {
         return queryParams.contains(key.toString()) ? (List<T>) queryParams.getAll(key.toString()) : defaultValue;
-    }
-
-    public static Double asDouble(QueryParams key, MultiMap queryParams, Double defaultValue) {
-        return queryParams.contains(key.toString()) ? Double.valueOf(queryParams.getAll(key.toString()).get(0)) : defaultValue;
     }
 }

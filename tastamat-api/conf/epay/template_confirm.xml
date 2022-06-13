@@ -1,1 +1,0 @@
-<merchant id="%merchant_id%"><command type="complete"/><payment reference="%ref%" approval_code="%code%" orderid="%order_id%" amount="%amount%" currency_code="398"/></merchant>

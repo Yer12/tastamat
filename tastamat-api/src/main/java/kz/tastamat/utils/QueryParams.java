@@ -12,12 +12,5 @@ public enum QueryParams {
     from,
     to,
     limit,
-    user,
-    txn_id,
-    sum,
-    txn_date,
-    account,
-    command,
-    phone,
-    password
+    user
 }
