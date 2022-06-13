@@ -40,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class JqPayment extends TableImpl<JqPaymentRecord> {
 
-    private static final long serialVersionUID = 1290494198;
+    private static final long serialVersionUID = 1316139076;
 
     /**
      * The reference instance of <code>public.tt_payment</code>
@@ -94,16 +94,6 @@ public class JqPayment extends TableImpl<JqPaymentRecord> {
      * The column <code>public.tt_payment.status_</code>.
      */
     public final TableField<JqPaymentRecord, String> STATUS = createField("status_", org.jooq.impl.SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>public.tt_payment.ref_</code>.
-     */
-    public final TableField<JqPaymentRecord, String> REF = createField("ref_", org.jooq.impl.SQLDataType.CLOB, this, "");
-
-    /**
-     * The column <code>public.tt_payment.code_</code>.
-     */
-    public final TableField<JqPaymentRecord, String> CODE = createField("code_", org.jooq.impl.SQLDataType.CLOB, this, "");
 
     /**
      * Create a <code>public.tt_payment</code> table reference

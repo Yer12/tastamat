@@ -16,11 +16,4 @@ public class SearchParams {
 	public BoxSize size;
 	public Integer limit;
 	public Long user;
-	public Long txn_id;
-	public Double sum;
-	public String txn_date;
-	public String account;
-	public String command;
-	public String phone;
-	public String password;
 }

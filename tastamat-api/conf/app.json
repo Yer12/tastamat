@@ -22,10 +22,6 @@
       "instance_count": 1
     }
   ],
-  "epay_scheduler": {
-    "enabled": false,
-    "interval": "2s"
-  },
   "core": {
     "url": "http://docker.for.mac.localhost/platform/v1/rest",
     "key": "tastamat",
@@ -56,36 +52,19 @@
     "link": "https://tastamat.kz/",
     "webhook": "https://testtasta.tastamat.com/api/rest/payment/"
   },
-  "epay": {
-    "path": "conf/epay",
-    "statusUrl": "https://testpay.kkb.kz/jsp/remote/checkOrdern.jsp",
-    "confirmUrl": "https://testpay.kkb.kz/jsp/remote/control.jsp",
-    "postLink": "http://localhost:10402/api/insta/payments/epayinfo/kkb/success",
-    "postFailureLink": "http://localhost:10402/insta/rest/payments/epayinfo/kkb/error",
-    "postBackLink": "https://tastamat.kz/",
-    "postFailureBackLink": "https://tastamat.kz/",
-    "jks": "cert.jks",
-    "alias": "kkbca",
-    "storepass": "1q2w3e4r",
-    "verify": false
-  },
-  "kaspi": {
-    "login": "",
-    "password": ""
-  },
   "profile": {
     "wallet": 0,
     "template": "Вам поступила посылка в тастамат."
   },
   "web": {
-    "host": "localhost",
-    "port": 10402,
+    "host": "0.0.0.0",
+    "port": 8080,
     "prefix": "insta"
   },
   "datasources": [
     {
       "name": "default",
-      "jdbc_url": "jdbc:postgresql://localhost:5432/tastamat",
+      "jdbc_url": "jdbc:postgresql://db:5432/tastamat",
       "username": "postgres",
       "password": "postgres",
       "max_pool_size": 10

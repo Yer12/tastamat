@@ -3,15 +3,18 @@ package kz.tastamat.profile.route;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import kz.tastamat.db.model.dto.ProfileDto;
-import kz.tastamat.profile.dto.BalanceWithdrawDto;
 import kz.tastamat.profile.dto.ProfileInfoDto;
 import kz.tastamat.profile.handler.ProfileHandler;
 import kz.zx.api.app.BaseRoute;
 
 public class ProfileRoute extends BaseRoute {
+
+	private Logger log = LoggerFactory.getLogger(ProfileRoute.class);
 
 	final ProfileHandler handler;
 
@@ -43,36 +46,6 @@ public class ProfileRoute extends BaseRoute {
 			Long id = Long.parseLong(ctx.pathParam("id"));
 			handler.getUserProfile(id, ar -> {
 				if(ar.succeeded()){
-					okProfileInfo(ar, ctx);
-				} else {
-					ctx.fail(ar.cause());
-				}
-			});
-		});
-
-		router.get("/users/phone/:number").handler(ctx -> {
-			if (!ctx.get("user_id").equals(Long.valueOf(5))) {
-				ctx.fail(new Throwable("Forbidden"));
-			}
-			String phone = ctx.pathParam("number");
-
-			handler.getUserProfileWallet(phone, ar -> {
-				if (ar.succeeded()) {
-					okProfileInfo(ar, ctx);
-				} else {
-					ctx.fail(ar.cause());
-				}
-			});
-		});
-
-		router.put("/:id/balance/withdraw").handler(ctx -> {
-			if (!ctx.get("user_id").equals(Long.valueOf(5))) {
-				ctx.fail(new Throwable("Forbidden"));
-			}
-			BalanceWithdrawDto balanceWithdrawDto = ctx.getBodyAsJson().mapTo(BalanceWithdrawDto.class);
-
-			handler.withdrawBalance(balanceWithdrawDto, ar -> {
-				if (ar.succeeded()) {
 					okProfileInfo(ar, ctx);
 				} else {
 					ctx.fail(ar.cause());

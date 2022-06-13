@@ -32,7 +32,6 @@ public class CoreVerticle extends BaseVerticle {
         DROP,
         OPEN,
         WITHDRAW,
-        TRACKING,
         INFO,
         PICK,
         RATE
@@ -63,7 +62,6 @@ public class CoreVerticle extends BaseVerticle {
                 .on(Action.DROP, this::drop)
                 .on(Action.OPEN, this::open)
                 .on(Action.WITHDRAW, this::withdraw)
-                .on(Action.TRACKING, this::getTracking)
 //                .on(Action.INFO, this::handleGetInfo)
 //                .on(Action.PICK, this::handlePick)
 //                .on(Action.RATE, this::handleRate)
@@ -255,25 +253,5 @@ public class CoreVerticle extends BaseVerticle {
                 .setChunked(true)
                 .write(body)
                 .end();
-    }
-
-    private void getTracking(Message<JsonObject> mes){
-        Handler<Throwable> exHandler = (Throwable ex) -> handle(mes, ex);
-        client.getAbs(coreUrl+"/orders/tracking/"+mes.body().getString("identifier"), rh -> {
-            rh.exceptionHandler(exHandler);
-            if(200 == rh.statusCode()){
-                rh.bodyHandler(bh -> {
-                    JsonObject b = bh.toJsonObject();
-                    handle(mes, b);
-                });
-            } else {
-                rh.bodyHandler(bh -> {
-                    log.error(bh.toString());
-                    JsonObject b = bh.toJsonObject();
-                    JsonObject error = new JsonObject(b.getString("message"));
-                    handle(mes, ApiException.unexpected(error.encode()));
-                });
-            }
-        }).putHeader(HttpHeaders.CONTENT_TYPE, APPLICATION_JSON).end();
     }
 }

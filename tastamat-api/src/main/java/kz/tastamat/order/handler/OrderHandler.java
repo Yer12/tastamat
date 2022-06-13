@@ -4,9 +4,6 @@ import io.vertx.core.*;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.web.client.HttpRequest;
-import io.vertx.ext.web.client.WebClient;
-import io.vertx.ext.web.codec.BodyCodec;
 import kz.tastamat.core.dto.DropResponse;
 import kz.tastamat.core.dto.OpenRequest;
 import kz.tastamat.core.dto.OpenResponse;
@@ -45,8 +42,6 @@ public class OrderHandler extends DbHandler {
 	private final SmsHandler smsHandler;
 	private PaymentHandler paymentHandler;
 
-	private WebClient webClient;
-
 	protected String prefix;
 	protected Long price;
 
@@ -62,9 +57,7 @@ public class OrderHandler extends DbHandler {
 
 		this.smsHandler = new SmsHandler(vertx);
 		this.coreHandler = new CoreHandler(vertx);
-		this.paymentHandler = new PaymentHandler(vertx, config);
-
-		this.webClient = WebClient.create(vertx);
+		this.paymentHandler = new PaymentHandler(vertx);
 	}
 
 	public void getOrders(MultiMap params, Handler<AsyncResult<PaginatedList<OrderDto>>> handler) {
@@ -193,7 +186,7 @@ public class OrderHandler extends DbHandler {
 					handler.handle(Future.failedFuture(ApiException.business(statusError.toString())));
 				}
 
-				if(!actionDto.userId.equals(order.creatorId)){
+				if(actionDto.userId != order.creatorId){
 					ex = true;
 					JsonObject statusError = JsonUtils.getDictionary("open.invalid.user", "", "Вы не являетесь владельцем заказа", "", "");
 					handler.handle(Future.failedFuture(ApiException.business(statusError.toString())));
@@ -282,18 +275,5 @@ public class OrderHandler extends DbHandler {
 		} else {
 			handler.handle(Future.succeededFuture(response));
 		}
-	}
-
-	public Future<JsonObject> getTracking(String identifier) {
-		Future<JsonObject> future = Future.future();
-		coreHandler.getTracking(identifier, rr -> {
-			if(rr.succeeded()){
-				future.complete(rr.result());
-			} else {
-				future.fail(rr.cause());
-			}
-		});
-
-		return future;
 	}
 }
